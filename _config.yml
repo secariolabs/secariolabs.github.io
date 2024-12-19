@@ -25,58 +25,50 @@ description: >- # this means to ignore newlines until "baseurl:"
   line in _config.yml. It will appear in your document head meta (for
   Google search results) and in your feed.xml site description.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://secariolabs.com" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://secariolabs.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: jekyllrb
-github_username:  jekyll
+github_username: jekyll
 
 defaults:
-  -
-    scope:
+  - scope:
       path: "pages/home.md"
     values:
       layout: "home"
       permalink: "/"
-  -
-    scope:
+  - scope:
       path: "pages/about-us.md"
     values:
       layout: "about-us"
       permalink: /about-us/
-  -
-    scope:
+  - scope:
       path: "pages/services.md"
     values:
       layout: "services"
       permalink: /services/
-  -
-    scope:
+  - scope:
       path: "pages/contact.md"
     values:
       layout: "contact"
       permalink: /contact/
       type: "plain-page"
-  -
-    scope:
+  - scope:
       path: "pages/technical-research.md"
     values:
       layout: "blog"
       permalink: /technical-research/
       type: "plain-page"
-  -
-    scope:
+  - scope:
       path: "pages/defence.md"
     values:
       layout: "defence"
       permalink: /defence/
-  -
-    scope:
+  - scope:
       path: "pages/privacy-policy.md"
     values:
       layout: "plain-page"
       permalink: /privacy-policy/
       type: "plain-page"
-  -
-    scope:
+  - scope:
       path: "pages/modern-slavery-policy.md"
     values:
       layout: "plain-page"
@@ -86,7 +78,7 @@ defaults:
       path: ""
       type: "posts"
     values:
-      layout: "post"   
+      layout: "post"
 
 permalink: :slug/
 
@@ -108,20 +100,20 @@ pagination:
     after: 2
 autopages:
   enabled: true
-  tags: 
+  tags:
     # Optional, the list of layouts that should be processed for every category found in the site
-    layouts: 
-      - 'autopage_tags.html'
+    layouts:
+      - "autopage_tags.html"
     # Optional, the title that each category paginate page should get (:cat is replaced by the Category name)
-    title: 'Posts tagged as :tag'
-    # Optional, the permalink for the  pagination page (:cat is replaced), 
+    title: "Posts tagged as :tag"
+    # Optional, the permalink for the  pagination page (:cat is replaced),
     # the pagination permalink path is then appended to this permalink structure
     permalink: /tag/:tag/
     # Optional, when true logging related to category pages will be supressed.
     silent: false
     slugify:
-      mode: 'default'   # :cat is slugified. Modes: default, raw, pretty, ascii, latin
-      case: false       # Whether to replace all uppercase letters with their lowercase counterparts
+      mode: "default" # :cat is slugified. Modes: default, raw, pretty, ascii, latin
+      case: false # Whether to replace all uppercase letters with their lowercase counterparts
   categories:
     enabled: false
   collections:
