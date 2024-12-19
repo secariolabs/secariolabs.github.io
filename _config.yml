@@ -82,6 +82,10 @@ defaults:
 
 permalink: :slug/
 
+sass:
+  sass_dir: _sass
+  style: compressed # Optional: Outputs minified CSS
+
 # Build settings
 # theme: minima
 plugins:
