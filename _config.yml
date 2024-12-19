@@ -140,3 +140,7 @@ exclude:
   - vendor/ruby/
   - LICENSE.txt
   - README.md
+
+sass:
+  sass_dir: _sass
+  style: compressed
