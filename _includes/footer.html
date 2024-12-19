@@ -1,0 +1,99 @@
+<footer class="site-footer">
+    <div class="container">
+
+        <div class="site-footer__logo-wrapper">
+            <a href="{{- '/' | relative_url -}}" class="site-footer__logo-link">
+                <img class="site-footer__logo" src="{{- '/assets/images/secario-labs-logo.png' | relative_url -}}" alt="Secario Labs logo" width="462" height="58">
+            </a>
+        </div>
+
+        <div class="site-footer__cols site-footer__cols--3">
+
+            <div class="site-footer__col site-footer__col--desc">
+
+                <div class="site-footer__desc">
+                    {{ site.data.global.footer.description | markdownify }}
+                </div>
+            </div>
+
+            <div class="site-footer__col site-footer__col--location">
+                <p>
+                    <strong>{{ site.data.global.location1.title }}</strong><br>
+                    {{ site.data.global.location1.details }}
+                </p>
+                <p>
+                    <a class="site-footer__link" href="tel:{{- site.data.global.location1.phone | replace: ' ', '' | replace: '-', '' -}}">
+                        {{ site.data.global.location1.phone }}
+                    </a>
+                    <br>
+                    <a class="site-footer__link" href="mailto:{{- site.data.global.location1.email -}}">
+                        {{ site.data.global.location1.email }}
+                    </a>
+                </p>
+            </div>
+
+            <div class="site-footer__col site-footer__col--location">
+                <p>
+                    <strong>{{ site.data.global.location2.title }}</strong><br>
+                    {{ site.data.global.location2.details }}
+                </p>
+                <p>
+                    <a class="site-footer__link" href="tel:{{- site.data.global.location2.phone | replace: ' ', '' | replace: '-', '' -}}">
+                        {{ site.data.global.location2.phone }}
+                    </a>
+                    <br>
+                    <a class="site-footer__link" href="mailto:{{- site.data.global.location2.email -}}">
+                        {{ site.data.global.location2.email }}
+                    </a>
+                </p>                
+            </div>
+
+        </div>
+
+        <div class="site-footer__cols site-footer__cols--2">
+            <div class="site-footer__col">
+                <form action="" class="site-footer__form">
+                    <label class="site-footer__form-label" for="email">
+                        {{- site.data.global.signup.label -}}
+                    </label>
+                    <div class="site-footer__form-fields">
+                        <input type="email" name="email" class="input__text input__text--xl" placeholder="Your email" required>
+                        <button type="submit" class="site-footer__form-submit btn btn--xl btn--light uppercase">
+                            {{- site.data.global.signup.button_text -}}
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="site-footer__col">
+                <h3 class="site-footer__social-heading">
+                    Connect With Us
+                </h3>
+                <div class="site-footer__social">
+                    {% for item in site.data.global.social %}
+                        {%- assign trimmed_url = item.url | strip -%}
+                        {%- assign sliced_url = trimmed_url | slice: 0, 4 -%}
+                        <a href="{{- item.url -}}" class="site-footer__social-item"{% if sliced_url == 'http' %} target="_blank"{% endif %}>
+                            {{- item.icon -}}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="site-footer__bottom">
+            {% for item in site.data.global.footer_links %}
+                {%- if item.url.size > 0 -%}
+                    <a class="site-footer__bottom-item site-footer__link" href="{{- item.url | relative_url -}}">
+                        {{- item.text -}}
+                    </a>
+                {%- else -%}
+                    <span class="site-footer__bottom-item">
+                        {%- assign current_year = site.time | date: "%Y" -%}
+                        {{ item.text | replace: '__YEAR__', current_year }}
+                    </span>
+                {%- endif -%}
+            {% endfor %}
+        </div>
+
+    </div>
+</footer>

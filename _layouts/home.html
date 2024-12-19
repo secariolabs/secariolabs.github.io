@@ -1,0 +1,14 @@
+---
+layout: default
+---
+{%- include home/hero.html -%}
+{%- if page.show_services == true -%}
+    {%- include partials/services.html -%}
+{%- endif -%}
+{%- include home/why.html -%}
+{%- include home/partners.html -%}
+{%- include home/testimonials.html -%}
+{%- include home/research.html -%}
+{%- if page.show_callout == true -%}
+    {%- include partials/callout.html -%}
+{%- endif -%}

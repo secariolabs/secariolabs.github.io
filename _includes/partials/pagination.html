@@ -1,0 +1,36 @@
+<div class="pagination">
+    {%- assign current_page = page.pagination_info.curr_page -%}
+    {%- assign total_pages = page.pagination_info.total_pages -%}
+
+    {% if paginator.total_pages > 1 %}
+        <ul class="pager">
+            {% if paginator.previous_page %}
+                <li class="previous">
+                    <a href="{{ paginator.previous_page_path | relative_url }}" title="Previous Page">
+                        &larr;
+                    </a>
+                </li>
+            {% endif %}
+
+            {% if paginator.page_trail %}
+                {% for trail in paginator.page_trail %}
+                    <li {% unless page.url == trail.path %}class="zero-margin-on-mobile"{% endunless %}>
+                        {%- if page.url == trail.path -%}
+                            <span class="selected">{{ trail.num }}</span>
+                        {%- else -%}
+                            <a class="hide-on-mobile" href="{{ trail.path | relative_url | remove: 'index.html' }}">{{ trail.num }}</a>
+                        {%- endif -%}
+                    </li>
+                {% endfor %}
+            {% endif %}
+
+            {% if paginator.next_page %}
+                <li class="next">
+                    <a href="{{ paginator.next_page_path | remove: 'index.html' | relative_url }}" title="Next Page">
+                        &rarr;
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    {% endif %}
+</div>

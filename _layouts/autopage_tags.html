@@ -1,0 +1,36 @@
+---
+layout: plain-page
+type: plain-page
+---
+<h1 class="plain-page__heading">
+    Tag Archives: {{ page.autopages.display_name }}
+</h1>
+
+<div class="blog__teasers cols cols--2">        
+    {% for post in paginator.posts %}
+        <div class="blog__teaser">
+        
+            <h2 class="blog__teaser-heading">
+                <a href="{{ post.url | relative_url }}">
+                    {{ post.title }}
+                </a>
+            </h2>
+
+            {%- include partials/post-meta.html -%}
+
+            <div class="blog__teaser-summary text-lg">
+                {{ post.excerpt | truncatewords: 50, ' […]' }}
+            </div>
+
+            <div class="blog__teaser-link-wrapper">
+                <a href="{{- post.url | relative_url -}}" class="blog__teaser-link btn btn--light btn--md btn--thin btn--bordered">
+                    Read More
+                </a>
+            </div>
+
+        </div>
+    {% endfor %}
+</div>
+
+{%- include partials/pagination.html -%}
+           

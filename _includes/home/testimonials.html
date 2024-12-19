@@ -1,0 +1,40 @@
+<section class="section section--dark testimonials">
+    <div class="container">
+
+        <header class="section__header">
+            {%- if page.testimonials.superheading.size > 0 -%}
+                <h3 class="section__superheading">
+                    {{- page.testimonials.superheading -}}
+                </h3>
+            {%- endif -%}
+
+            <h2 class="section__heading">
+                {{- page.testimonials.heading -}}        
+            </h2>
+        </header>
+
+        <div class="section__content">
+            <div class="splide" aria-label="Testimonials">
+                <div class="splide__track">
+                    <ul class="splide__list">
+                        {% for item in page.testimonials.items %}                            
+                            <li class="splide__slide testimonials__item">
+                                <svg class="quote-icon" width="30pt" height="30pt" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="m6.4375 50.5v35.875h35.875v-35.875h-20.5c0-11.32 9.1797-20.5 20.5-20.5v-15.375c-19.816 0-35.875 16.062-35.875 35.875zm87.125-20.5v-15.375c-19.812 0-35.875 16.062-35.875 35.875v35.875h35.875v-35.875h-20.5c0-11.32 9.1797-20.5 20.5-20.5z" fill-rule="evenodd" fill="#921F20"></path>
+                                </svg>
+                                <blockquote>
+                                    {{ item.text | markdownify }}
+                                </blockquote>
+
+                                {%- if item.person.size > 0 -%}
+                                    <p>{{ item.person }}</p>
+                                {%- endif -%}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>

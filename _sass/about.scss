@@ -1,0 +1,113 @@
+@use "vars" as *;
+
+.about {
+
+    &__desc {
+        font-family: $text_font;
+        text-align: center;
+        max-width: 850px;
+        margin-left: auto;
+        margin-right: auto;
+        font-weight: 500;
+    }
+
+    &__text {
+        column-gap: 3rem;
+        row-gap: 1rem;
+        &-item {
+            
+            &:last-child:nth-child(2n - 1) {
+                grid-column: span 2;
+                @include breakpoint(small) {
+                    grid-column: span 1;
+                }
+            }
+        }
+
+        @include breakpoint(small) {
+            row-gap: 0.5rem;
+        }
+
+    }
+
+    &__features {
+        margin-top: 3rem;
+        margin-left: auto;
+        margin-right: auto;
+        list-style: none;    
+    }
+
+    &__feature {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        img {
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 2rem;
+            max-width: 120px;
+
+            @include breakpoint(small) {
+                max-width: 100px;
+                margin-bottom: 1rem;
+            }
+        }
+    }
+
+    &__cta-wrapper {
+        margin-top: 3rem;
+        text-align: center;
+
+        @include breakpoint(small) {
+            margin-top: 2rem;
+        }
+    }
+
+    &__badges-section {
+        padding-top: 8rem;
+        padding-bottom: 8rem;
+
+        @include breakpoint(medium) {
+            padding-top: 5rem;
+            padding-bottom: 5rem;
+        }
+    }
+
+    &__badges {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        max-width: 850px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    &__badge {
+        &-item {
+            padding: 1rem;
+            width: 16%;
+            text-align: center;
+            
+            @include breakpoint(medium) {
+                width: 25%;
+            }
+
+            @include breakpoint(small) {
+                width: 33%;
+            }
+
+            @include breakpoint(smaller) {
+                width: 50%;
+            }
+        }
+
+        &-img {
+            max-height: 85px;
+            width: auto;
+        }
+    }
+
+}

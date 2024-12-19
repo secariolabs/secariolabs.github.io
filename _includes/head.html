@@ -1,0 +1,28 @@
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{- '/assets/css/main.css' | relative_url -}}">
+
+  {%- if page.collection == 'posts' -%}
+    <title>{{ page.title | escape }} - Secario Labs</title>
+    <meta name="description" content="{{ page.excerpt | truncatewords: 50 | strip_html | escape }}">
+  {%- else -%}
+    <title>{{- page.meta.title | default: site.data.global.meta.title | escape -}}</title>
+    <meta name="description" content="{{- page.meta.description | default: site.data.global.meta.description | escape -}}">
+  {%- endif -%}
+
+
+  <link rel="canonical" href="{{- site.url }}{{ page.url | replace:'index.html','' -}}">
+
+  {%- include meta/favicon.html -%}
+
+  {%- include meta/open-graph.html -%}
+
+  {%- feed_meta -%}
+
+  {%- if jekyll.environment == 'dev' -%}
+    <META NAME="robots" CONTENT="noindex,nofollow">
+  {%- endif -%}
+
+</head>

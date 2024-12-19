@@ -1,0 +1,27 @@
+
+<section class="hero hero--home">
+
+    <div class="container">
+        <div class="cols cols--2 cols--no-gap">
+            <div class="col col--left">
+                <h1 class="hero__heading">
+                    {{- page.hero.heading -}}
+                </h1>
+
+                <div class="hero__desc">
+                    {{ page.hero.description | markdownify }}
+                </div>
+
+                <a href="{{- page.hero.cta.url | relative_url -}}" class="hero__cta btn btn--xl btn--dark">
+                    <span>{{- page.hero.cta.text -}}</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" class="icon icon-tabler icon-tabler-circle-arrow-right-filled" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z"/><path fill="currentColor" stroke="none" d="m12 2 .324.005a10 10 0 1 1-.648 0L12 2zm.613 5.21a1 1 0 0 0-1.32 1.497L13.584 11H8l-.117.007A1 1 0 0 0 8 13h5.584l-2.291 2.293-.083.094a1 1 0 0 0 1.497 1.32l4-4 .073-.082.064-.089.062-.113.044-.11.03-.112.017-.126L17 12l-.007-.118-.029-.148-.035-.105-.054-.113-.071-.111a1.008 1.008 0 0 0-.097-.112l-4-4z"/></svg>
+                </a>
+            </div>
+
+            <div class="col col--right">
+                <img src="assets/images/hero/secario-focus.png" alt="" width="574" height="574">
+            </div>
+        </div>
+    </div>
+
+</section>

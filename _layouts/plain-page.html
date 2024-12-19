@@ -1,0 +1,18 @@
+---
+layout: default
+---
+<article class="plain-page">
+    <div class="container">
+        {%- unless page.layout == 'autopage_tags' -%}
+            {%- if page.heading.size > 0 -%}
+                <h1 class="plain-page__heading plain-page__heading--{{ page.url | slugify }}">
+                    {{- page.heading -}}
+                </h1>
+            {%- endif -%}
+        {%- endunless -%}
+
+        <div class="plain-page__content">
+            {{content}}
+        </div>
+    </div>
+</article>

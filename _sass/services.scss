@@ -1,0 +1,27 @@
+.services {
+
+    &__item {
+        text-align: center;
+
+        &-content {
+            font-size: 1.125rem;
+        }
+
+        &-img {
+            max-width: 120px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 2rem;
+            filter: url(#duotone-1a1a1a-ffffff-1);
+            @supports(-moz-appearance:none){
+                filter: grayscale(1);
+            }
+        }
+    }
+
+    &__cta-wrapper {
+        text-align: center;
+        margin-top: 5rem;
+    }
+
+}

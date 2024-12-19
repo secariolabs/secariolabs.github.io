@@ -1,0 +1,48 @@
+@use "vars" as *;
+
+.plain-page {
+
+    padding-top: 4rem;
+    padding-bottom: 7rem;
+
+    color: $dark;
+
+    @include breakpoint(medium) {
+        padding-top: 2rem;
+        padding-bottom: 4rem;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        color: $alt_dark;
+    }
+
+    &__heading {
+        &--contact {
+            margin-bottom: 3rem;
+        }
+    }
+
+    &__content {
+        color: $dark;
+    
+        h2 {
+            font-size: 2rem;
+            margin: 1.75rem 0 1.5rem;
+        }
+    
+        h3 {
+            margin: 1.5rem 0 1.25rem;
+        }
+    
+        ul {
+            list-style-position: inside;
+            padding-left: 1rem;
+        }
+    
+        a {
+            color: $darker;
+            text-decoration: underline;
+        }
+    }
+
+}

@@ -1,0 +1,1 @@
+Secario labs static website

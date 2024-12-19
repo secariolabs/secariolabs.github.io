@@ -1,0 +1,21 @@
+{%- if page.collection == 'posts' -%}
+    {%- assign og_image = page.meta.image | default: page.bg_image | default: site.data.global.meta.image -%}
+{%- else -%}
+    {%- assign og_image = page.meta.image | default: site.data.global.meta.image -%}
+{%- endif -%}
+
+{%- assign og_title = {{ page.title | default: page.meta.title | default: site.data.global.meta.title }} -%}
+
+{%- assign og_description = {{ page.meta.description | default: site.data.global.meta.description }} -%}
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@SecarioLabs" />
+<meta name="twitter:title" content="{{ og_title }}" />
+<meta name="twitter:description" content="{{ og_description }}" />
+<meta name="twitter:image" content="{{- og_image | absolute_url -}}" />
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="{{ og_title }}" />
+<meta property="og:description" content="{{ og_description }}" />
+<meta property="og:url" content="{{ page.url | absolute_url }}" />
+<meta property="og:image" content="og_image | absolute_url" />

@@ -1,0 +1,43 @@
+{%- assign the_services = page.services | default: site.data.partials.services -%}
+<section class="section section--dark{% if page.layout == 'home' %} triangle-divider {% endif %}">
+    <div class="container">
+
+        <header class="section__header">
+            {%- if the_services.superheading.size > 0 -%}
+                <h3 class="section__superheading">
+                    {{- the_services.superheading -}}
+                </h3>
+            {%- endif -%}
+
+            <h2 class="section__heading">
+                {{- the_services.heading -}}        
+            </h2>
+        </header>
+
+        <div class="section__content">
+            <div class="cols cols--3">
+            
+                {% for item in the_services.items %}
+                    <div class="services__item">
+                        <img class="services__item-img" src="{{- item.image.path | relative_url -}}" alt="{{- item.image.alt_text -}}" loading="lazy"{% if item.image.width.size > 0 and item.image.height.size > 0 %} width="{{ item.image.width }}" height="{{ item.image.height }}"{% endif %}>
+                        <h3 class="services__item-title">
+                            {{- item.title  -}}
+                        </h3>
+                        <div class="services__item-content">
+                            {{ item.text | markdownify }}
+                        </div>
+                    </div>
+                {% endfor %}
+            
+            </div>
+        </div>
+
+        <div class="services__cta-wrapper">
+            <a href="#book-a-call" class="btn btn--xl btn--light uppercase" data-open-modal>
+                {{- the_services.cta.text -}}
+            </a>
+        </div>
+    
+    
+    </div>
+</section>

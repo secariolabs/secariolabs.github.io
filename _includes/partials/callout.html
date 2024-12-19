@@ -1,0 +1,30 @@
+{%- assign the_callout = page.callout | default: site.data.partials.callout -%}
+<section class="section section--dark callout">
+    <div class="container">
+
+        <header class="section__header callout__header">
+            {%- if the_callout.superheading.size > 0 -%}
+                <h3 class="section__superheading">
+                    {{- the_callout.superheading -}}
+                </h3>
+            {%- endif -%}
+
+            <h2 class="section__heading callout__heading">
+                {{- the_callout.heading -}}        
+            </h2>
+        </header>
+
+        <div class="section__content callout__content">
+            <div class="callout__text text-xl">
+                {{ the_callout.text | markdownify }}
+            </div>
+
+            {%- if the_callout.cta -%}
+                <a href="#book-a-call" class="btn btn--xl btn--secondary btn--thin uppercase callout__cta" data-open-modal>
+                    {{- the_callout.cta.text -}}
+                </a>
+            {%- endif -%}
+        </div>
+
+    </div>
+</section>

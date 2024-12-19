@@ -1,0 +1,28 @@
+<div class="banner" id="banner">
+    <div class="container container--xl">
+        <p class="banner__title">
+            <strong>{{ site.data.global.banner.text }}</strong>
+        </p>
+        <p>
+            {%- if site.data.global.banner.subtext.url.size > 0 -%}                
+                <a class="text-muted text-xs" href="{{- site.data.global.banner.subtext.url -}}">
+                    {{ site.data.global.banner.subtext.text }}
+                </a>
+            {%- elsif site.data.global.banner.subtext.text.size > 0 -%}
+                <span class="text-muted text-xs">
+                    {{ site.data.global.banner.subtext.text }}
+                </span>
+            {%- endif -%}
+        </p>
+    </div>
+
+    {%- if site.data.global.banner.show_tag == true -%}
+        <div class="banner__tag">
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="#921F20" viewBox="0 0 100 100"><path d="M61.223 61.836c0 4.492-6.734 4.492-6.734 0 0-4.488 6.734-4.488 6.734 0M45.512 46.223c0 4.492-6.734 4.492-6.734 0 0-4.488 6.734-4.488 6.734 0"/><path d="m27.551 85.203 21.328-12.961c.203-.203.715-.203 1.02-.203.203 0 .406 0 .613.203L71.43 85.203v-53.57H27.55zm30.305-16.938a6.403 6.403 0 0 1-6.43-6.43c0-3.57 2.856-6.43 6.43-6.43 3.57 0 6.43 2.856 6.43 6.43 0 3.57-2.856 6.43-6.43 6.43zm4.695-26.836a1.601 1.601 0 0 1 0 2.246L40.305 65.917a1.578 1.578 0 0 1-2.144.102l-.102-.102a1.69 1.69 0 0 1 0-2.144l22.348-22.348a1.695 1.695 0 0 1 2.145.004zm-20.406-1.633c3.57 0 6.43 2.856 6.43 6.43 0 3.57-2.856 6.43-6.43 6.43-3.57-.102-6.328-2.856-6.43-6.43a6.4 6.4 0 0 1 6.43-6.43zM27.551 15.305H71.43v13.266H27.551z"/></svg>
+        </div>
+    {%- endif -%}
+
+    <button class="banner__close" id="close-banner">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="icon icon-tabler icons-tabler-outline icon-tabler-x" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z"/><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+</div>

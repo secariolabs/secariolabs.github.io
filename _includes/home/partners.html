@@ -1,0 +1,42 @@
+<section class="section partners">
+    <div class="container">
+
+        <header class="section__header">
+            {%- if page.partners.superheading.size > 0 -%}
+                <h3 class="section__superheading">
+                    {{- page.partners.superheading -}}
+                </h3>
+            {%- endif -%}
+
+            <h2 class="section__heading">
+                {{- page.partners.heading -}}        
+            </h2>
+        </header>
+
+        {%- if page.partners.logos.size > 4 -%}
+            {%- assign logos_cols = 4 -%}
+        {%- else -%}
+            {%- assign logos_cols = page.partners.logos.size -%}
+        {%- endif -%}
+
+        <div class="section__content partners__logos cols cols--{{- logos_cols -}}">
+
+            {% for item in page.partners.logos %}
+                {%- capture the_logo -%}
+                    <img src="{{- item.path | relative_url -}}" alt="{{- item.alt_text -}}" class="partners__logo" loading="lazy"{% if item.width.size > 0 and item.height.size > 0 %} width="{{ item.width }}" height="{{ item.height }}"{% endif %}>
+                {%- endcapture -%}
+                {%- if item.url.size > 0 -%}
+                    <a class="partners__logo-item partners__logo-item--link" href="{{- item.url -}}" target="_blank" rel="noreferrer noopener">
+                        {{ the_logo }}
+                    </a>
+                {%- else -%}
+                    <span class="partners__logo-item partners__logo-item--span">
+                        {{ the_logo }}
+                    </span>
+                {%- endif -%}
+            {% endfor %}
+
+        </div>
+
+    </div>
+</section>

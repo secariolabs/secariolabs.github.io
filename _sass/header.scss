@@ -1,0 +1,153 @@
+@use "vars" as *;
+
+.site-header {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+
+    
+    &--dark {
+        transition: background-color .5s linear;
+        background-color: $dark;
+        box-shadow: rgba(255, 255, 255, 0.5) 0 -10px 42px;
+    }
+}
+
+.site-nav {
+
+    padding: 0.75rem 0;
+
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        @include breakpoint(medium) {
+            position: relative;
+        }
+    }
+
+
+    &__logo {
+        width: 180px;
+
+        &-link {
+            display: flex;
+            align-items: center;
+        }
+    }
+
+    &__items {
+        display: flex;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        @include breakpoint(medium) {
+            display: none;
+            flex-direction: column;
+            align-items: flex-start;
+            position: absolute;
+            background: $dark;
+            padding: 1.75rem 1rem;
+            left: 0;
+            width: 100%;
+            top: 2.75rem;
+        }        
+    }
+
+    &__item {
+        margin: 0 1rem;
+
+        &:last-of-type {
+            margin-right: 0;
+        }
+
+        @include breakpoint(medium) {
+            margin-bottom: 0.75rem;
+
+            button {
+                margin-top: 1rem;
+            }
+        }
+    }
+
+    &__link {
+        font-size: 1.125rem;
+        font-family: $heading_font;
+        color: $light;
+        text-decoration: none;
+        position: relative;
+
+        &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -8px;
+            width: 100%;
+            height: 2px;
+            background: $light;
+            transform: scale(0);
+            transition: transform .3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        &:hover {
+            &::before {
+                transform: scale(1);                
+            }
+        }
+        
+        &--active {
+            &::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                bottom: -8px;
+                width: 100%;
+                height: 2px;
+                background: $light;         
+                transform: scale(1);               
+            }
+        }
+    }
+
+}
+
+.burger {
+    display: none;
+    border: none;
+    background: none;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    transition: all .2s linear;
+    cursor: pointer;
+
+    rect {
+        transform-origin: center center;
+        transition: all .4s;
+        fill: #fff;
+    }
+
+    &.active #line1 {
+        transform: rotate(-135deg) translate(-1px, 5px);
+        fill: $light;
+    }
+
+    &.active #line2 {
+        transform: rotate(-135deg) translate(-1px, -3px);
+        fill: $light;
+    }
+
+    &.active #line3 {
+        transform: rotate(135deg) translate(1px, -11px);
+        fill: $light;
+    }
+
+    @include breakpoint(medium) {
+        display: block;
+    }
+
+}

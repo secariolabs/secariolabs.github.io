@@ -1,0 +1,58 @@
+<header {% unless page.type == 'plain-page' %} id="site-header" {% endunless %} class="site-header{% if page.type == 'plain-page' %} site-header--dark{% endif %}">
+
+    {%- if site.data.global.banner.show == true -%}
+        {%- include banner.html -%}
+    {%- endif -%}  
+
+    <nav id="site-nav" class="site-nav">
+        <div class="container container--xl">
+            <a href="{{- '/' | relative_url -}}" class="site-nav__logo-link">
+                <img class="site-nav__logo" src="{{- '/assets/images/secario-labs-logo.png' | relative_url -}}" alt="Secario Labs logo" width="462" height="58">
+            </a>
+
+            <ul class="site-nav__items" id="nav">
+                {% for item in site.data.navigation.main %}
+                    <li class="site-nav__item">
+                        {%- if item.type == 'button' -%}
+                            {%- if item.url.size > 0 -%}
+                                <a class="btn" href="{{- item.url | relative_url -}}">
+                                    {{- item.text -}}
+                                </a>
+                            {%- else -%}
+                                <button class="btn btn--md btn--light uppercase" data-open-modal>
+                                    {{- item.text -}}
+                                </button>
+                            {%- endif -%}
+                        {%- else -%}
+                            {%- assign page_url_slug = 'page' -%}
+                            {%- assign item_url_slug = 'item' -%}
+                            {%- unless page.url == '/' -%}
+                                {%- assign page_url_slug = page.url | slugify -%}
+                                {%- assign item_url_slug = item.url | slugify -%}
+                                {%- if page_url_slug == item_url_slug -%}
+                                    {%- assign nav_item_is_active = true -%}
+                                {%- elsif item_url_slug == 'technical-research' and page.layout == 'blog' -%}
+                                    {%- assign nav_item_is_active = true -%}                                    
+                                {%- elsif item_url_slug == 'technical-research' and page.layout == 'autopage_tagss' -%}
+                                    {%- assign nav_item_is_active = true -%}                                    
+                                {%- elsif page.collection == 'posts' and item_url_slug == 'technical-research' -%}
+                                    {%- assign nav_item_is_active = true -%}
+                                {%- else -%}
+                                    {%- assign nav_item_is_active = false -%}
+                                {%- endif -%}
+                            {%- endunless -%}
+                            <a href="{{- item.url | relative_url -}}" class="site-nav__link{% if nav_item_is_active == true %} site-nav__link--active{% endif %}">
+                                {{- item.text -}}
+                            </a>
+                        {%- endif -%}
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <button class="burger" id="menu-btn">
+                {%- include svg/burger.svg -%}
+            </button>
+        </div>
+    </nav>
+
+</header>

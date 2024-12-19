@@ -1,0 +1,110 @@
+@use "vars" as *;
+
+.container {
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    box-sizing: content-box;
+
+    &--xl {
+        max-width: 1320px;
+    }
+
+    &--sm {
+        max-width: 860px;
+    }
+}
+
+.cols {
+    display: grid;
+
+    &--2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 4rem;
+
+        @include breakpoint(medium) {
+            gap: 3rem;
+        }
+
+        @include breakpoint(small) {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+            gap: 2rem;
+        }
+    }
+    
+    &--3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 3rem;
+        
+        @include breakpoint(medium) {
+            gap: 2rem;
+        }
+
+        @include breakpoint(small) {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+
+
+    }
+
+    &--4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 2rem;
+        
+        @include breakpoint(medium) {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        @include breakpoint(small) {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }        
+    }
+
+    &--no-gap {
+        gap: 0;
+    }
+
+    // &--2-thirds-1-third {
+    //     grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    //     gap: 4rem;
+    // }
+    
+    &--2-thirds-1-third {
+        grid-template-columns: minmax(0, 4fr) minmax(0, 2fr);
+        gap: 4rem;
+        
+        @include breakpoint(medium) {
+            gap: 2rem;
+        }
+        
+        @include breakpoint(small) {
+            grid-template-columns: minmax(0, 1fr);            
+        }
+    }
+
+    &--1-third-2-thirds {
+        grid-template-columns: minmax(0, 2fr) minmax(0, 4fr);
+        gap: 4rem;
+        
+        @include breakpoint(medium) {
+            gap: 2rem;
+        }
+        
+        @include breakpoint(small) {
+            grid-template-columns: minmax(0, 1fr);            
+        }
+    }
+    
+    &--100 {
+        grid-template-columns: 100px minmax(0, 1fr);
+        gap: 10%;
+        
+        @include breakpoint(small) {
+            grid-template-columns: minmax(0, 1fr);            
+            gap: 1rem;            
+        }
+    }
+
+}

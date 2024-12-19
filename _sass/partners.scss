@@ -1,0 +1,30 @@
+.partners {
+
+    &__logo {
+        width: auto;
+        max-height: 76px;
+        filter: url(#duotone-000000-ffffff-5);
+        @supports(-moz-appearance:none){
+            filter: grayscale(1);
+        }
+    }
+    
+    &__logo-item {
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        img {
+            transition: filter .3s ease-in-out;
+        }
+
+        &:hover {
+            img {
+                filter: none;
+            }
+        }
+    }
+
+
+}

@@ -1,0 +1,56 @@
+---
+layout: default
+---
+{%- comment -%} Hero {%- endcomment -%}
+<section class="hero hero--page hero--post"{% if page.bg_image.size > 0 %} style="background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.7) 100%), url({{- page.bg_image | relative_url -}});" {% endif %}>
+
+    <div class="container container--sm">
+
+        <h1 class="hero__heading hero__heading--page hero__heading--post">
+            {{- page.title -}}
+        </h1>
+
+        {%- include partials/post-meta.html is_post=true -%}
+
+    </div>
+
+</section>
+{%- comment -%} End Hero {%- endcomment -%}
+
+<section class="post-wrapper">
+    <section class="section section--page section--post">
+        <div class="container container--sm">
+            <div class="post__bc text-muted">
+                <a class="post__bc-item text-muted underline" href="{{- '/' | relative_url -}}">Home</a> » <a class="post__bc-item text-muted underline" href="{{- '/technical-research/' | relative_url -}}">Technical Research</a> » <strong class="post__bc-item text-muted post__bc-item--active">{{- page.title -}}</strong>
+            </div>
+
+            <article class="post">
+                {{content}}
+            </article>
+
+            {%- if page.next or page.previous -%}
+                <div class="post__nav-wrapper">
+                    <h3 class="post__nav-heading">
+                        More articles
+                    </h3>
+
+                    <div class="post__nav">
+                        {%- if page.previous -%}
+                            <a class="post__nav-item post__nav-item--prev" href="{{- page.previous.url | relative_url -}}">
+                                {{- page.previous.title -}}
+                            </a>
+                        {%- endif -%}
+
+                        {%- if page.next -%}
+                            <a class="post__nav-item post__nav-item--next" href="{{- page.next.url | relative_url -}}">
+                                {{- page.next.title -}}
+                            </a>
+                        {%- endif -%}
+                    </div>
+                </div>
+            {%- endif -%}
+        </div>
+    </section>
+</section>
+
+{%- include partials/lightbox.html -%}

@@ -1,0 +1,223 @@
+@use "vars" as *;
+@use "sass:color";
+
+.contact {
+
+    &__cols {
+        display: grid;
+        grid-template-columns: minmax(0, 5fr) minmax(0, 2fr);
+        gap: 3rem;
+        
+        @include breakpoint(medium) {
+            gap: 1rem;
+        }
+        
+        @include breakpoint(small) {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+            gap: 2rem;
+        }
+    }
+
+    &__col {
+        &--left {
+            border: 1px solid color.adjust($dark, $lightness: 50%);
+            border-radius: 6px;
+            padding: 0 4rem 3rem 4rem;
+
+            @include breakpoint(large) {
+                padding: 2rem;
+                padding-top: 0;
+            }
+        }
+    }
+
+    &__form {
+
+        .cols {
+            &--2 {
+                column-gap: 1rem;
+                row-gap: 2rem;
+
+                @include breakpoint(medium) {
+                    grid-template-columns: repeat(1, minmax(0, 1fr));
+                }
+            }
+        }
+
+        &-heading {
+            font-size: 2.5rem;
+        }
+
+        &-set {
+            margin-top: 3rem;
+        }
+
+        &-set-heading {
+            font-family: $text_font;
+            font-weight: bold;
+            color: $alt_dark;
+            span {
+                font-weight: normal;
+                color: $secondary;
+            }
+        }
+
+        &-control {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 1rem;
+
+            &.has-danger {
+                input,
+                select {
+                    border-color: $secondary;
+                }
+            }
+
+            &.hidden {
+                display: none;
+            }
+        }
+
+        &-label {
+            margin-bottom: 0.5rem;
+
+            span {
+                color: $secondary;
+            }
+
+            &--bold {
+                font-weight: bold;
+
+                span {
+                    font-weight: normal;
+                }
+            }
+        }
+
+        &-group {
+            border-top: 1px solid color.adjust($dark, $lightness: 50%);
+            margin-top: 3rem;
+            padding-top: 2rem;
+
+            &-heading {
+                margin-bottom: .5rem;
+                font-size: 1.25rem;
+
+                & + p {
+                    margin-top: 0;
+                }
+            }
+        }
+
+        &-submit {
+            margin-top: 2.5rem;
+
+            @include breakpoint(smaller) {
+                max-width: none;
+            }
+        }
+
+        &-text-help {
+            padding-top: 3px;
+            font-size: 1.125rem;
+
+            &.pristine-error {
+                color: $secondary;
+            }
+        }
+
+        &--embedded {
+
+            .contact__form {
+
+                &-set-heading {
+                    color: $light;
+    
+                    span {
+                        color: $light;
+                        text-decoration: underline;
+                    }
+                }
+
+                &-label {
+                    span {
+                        color: $light;
+                        text-decoration: underline;
+                    }
+                }
+
+                &-text {
+                    &-help {
+                        &.pristine-error {
+                            color: $light;
+                            text-decoration: underline;
+                        }
+                    }
+                }
+
+                &-submit {
+                    background-image: linear-gradient(163deg, rgb(255, 229, 59) 0%, rgb(146, 31, 32) 61%);
+                }
+            }
+
+            
+
+            .input {
+
+                &__text,
+                &__textarea {
+                    background-color: $dark;
+                    background: $dark;
+                    color: $light;
+                    border-color: $light;
+                }
+                &__select-wrapper {
+                    svg {
+                        color: $light;
+                        pointer-events: none;
+                        z-index: 0;
+                    }
+                }
+                &__select {
+                    background-color: $dark;
+                    background: $dark;
+                    color: $light;
+                    border-color: $light;
+                    color: $light;
+                }
+            }
+
+        }
+
+    }
+
+    &__location {
+        p {
+            margin-top: 0;
+        }
+        &:not(:last-child) {
+            margin-bottom: 6rem;
+
+            @include breakpoint(small) {
+                margin-bottom: 4rem;
+            }
+        }
+
+        &:not(:first-child) {
+            padding-top: 4rem;
+            border-top: 2px solid color.adjust($dark, $lightness: 50%);
+
+            @include breakpoint(small) {
+                padding-top: 3rem;
+            }
+        }
+    }
+
+    &__link {
+        color: $dark;
+        text-decoration: underline;
+        text-underline-offset: .35em;
+    }
+
+}

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="58" height="58.553" viewBox="0 0 58 58.553">
+  <g id="Gruppe_352" data-name="Gruppe 352" transform="translate(0 1)">
+    <rect id="Rechteck_358" data-name="Rechteck 358" width="58" height="55" fill="none"/>
+    <g id="Gruppe_353" data-name="Gruppe 353" transform="translate(0.142 -0.858)">
+      <path id="Pfad_488" data-name="Pfad 488" d="M21.329,58.406V51.882H18.318V49.253h3.011V45.361H18.318V42.733h2.763l-.36-.636a74.893,74.893,0,0,0-4.805-7.415A16.606,16.606,0,0,1,29.222,8.3h.114A16.605,16.605,0,0,1,42.717,34.745,71.581,71.581,0,0,0,37.959,42.1l-.356.636h2.759v2.628h-3.01v3.892H40.36v2.629H37.352v6.524Zm13.393-2.627v-3.9H23.958v3.9Zm0-6.525V45.362H23.958v3.892Zm-.085-6.527.12-.225a72.9,72.9,0,0,1,5.854-9.317l.55-.741.053-.151a13.975,13.975,0,0,0-11.86-21.365h-.118a13.97,13.97,0,0,0-11.194,22.2,74.879,74.879,0,0,1,5.894,9.37l.119.225h3.973V35.216l-.3-.094a5.292,5.292,0,0,1-3.7-5.067v-.874h2.63v.874a2.688,2.688,0,1,0,5.376,0v-.875h2.623v.874a5.291,5.291,0,0,1-3.7,5.067l-.3.094v7.511Z"/>
+      <rect id="Rechteck_359" data-name="Rechteck 359" width="2.629" height="4.138" transform="translate(28.025 -0.142)"/>
+      <rect id="Rechteck_360" data-name="Rechteck 360" width="2.63" height="4.135" transform="translate(47.304 37.046) rotate(-59.883)"/>
+      <rect id="Rechteck_361" data-name="Rechteck 361" width="4.138" height="2.629" transform="matrix(0.5, -0.866, 0.866, 0.5, 38.771, 6.132)"/>
+      <rect id="Rechteck_362" data-name="Rechteck 362" width="4.14" height="2.632" transform="translate(47.133 13.442) rotate(-29.928)"/>
+      <rect id="Rechteck_363" data-name="Rechteck 363" width="4.137" height="2.63" transform="translate(50.647 23.892)"/>
+      <rect id="Rechteck_364" data-name="Rechteck 364" width="2.629" height="4.138" transform="translate(15.548 3.882) rotate(-30.013)"/>
+      <rect id="Rechteck_365" data-name="Rechteck 365" width="2.631" height="4.139" transform="translate(6.674 13.636) rotate(-60.09)"/>
+      <rect id="Rechteck_366" data-name="Rechteck 366" width="4.138" height="2.632" transform="translate(3.858 23.912)"/>
+      <rect id="Rechteck_367" data-name="Rechteck 367" width="4.136" height="2.631" transform="translate(6.599 36.829) rotate(-30.079)"/>
+    </g>
+  </g>
+</svg>

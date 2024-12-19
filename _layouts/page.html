@@ -1,0 +1,26 @@
+---
+layout: default
+---
+{%- comment -%} Hero {%- endcomment -%}
+<section class="hero hero--page hero--{% if page.layout == 'blog' %}technical-research{% else %}{{ page.url | slugify }}{% endif %}"{% if page.bg_image.size > 0 %} style="background-image: url({{- page.bg_image | relative_url -}})" {% endif %}>
+
+    <div class="container">
+
+        <h1 class="hero__heading hero__heading--page">
+            {{- page.hero_title -}}
+        </h1>
+
+        {%- if page.hero_subtitle.size > 0 -%}
+            <h2 class="hero__subheading text-xl">
+                {{- page.hero_subtitle -}}
+            </h2>
+        {%- endif -%}
+
+    </div>
+
+</section>
+{%- comment -%} End Hero {%- endcomment -%}
+
+<article>
+    {{content}}
+</article>

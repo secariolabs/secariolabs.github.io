@@ -1,0 +1,72 @@
+---
+layout: page
+---
+<section class="section section--page">
+    <div class="container">
+    
+        <h2 class="about__desc text-2xl">
+            {{ page.description }}
+        </h2>
+
+        <div class="about__text cols cols--2">
+            {% for item in page.text %}
+                <div class="about__text-item">
+                    {{ item.piece | markdownify }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <ul class="about__features cols cols--3">
+            {% for item in page.features %}
+                <li class="about__feature text-xl">
+                    <img src="{{- item.icon | relative_uirl -}}" alt="">
+                    <div class="about__feature-text">
+                        {{- item.text -}}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="about__cta-wrapper">
+            <a href="#book-a-call" class="hero__cta btn btn--md btn--dark" data-open-modal>
+                <span>{{- page.cta.text -}}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" class="icon icon-tabler icon-tabler-circle-arrow-right-filled" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z"/><path fill="currentColor" stroke="none" d="m12 2 .324.005a10 10 0 1 1-.648 0L12 2zm.613 5.21a1 1 0 0 0-1.32 1.497L13.584 11H8l-.117.007A1 1 0 0 0 8 13h5.584l-2.291 2.293-.083.094a1 1 0 0 0 1.497 1.32l4-4 .073-.082.064-.089.062-.113.044-.11.03-.112.017-.126L17 12l-.007-.118-.029-.148-.035-.105-.054-.113-.071-.111a1.008 1.008 0 0 0-.097-.112l-4-4z"/></svg>
+            </a>        
+        </div>
+
+    </div>
+</section>
+
+{%- if page.show_services == true -%}
+    {%- include partials/services.html -%}
+{%- endif -%}
+
+<section class="section section--page about__badges-section">
+    <div class="container">
+
+    {%- if page.badges.heading.size > 0 -%}
+        <h2 class="section__heading">
+            {{- page.badges.heading -}}
+        </h2>
+    {%- endif -%}
+    
+    <div class="about__badges">
+        {% for item in page.badges.items %}
+            {%- if item.url.size > 0 -%}
+                <a class="about__badge-item" href="{{- item.url -}}" target="_blank">
+                    <img class="about__badge-img" src="{{- item.path | relative_url -}}" alt="{{- item.alt_text -}}" loading="lazy"{% if item.width.size > 0 and item.height.size > 0 %} width="{{- item.width -}}" height="{{- item.height -}}"{% endif %}>
+                </a>
+            {%- else -%}                
+                <span class="about__badge-item">
+                    <img class="about__badge-img" src="{{- item.path | relative_url -}}" alt="{{- item.alt_text -}}" loading="lazy"{% if item.width.size > 0 and item.height.size > 0 %} width="{{- item.width -}}" height="{{- item.height -}}"{% endif %}>
+                </span>
+            {%- endif -%}
+        {% endfor %}
+    </div>
+
+    </div>
+</section>
+
+{%- if page.show_callout == true -%}
+    {%- include partials/callout.html -%}
+{%- endif -%}

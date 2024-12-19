@@ -1,0 +1,152 @@
+<form id="contact-form" action="" class="contact__form{% if include.embedded == true %} contact__form--embedded{% endif %}">
+    <div class="contact__form-set">
+        <p class="contact__form-set-heading">
+            Your Name <span>(Required)</span>
+        </p>
+        <div class="cols cols--2">
+            <div class="contact__form-control">
+                <label for="first_name" class="contact__form-label">
+                    First name
+                </label>
+                <input type="text" name="first_name" class="input__text input__text--xl input__text--bordered" required>
+            </div>
+            <div class="contact__form-control">
+                <label for="last_name" class="contact__form-label">
+                    Last name
+                </label>
+                <input type="text" name="last_name" class="input__text input__text--xl input__text--bordered" required>
+            </div>
+        </div>
+    </div>
+
+    <div class="contact__form-group">
+        <div class="contact__form-group-header">
+            <h3 class="contact__form-group-heading">
+                How Can We Reach You?
+            </h3>
+
+            <p>
+                We would love to chat with you. How can we get in touch?
+            </p>
+        </div>
+
+        <div class="contact__form-control">
+            <label for="contact_method" class="contact__form-label contact__form-label--bold">
+                Preferred Method of Contact
+            </label>
+            <div class="input__select-wrapper">
+                <select name="contact_method" id="select-contact-method" class="input__select input__select--xl">
+                    <option value="email">Email</option>
+                    <option value="phone">Phone</option>
+
+                </select>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" stroke-width="1"> <path d="M6 9l6 6l6 -6"></path> </svg> 
+            </div>
+        </div>
+    </div>
+
+    <div class="contact__form-set">
+        <p id="email-heading" class="contact__form-set-heading">
+            Your Email Address <span>(Required)</span>
+        </p>
+        <div class="">
+            <div id="email-control" class="contact__form-control">
+                <label for="email" class="contact__form-label">
+                    Email Address
+                </label>
+                <input type="email" id="email" name="email" class="input__text input__text--xl input__text--bordered" required>
+            </div>
+            <div id="phone-control" class="contact__form-control hidden">
+                <label for="phone" class="contact__form-label contact__form-label--bold">
+                    Your Phone <span>(Required)</span>
+                </label>
+                <input id="phone" type="text" name="phone" class="input__text input__text--xl input__text--bordered">
+            </div>                
+            <div id="time_to_call-control" class="contact__form-control hidden">
+                <label for="time_to_call" class="contact__form-label contact__form-label--bold">
+                    Best Time to Call You <span>(Required)</span>
+                </label>
+                <div class="input__select-wrapper">
+                    <select name="time_to_call" id="time-to-call" class="input__select input__select--xl">
+                        <option value="" selected="selected">Select A Time</option>
+                        <option value="12:00 am">12:00 am</option>
+                        <option value="12:30 am">12:30 am</option>
+                        <option value="1:00 am">1:00 am</option>
+                        <option value="1:30 am">1:30 am</option>
+                        <option value="2:00 am">2:00 am</option>
+                        <option value="2:30 am">2:30 am</option>
+                        <option value="3:00 am">3:00 am</option>
+                        <option value="3:30 am">3:30 am</option>
+                        <option value="4:00 am">4:00 am</option>
+                        <option value="4:30 am">4:30 am</option>
+                        <option value="5:00 am">5:00 am</option>
+                        <option value="5:30 am">5:30 am</option>
+                        <option value="6:00 am">6:00 am</option>
+                        <option value="6:30 am">6:30 am</option>
+                        <option value="7:00 am">7:00 am</option>
+                        <option value="7:30 am">7:30 am</option>
+                        <option value="8:00 am">8:00 am</option>
+                        <option value="8:30 am">8:30 am</option>
+                        <option value="9:00 am">9:00 am</option>
+                        <option value="9:30 am">9:30 am</option>
+                        <option value="10:00 am">10:00 am</option>
+                        <option value="10:30 am">10:30 am</option>
+                        <option value="11:00 am">11:00 am</option>
+                        <option value="11:30 am">11:30 am</option>
+                        <option value="12:00 pm">12:00 pm</option>
+                        <option value="12:30 pm">12:30 pm</option>
+                        <option value="1:00 pm">1:00 pm</option>
+                        <option value="1:30 pm">1:30 pm</option>
+                        <option value="2:00 pm">2:00 pm</option>
+                        <option value="2:30 pm">2:30 pm</option>
+                        <option value="3:00 pm">3:00 pm</option>
+                        <option value="3:30 pm">3:30 pm</option>
+                        <option value="4:00 pm">4:00 pm</option>
+                        <option value="4:30 pm">4:30 pm</option>
+                        <option value="5:00 pm">5:00 pm</option>
+                        <option value="5:30 pm">5:30 pm</option>
+                        <option value="6:00 pm">6:00 pm</option>
+                        <option value="6:30 pm">6:30 pm</option>
+                        <option value="7:00 pm">7:00 pm</option>
+                        <option value="7:30 pm">7:30 pm</option>
+                        <option value="8:00 pm">8:00 pm</option>
+                        <option value="8:30 pm">8:30 pm</option>
+                        <option value="9:00 pm">9:00 pm</option>
+                        <option value="9:30 pm">9:30 pm</option>
+                        <option value="10:00 pm">10:00 pm</option>
+                        <option value="10:30 pm">10:30 pm</option>
+                        <option value="11:00 pm">11:00 pm</option>
+                        <option value="11:30 pm">11:30 pm</option>
+                    </select>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" stroke-width="1"> <path d="M6 9l6 6l6 -6"></path> </svg> 
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="contact__form-group">
+        <div class="contact__form-group-header">
+            <h3 class="contact__form-group-heading">
+                What's on your mind?
+            </h3>
+
+            <p>
+                Please let us know what's on your mind. Have a question for us? Ask away.
+            </p>
+        </div>
+
+        <div class="contact__form-control">
+            <label for="conntact_method" class="contact__form-label contact__form-label--bold">
+                Your Comments/Questions
+            </label>
+            <textarea name="" id="" class="input__textarea" rows="10" cols="50"></textarea>
+        </div>
+
+        <div class="contact__form-control">
+            <button class="btn btn--lg btn--secondary contact__form-submit" type="submit">
+                Submit
+            </button>
+        </div>
+    </div>            
+
+</form>

@@ -1,0 +1,358 @@
+---
+layout: page
+---
+<section class="section section--page">
+    <div class="container">
+
+        <ul class="cols cols--3 defence__list-items">
+            {% for item in page.list.items %}
+                <li class="defence__list-item">
+                    <h3 class="defence__list-title">
+                        {{- item.title -}}
+                    </h3>
+                    <div class="defence__list-text">
+                        {{ item.text | markdownify }}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+
+    </div>
+</section>
+
+<section class="section section--page section--gray defence__anchors">
+    <div class="container">
+
+        <div class="cols cols--2-thirds-1-third">
+            <div class="defence__anchors-text">
+                {{ page.inner_nav.text | markdownify }}
+            </div>
+            <p class="defence__anchors-items">
+                {% for anchor in page.inner_nav.anchors %}
+                    <a class="defence__anchors-item" href="#{{- anchor.target_id -}}" data-target="{{- anchor.target_id -}}">
+                        <span>{{- anchor.name -}}</span>
+                        {%- include svg/arrow-down.svg -%}
+                    </a>
+                {% endfor %}
+            </p>
+        </div>
+
+    </div>
+</section>
+
+<section id="{{- page.services.id -}}" class="section section--page defence__services">
+    <div class="container">
+
+        <h2 class="plain-page__heading defence__heading">
+            {{- page.services.heading -}}
+        </h2>
+
+        <div class="defence__services-items">
+            {% for item in page.services.items %}
+                {%- capture the_cycle -%}
+                    {% cycle 'odd', 'even' %}
+                {%- endcapture -%}
+                <div class="defence__services-item cols {% if the_cycle == 'odd' %} cols--2-thirds-1-third{% else %} cols--1-third-2-thirds{% endif %}">
+                    <div class="defence__services-item-content{% if the_cycle == 'even' %} order-1{% endif %}">
+                        <h3 class="defence__services-item-title">
+                            {{- item.title -}}
+                        </h3>
+                        <div class="defence__services-item-text">
+                            {{ item.text | markdownify }}
+                        </div>
+                    </div>
+                    <div class="defence__services-item-image">
+                        <figure>
+                            <img src="{{- item.image.path | relative_url -}}" alt="{{- item.image.alt_text -}}">
+                            {%- if item.image.caption.size > 0 -%}
+                                <figcaption>
+                                    {{- item.image.caption -}}
+                                </figcaption>
+                            {%- endif -%}
+                        </figure>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</section>
+
+<section id="{{- page.levels.id -}}" class="section section--page defence__levels">
+    <div class="container">
+
+        {%- if page.levels.heading.size > 0 -%}
+            <h2 class="levels__heading">
+                {{- page.levels.heading -}}
+            </h2>
+        {%- endif -%}
+
+        {%- assign first_col = page.levels.table | first -%}
+        {%- assign items_size = first_col.items | size -%}
+        {%- assign range_end = items_size | minus: 1 -%}
+
+        <div class="defence__levels-table-nav">
+            <div></div>
+            <div>
+                <button data-target="1" class="defence__levels-table-nav-btn defence__levels-table-nav-btn--prev defence__levels-table-nav-btn--inactive">
+                    {%- include svg/chevron-right.svg -%}
+                </button>
+                <button data-target="2" class="defence__levels-table-nav-btn defence__levels-table-nav-btn--next">
+                    {%- include svg/chevron-right.svg -%}
+                </button>
+            </div>
+        </div>
+
+        <div class="defence__levels-table">
+            <div class="defence__levels-row defence__levels-row--headings">
+                {% for cell in page.levels.table %}
+                    <div class="defence__levels-cell defence__levels-cell--{{ forloop.index }} defence__levels-cell--heading">
+                        {%- unless forloop.first -%}
+                            <div class="defence__levels-cell-stars">
+                                {%- assign stars_end = forloop.index | minus: 1 -%}
+                                {% for star in (1..stars_end) %}
+                                    {%- include svg/star.svg -%}
+                                {% endfor %}
+                            </div>
+                        {%- endunless -%}
+                        <h3>{{- cell.title -}}</h3>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% for i in (0..range_end) %}
+                {%- if forloop.last -%}
+                    {%- assign forloop_last = true -%}
+                {%- endif -%}
+                <div class="defence__levels-row defence__levels-row--cells">
+                    {% for column in page.levels.table %}
+                        <div{% unless forloop.first %} data-col="{{- forloop.index0 -}}"{% endunless %} class="defence__levels-cell defence__levels-cell--{{ forloop.index }} defence__levels-cell--desc{% unless forloop.first %} defence__levels-cell--info{% endunless %}{% if forloop_last == true %} defence__levels-cell--last{% endif %}">
+                            <span>{{ column.items[i] }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</section>
+
+<section class="section section--page defence__soc">
+    <div class="container">
+        <div class="cols cols--100">
+            <div class="defence__vertical-text">
+                <h2>
+                    <span>{{ page.soc.aside }}</span>
+                    {%- if page.soc.image.path.size > 0 -%}
+                        <img src="{{- page.soc.image.path | relative_url -}}" alt="{{- page.soc.image.alt_text -}}">
+                    {%- endif -%}
+                </h2>
+            </div>
+            <div class="">
+                {%- if page.soc.heading.size > 0 -%}
+                    <h3>{{- page.soc.heading -}}</h3>
+                {%- endif -%}
+                <div>
+                    {{ page.soc.text | markdownify }}
+                </div>
+
+                {%- if page.soc.footer.text.size > 0 -%}
+                    {%- if page.soc.footer.url.size > 0 -%}
+                        <a class="defence__soc-footer" href="{{- page.soc.footer.url | relative_url -}}">
+                            {%- include svg/arrow-right.svg -%}
+                            {{ page.soc.footer.text }}
+                        </a>
+                    {%- else -%}
+                        <div class="defence__soc-footer"">
+                            {{ page.soc.footer.text }}
+                        </div>
+                    {%- endif -%}
+                {%- endif -%}
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="{{- page.faq.id -}}" class="section section--page defence__faq">
+    <div class="container">
+        <div class="cols cols--100">
+            <div class="defence__vertical-text">
+                <h2>
+                    <span>{{ page.faq.aside }}</span>
+                    {%- if page.faq.image.path.size > 0 -%}
+                        <img src="{{- page.faq.image.path | relative_url -}}" alt="{{- page.faq.image.alt_text -}}">
+                    {%- endif -%}
+                </h2>
+            </div>
+            <div class="">
+                {%- if page.faq.heading.size > 0 -%}
+                    <h3>{{- page.faq.heading -}}</h3>
+                {%- endif -%}
+
+                <div class="defence__faq-items">
+                    {% for item in page.faq.items %}
+                    <details name="faq" class="defence__details defence__faq-item">
+                        <summary class="defence__summary defence__faq-item-q">
+                            <h3>{{ item.q }}</h3>
+                            {%- include svg/chevron-down.svg -%}
+                        </summary>
+                        <div class="defence__faq-item-a">
+                            {{ item.a | markdownify }}
+                        </div>
+                    </details>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section section--page defence__info">
+    <div class="container">
+
+        <h2 class="plain-page__heading defence__heading">
+            {{- page.info.heading -}}
+        </h2>
+
+        <div class="defence__info-items">
+            {% for item in page.info.items %}                
+                <div class="defence__info-item{% if item.highlight == true %} defence__info-item--highlighted{% endif %}">
+                    <div class="defence__info-item-content">
+                        <h3 class="defence__info-item-title">
+                            {%- if item.link.size > 0 -%}
+                                <a href="{{- item.link | relative_url -}}">
+                                    {{- item.title -}}
+                                </a>
+                            {%- else -%}
+                                {{- item.title -}}
+                            {%- endif -%}
+                        </h3>
+
+                        <div class="defence__info-item-text">
+                            {{ item.text | markdownify }}
+                        </div>
+                    </div>
+
+                    {%- if item.link.size > 0 -%}
+                        <div class="defence__info-item-link-wrapper">
+                            <a class="defence__info-item-link" href="{{- item.link | relative_url -}}">
+                                {%- include svg/arrow-right.svg -%}
+                            </a>
+                        </div>
+                    {%- endif -%}
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</section>
+
+<section class="section section--page defence__info defence__info--more">
+    <div class="container">
+
+        <h2>
+            {{- page.more_info.heading -}}
+        </h2>
+
+        <div class="defence__info-items">
+            {% for item in page.more_info.items %}                
+                <div class="defence__info-item defence__info-item--more{% if item.highlight == true %} defence__info-item--highlighted{% endif %}">
+                    <div class="defence__info-item-content">
+                        {%- if item.categories.size > 0 or item.tags.size > 0 -%}
+                            <div class="defence__info-item-meta{% if item.highlight == true %} defence__info-item-meta--highlighted{% endif %}">
+                                {%- if item.categories.size > 0 -%}
+                                    {% for cat in item.categories %}
+                                        <span class="defence__info-item-meta-cat{% if item.highlight == true %} defence__info-item-meta-cat--highlighted{% endif %}">
+                                            {{ cat }}
+                                        </span>
+                                    {% endfor %}
+                                {%- endif -%}
+                                {%- if item.tags.size > 0 -%}
+                                    {% for cat in item.tags %}
+                                        <span class="defence__info-item-meta-tag{% if item.highlight == true %} defence__info-item-meta-tag--highlighted{% endif %}">
+                                            {{ cat }}
+                                        </span>
+                                    {% endfor %}
+                                {%- endif -%}
+                            </div>
+                        {%- endif -%}
+                        <h3 class="defence__info-item-title defence__info-item-title--more{% if item.highlight == true %} defence__info-item-title--highlighted{% endif %}">
+                            {%- if item.link.size > 0 -%}
+                                <a href="{{- item.link | relative_url -}}">
+                                    {{- item.title -}}
+                                </a>
+                            {%- else -%}
+                                {{- item.title -}}
+                            {%- endif -%}
+                        </h3>
+
+                        <div class="defence__info-item-text{% if item.highlight == true %} defence__info-item-text--highlighted{% endif %}">
+                            {{ item.text | markdownify }}
+                        </div>
+                    </div>
+
+                    {%- if item.link.size > 0 -%}
+                        <div class="defence__info-item-link-wrapper">
+                            <a class="defence__info-item-link defence__info-item-link--more{% if item.highlight == true %} defence__info-item-link--highlighted{% endif %}" href="{{- item.link | relative_url -}}">
+                                {%- include svg/arrow-right.svg -%}
+                            </a>
+                        </div>
+                    {%- endif -%}
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</section>
+
+<section id="{{- page.contact.id -}}" class="section section--page defence__info defence__contact" style="--contact-bg-image: url({{ page.contact.background_image }});--contact-bg-color: {{ page.contact.background_color }}" >
+    <div class="container">
+
+        <div class="cols cols--2">
+            <div class="defence__contact-header">
+                <h2>
+                    {{- page.contact.heading -}}
+                </h2>
+
+                <div class="defence__contact-text">
+                    {{ page.contact.text | markdownify }}
+                </div>
+            </div>
+            <div></div>
+        </div>
+
+        <img class="defence__contact-form-bg" src="{{-page.contact.background_image | relative_url -}}" alt="">
+        <div class="defence__contact-form">
+            <div class="cols cols--2">
+                <div>
+                    <h3 class="defence__contact-form-heading">
+                        {{- page.contact.form.heading -}}
+                    </h3>
+                </div>
+                <div>
+                    {{ page.contact.form.description | markdownify }}
+                </div>
+            </div>
+
+            <details>
+                <summary>                
+                    <span class="btn btn--lg btn--thin btn--secondary defence__contact-form-toggle">
+                        <span>
+                            {{- page.contact.form.button_text -}}
+                        </span>
+                        {%- include svg/chevron-down.svg -%}
+                    </span>
+                </summary>
+
+                <div>
+                    {%- include partials/contact-form.html embedded=true -%}
+                </div>
+            </details>
+
+        </div>
+
+
+    </div>        
+</section>
+
+{%- include partials/lightbox.html -%}

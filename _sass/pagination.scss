@@ -1,0 +1,57 @@
+@use "vars" as *;
+
+.pagination {
+
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(63,63,70,0.3);
+
+    @include breakpoint(smaller) {
+        margin-top: 3rem;
+    }
+
+    .pager {
+        list-style: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    li {
+        margin: 0 .4rem;
+
+        a {
+            text-decoration: none !important;
+        }
+    }
+
+    li > a,
+    li > span {
+        color: $alt_dark;
+        padding: .3rem .8rem;
+        border: 1px solid $alt_dark;
+        border-radius: 4px;
+
+        &:hover,
+        &.selected {
+            background-color: $secondary;
+            color: $light;
+            border-color: $secondary;
+            opacity: 1;
+        }
+    }
+
+    .hide-on-mobile {
+        @include breakpoint(smaller) {
+            display: none;
+        }
+    }
+
+    .zero-margin-on-mobile {
+        @include breakpoint(smaller) {
+            margin: 0;
+            padding: 0;
+        }
+    }
+
+}

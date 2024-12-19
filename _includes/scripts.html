@@ -1,0 +1,23 @@
+{%- if page.url == '/contact/' or page.layout == 'defence' -%}
+    <script src="{{- '/assets/js/pristine.min.js' | relative_url -}}"></script>
+    <script>
+        {%- include scripts/form.js -%}
+    </script>
+{%- endif -%}
+
+{%- if page.layout == 'defence' -%}
+    <script>
+        {%- include scripts/inner-nav.js -%}
+    </script>
+{%- endif -%}
+
+{%- if page.collection == 'posts' -%}
+    <script>
+        {%- include scripts/lightbox.js -%}
+        handle_lightbox('article.post p:has(img:only-of-type) img', 'img');
+    </script>
+{%- endif -%}
+
+<script>
+    {%- include scripts/modal.js -%}
+</script>

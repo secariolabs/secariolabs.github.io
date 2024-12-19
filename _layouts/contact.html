@@ -1,0 +1,46 @@
+---
+layout: plain-page
+---
+<div class="contact__cols">
+    <div class="contact__col contact__col--left">
+        {%- include partials/contact-form.html -%}
+    </div>
+
+    <div class="contact__col contact__col--right">
+
+        <div class="contact__location">
+            <p>
+                <strong>{{ site.data.global.location1.title }}</strong><br>
+                {{ site.data.global.location1.details }}
+            </p>
+            <p>
+                <a class="contact__link" href="tel:{{- site.data.global.location1.phone | replace: ' ', '' | replace: '-', '' -}}">
+                    {{ site.data.global.location1.phone }}
+                </a>
+                <br>
+                <a class="contact__link" href="mailto:{{- site.data.global.location1.email -}}">
+                    {{ site.data.global.location1.email }}
+                </a>
+            </p>        
+        </div>
+
+        <div class="contact__location">
+            <p>
+                <strong>{{ site.data.global.location2.title }}</strong><br>
+                {{ site.data.global.location2.details }}
+            </p>
+            <p>
+                <a class="contact__link" href="tel:{{- site.data.global.location2.phone | replace: ' ', '' | replace: '-', '' -}}">
+                    {{ site.data.global.location2.phone }}
+                </a>
+                <br>
+                <a class="contact__link" href="mailto:{{- site.data.global.location2.email -}}">
+                    {{ site.data.global.location2.email }}
+                </a>
+            </p>  
+
+        </div>
+        </div>
+    
+
+</div>

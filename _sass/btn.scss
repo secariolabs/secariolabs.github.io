@@ -1,0 +1,69 @@
+@use "vars" as *;
+
+.btn {
+
+    cursor: pointer;
+    background: none;
+    border: none;
+    transition: background-color .15s ease-in-out;   
+
+    &--md {
+        font-family: $heading_font;
+        padding: .75rem 1.125rem;
+        font-size: 1.125rem;
+    }
+
+    &--lg {
+        font-family: $heading_font;
+        padding: 1rem 1.25rem;
+    }
+
+    &--xl {
+        font-family: $heading_font;
+        padding: 1rem 1.75rem;
+    }
+
+    &--light {
+        background-color: $light;
+        color: $dark;
+
+        &:hover {
+            background-color: $alt_gray;
+        }
+    }
+
+    &--dark {
+        background-color: $dark;
+        color: $light;
+
+        &:hover {
+            background-color: $zinc;
+        }        
+    }
+
+    &--secondary {
+        background-color: $secondary;
+        color: $light;
+
+        transition: opacity .15s ease-in-out;
+
+        &:hover {
+            opacity: .85;
+        }          
+    }
+
+    &--thin {
+        font-family: $text_font;
+    }
+
+    &--bordered {
+        border: 1px solid $dark;
+    }
+
+    @include mobile_btn;
+
+}
+
+a.btn {
+    text-decoration: none;
+}

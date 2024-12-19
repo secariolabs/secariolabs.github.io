@@ -1,0 +1,39 @@
+<section class="section research">
+    <div class="container">
+
+        <div class="cols research__cols">
+            <div class="research__col research__col--left">
+                {%- if page.research.superheading.size > 0 -%}
+                    <h3 class="section__superheading research__superheading">
+                        {{- page.research.superheading -}}
+                    </h3>
+                {%- endif -%}
+
+                <h2 class="section__heading research__heading">
+                    {{- page.research.heading -}}        
+                </h2>
+
+                <div class="research__text">
+                    {{ page.research.text | markdownify }}
+                </div>
+
+                {%- if page.research.ctas.size > 0 -%}
+                    <div class="research__ctas">
+                        {% for cta in  page.research.ctas %}                           
+                            <a href="{{- cta.url | relative_url -}}" class="research__cta btn btn--md btn--thin {% cycle 'btn--light', 'btn--secondary' %}">
+                                {{- cta.text -}}
+                            </a>
+                        {% endfor %}
+                    </div>
+                {%- endif -%}
+            </div>
+
+            <div class="research__img-wrapper">
+                <img class="research__img" src="{{- page.research.image.path | relative_url -}}" alt="{{- page.research.image.alt_text -}}" loading="lazy"{% if page.research.image.width.size > 0 and page.research.image.height.size > 0 %} width="{{- page.research.image.width -}}" height="{{- page.research.image.height -}}"{% endif %}>
+            </div>
+        </div>
+
+
+
+    </div>
+</section>

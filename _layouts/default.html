@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: "en" }}">
+
+  {%- include head.html -%}
+
+  <body data-prismjs-copy='' data-prismjs-copy-success=''>
+
+    {%- include header.html -%}
+
+    {%- include helpers/filters.html -%}
+
+    <main aria-label="Content">
+      {{ content }}
+    </main>
+
+    {%- include footer.html -%}
+
+    {%- if page.layout == 'home' -%}
+      <script src="{{- '/assets/js/splide.min.js' | relative_url -}}"></script>
+      <script>
+        document.addEventListener( 'DOMContentLoaded', function() {
+          var splide = new Splide( '.splide', {
+            type: 'loop',
+            autoplay: true,
+            arrows: false,
+            keyboard: true,
+          } );
+          splide.mount();
+        } );
+      </script>
+    {%- endif -%}
+
+    {%- include partials/modal.html -%}
+
+    <script src="{{- '/assets/js/slidetoggle.js' | relative_url -}}"></script>
+    {%- if page.collection == 'posts' -%}
+      <script src="{{- '/assets/js/prism.js' | relative_url -}}"></script>
+    {%- endif -%}
+    <script src="{{- '/assets/js/scripts.js' | relative_url -}}"></script>
+
+    {%- include scripts.html -%}
+
+  </body>
+
+</html>

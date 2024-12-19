@@ -1,0 +1,63 @@
+---
+layout: page
+---
+<section class="section section--page">
+    <div class="container">
+    
+        <h2 class="services-page__desc text-2xl">
+            {{ page.description }}
+        </h2>
+
+    </div>
+</section>
+
+{% for item in page.items %}
+    <section class="section section--page services-page__item services-page__item--{{ forloop.index }}" style="background-image: url({{- item.bg_image | relative_url -}})">
+        <div class="container">
+
+            {%- capture the_cycle -%}
+                {% cycle 'odd', 'even' %}
+            {%- endcapture -%}
+
+            {%- capture the_text -%}
+                <div class="services-page__item-text-wrapper services-page__item-text-wrapper--{{ the_cycle }}">
+                    <h3 class="services-page__item-title">
+                        {{- item.title -}}
+                    </h3>
+
+                    <div class="services-page__item-text">
+                        {{ item.text | markdownify }}
+                    </div>
+
+                    <a class="services-page__item-cta btn btn--lg btn--dark" href="{{- item.cta.url | relative_url -}}">
+                        <span>{{- item.cta.text -}}</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" class="icon icon-tabler icon-tabler-circle-arrow-right-filled" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z"></path><path fill="currentColor" stroke="none" d="m12 2 .324.005a10 10 0 1 1-.648 0L12 2zm.613 5.21a1 1 0 0 0-1.32 1.497L13.584 11H8l-.117.007A1 1 0 0 0 8 13h5.584l-2.291 2.293-.083.094a1 1 0 0 0 1.497 1.32l4-4 .073-.082.064-.089.062-.113.044-.11.03-.112.017-.126L17 12l-.007-.118-.029-.148-.035-.105-.054-.113-.071-.111a1.008 1.008 0 0 0-.097-.112l-4-4z"></path></svg>
+                    </a>
+                </div>
+            {%- endcapture -%}
+
+            {%- capture the_image -%}
+                <div class="services-page__item-img-wrapper">
+                    <img class="services-page__item-img services-page__item-img--{{ the_cycle }} services-page__item-img--{{ forloop.index }}" src="{{- item.image.path | relative_url -}}" alt="{{- item.image.alt_text -}}">
+                </div>
+            {%- endcapture -%}
+        
+            <div class="services-page__item-content cols cols--2">
+                {%- if the_cycle == 'odd' -%}                    
+                    {{ the_text }}
+
+                    {{ the_image }}
+                {%- else -%}
+                    {{ the_image }}
+
+                    {{ the_text }}
+                {%- endif -%}
+            </div>
+
+        </div>
+    </section>
+{% endfor %}
+
+{%- if page.show_callout == true -%}
+    {%- include partials/callout.html -%}
+{%- endif -%}

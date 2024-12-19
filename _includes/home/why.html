@@ -1,0 +1,44 @@
+<section class="section why">
+    <div class="container">
+
+        <header class="section__header">
+            {%- if page.why.superheading.size > 0 -%}
+                <h3 class="section__superheading">
+                    {{- page.why.superheading -}}
+                </h3>
+            {%- endif -%}
+
+            <h2 class="section__heading">
+                {{- page.why.heading -}}        
+            </h2>
+        </header>
+
+        <div class="section__content">
+            <div class="cols cols--2">
+                <div class="why__img-wrapper">
+                    <img class="why__img" src="{{- page.why.image.path | relative_url -}}" alt="{{- page.why.image.alt_text -}}" loading="lazy"{% if page.why.image.width.size > 0 and page.why.image.height.size > 0 %} width="{{ page.why.image.width }}" height="{{ page.why.image.height }}"{% endif %}>
+                </div>
+                <div>
+                    <div class="text-xl">
+                        {{ page.why.text | markdownify }}
+                    </div>
+
+                    {%- if page.why.checklist.size > 0 -%}
+                        <ul class="why__checklist tick-list">
+                            {% for item in page.why.checklist %}
+                                <li>{{- item -}}</li>
+                            {% endfor %}
+                        </ul>
+                    {%- endif -%}
+
+                    {%- if page.why.cta.url.size > 0 -%}
+                        <a class="why__cta btn btn--md btn--secondary" href="{{- page.why.cta.url | relative_url -}}">
+                            {{- page.why.cta.text -}}
+                        </a>
+                    {%- endif -%}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>

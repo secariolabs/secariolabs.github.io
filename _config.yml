@@ -1,0 +1,150 @@
+# Welcome to Jekyll!
+#
+# This config file is meant for settings that affect your whole blog, values
+# which you are expected to set up once and rarely edit after that. If you find
+# yourself editing this file very often, consider using Jekyll's data files
+# feature for the data you need to update frequently.
+#
+# For technical reasons, this file is *NOT* reloaded automatically when you use
+# 'bundle exec jekyll serve'. If you change this file, please restart the server process.
+#
+# If you need help with YAML syntax, here are some quick references for you:
+# https://learn-the-web.algonquindesign.ca/topics/markdown-yaml-cheat-sheet/#yaml
+# https://learnxinyminutes.com/docs/yaml/
+#
+# Site settings
+# These are used to personalize your new site. If you look in the HTML files,
+# you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
+# You can create any custom variable you would like, and they will be accessible
+# in the templates via {{ site.myvariable }}.
+
+title: Your awesome title
+email: your-email@example.com
+description: >- # this means to ignore newlines until "baseurl:"
+  Write an awesome description for your new site here. You can edit this
+  line in _config.yml. It will appear in your document head meta (for
+  Google search results) and in your feed.xml site description.
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "https://secariolabs.com" # the base hostname & protocol for your site, e.g. http://example.com
+twitter_username: jekyllrb
+github_username:  jekyll
+
+defaults:
+  -
+    scope:
+      path: "pages/home.md"
+    values:
+      layout: "home"
+      permalink: "/"
+  -
+    scope:
+      path: "pages/about-us.md"
+    values:
+      layout: "about-us"
+      permalink: /about-us/
+  -
+    scope:
+      path: "pages/services.md"
+    values:
+      layout: "services"
+      permalink: /services/
+  -
+    scope:
+      path: "pages/contact.md"
+    values:
+      layout: "contact"
+      permalink: /contact/
+      type: "plain-page"
+  -
+    scope:
+      path: "pages/technical-research.md"
+    values:
+      layout: "blog"
+      permalink: /technical-research/
+      type: "plain-page"
+  -
+    scope:
+      path: "pages/defence.md"
+    values:
+      layout: "defence"
+      permalink: /defence/
+  -
+    scope:
+      path: "pages/privacy-policy.md"
+    values:
+      layout: "plain-page"
+      permalink: /privacy-policy/
+      type: "plain-page"
+  -
+    scope:
+      path: "pages/modern-slavery-policy.md"
+    values:
+      layout: "plain-page"
+      permalink: /modern-slavery-policy/
+      type: "plain-page"
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"   
+
+permalink: :slug/
+
+# Build settings
+# theme: minima
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-paginate-v2
+
+# Pagination Settings
+pagination:
+  enabled: true
+  per_page: 1
+  permalink: "/page/:num/"
+  sort_reverse: true
+  trail:
+    before: 2
+    after: 2
+autopages:
+  enabled: true
+  tags: 
+    # Optional, the list of layouts that should be processed for every category found in the site
+    layouts: 
+      - 'autopage_tags.html'
+    # Optional, the title that each category paginate page should get (:cat is replaced by the Category name)
+    title: 'Posts tagged as :tag'
+    # Optional, the permalink for the  pagination page (:cat is replaced), 
+    # the pagination permalink path is then appended to this permalink structure
+    permalink: /tag/:tag/
+    # Optional, when true logging related to category pages will be supressed.
+    silent: false
+    slugify:
+      mode: 'default'   # :cat is slugified. Modes: default, raw, pretty, ascii, latin
+      case: false       # Whether to replace all uppercase letters with their lowercase counterparts
+  categories:
+    enabled: false
+  collections:
+    enabled: false
+
+# Exclude from processing.
+# The following items will not be processed, by default.
+# Any item listed under the `exclude:` key here will be automatically added to
+# the internal "default list".
+#
+# Excluded items can be processed by explicitly listing the directories or
+# their entries' file path in the `include:` list.
+#
+exclude:
+  - .sass-cache/
+  - .jekyll-cache/
+  - gemfiles/
+  - Gemfile
+  - Gemfile.lock
+  - node_modules/
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - LICENSE.txt
+  - README.md
