@@ -8,10 +8,6 @@ group :jekyll_plugins do
   gem "jekyll-feed", "~> 0.12"         # Atom feed generation
   gem "jekyll-paginate-v2"             # Advanced pagination
   gem "jekyll-sitemap"                 # Generate a sitemap.xml
+  gem "jekyll-html-minifier"           # Compress HTML pages
+  # gem "jekyll-seo-tag"                 # SEO tags
 end
-
-# Compress HTML pages
-gem "jekyll-html-minifier"
-
-# SEO tags
-# gem "jekyll-seo-tag"
