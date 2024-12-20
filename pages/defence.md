@@ -3,219 +3,116 @@ meta:
   title: Secario Labs — Expertly delivered cyber security services.
   description: Offensive Cybersecurity Solutions. Combining skills, experience, and carefully crafted methodologies to provide offensive cyber security.
 hero_title: Managed Endpoint Detection and Response Service
-hero_subtitle: Endgeräte effektiv absichern
+hero_subtitle: Secure Endpoints Effectively
+show_callout: true
 list:
   items:
-    - title: Inklusive Incident Handling
-      # You can use markdown for the text
+    - title: Inclusive Incident Handling
       text: |-
-        Wir bieten eine permanente Angriffserkennung und Incident Handling aus einer Hand. Zudem unterstützen wir Sie im Angriffsfall bei der Eindämmung und Behebung der Attacke sowie bei der schnellen Wiederherstellung des Regelbetriebes.
-    - title: Schnelle Lösungseinrichtung
-      # You can use markdown for the text
+        We offer permanent attack detection and incident handling from a single source. Additionally, we support you in the event of an attack with containment and remediation of the attack, as well as with the rapid restoration of normal operations.
+    - title: Quick Solution Setup
       text: |-
-        Wir setzen die Lösung eines führenden Endpoint-Security-Anbieters ein, mit deren Hilfe wir optimale Erkennungsraten erreichen. Eine automatische Anlernphase ohne aufwendige Use-Case-Erstellung ermöglicht eine schnelle Implementierung.
-    - title: Volle Kostenkontrolle
-      # You can use markdown for the text
+        We employ a solution from a leading endpoint security provider, which helps us achieve optimal detection rates. An automatic learning phase without the need for complex use case creation enables rapid implementation.
+    - title: Full Cost Control
       text: |-
-        Für die Rufbereitschaft und die fortlaufende Eventanalyse zahlen Sie eine Servicepauschale. Zusätzliche Kosten fallen nur im Falle eines Security Incidents nach vorheriger Abstimmung und Freigabe an.
+        You pay a service fee for on-call availability and ongoing event analysis. Additional costs are only incurred in the event of a security incident, after prior consultation and approval.
 inner_nav:
-  # You can use markdown for the text
   text: |-
-    Unser EDR-Team deckt Angriffsversuche auf alle Endpunkte auf, die an Ihr Netzwerk angebunden sind. Zunächst werden Anomalien mithilfe von Machine Learning identifiziert. Diese werden anschließend von unseren Cyber-Security-Spezialisten bewertet und isoliert.
+    Our EDR team detects attempted attacks on all endpoints connected to your network. First, anomalies are identified using machine learning. These are then assessed and isolated by our cyber security specialists.
   anchors:
-    - name: Serviceüberblick
+    - name: Overview
       target_id: services
-    - name: Servicelevel
+    - name: Level
       target_id: levels
     - name: FAQ
       target_id: faq
-    - name: Kontakt
+    - name: Contact
       target_id: contact
 services:
   id: services
-  heading: Der Managed Endpoint Detection & Response Service
+  heading: Managed Endpoint Detection & Response Service
   items:
-    - title: Angriffserkennung und Incident Response aus einer Hand
-      # You can use markdown for the text
+    - title: Attack detection and incident response from a single source
       text: |-
-        Unsere Experten überwachen Geräte wie Laptops, Smartphones oder Tablets, analysieren verdächtige Ereignisse, schlagen bei Angriffen Alarm und führen notwendige Maßnahmen zur Angriffsabwehr durch. Der Service enthält außerdem alle Leistungen unseres Incident Response Service, sodass Sie im Ernstfall innerhalb garantierter Reaktionszeiten Unterstützung bei der Angriffsabwehr und -bewältigung erhalten.
+        Our experts monitor devices such as laptops and servers, analyzing suspicious events and raising alarms during attacks. We promptly implement necessary defensive measures. This service includes our full Incident Response capabilities, guaranteeing support within specified response times for attack defense and incident management.
       image:
         path: https://placehold.co/1280x1024
-        alt_text: ''
-        caption: ''
-    - title: Modernste Technologien für die Angriffserkennung
-      # You can use markdown for the text
+        alt_text: ""
+        caption: ""
+    - title: State-of-the-art attack detection technologies
       text: |-
-        r-tec setzt auf die moderne Endpoint-Security-Lösung des Cyber-Security-Unternehmens Crowdstrike, das zum vierten Mal in Folge als Leader im Gartner® Magic Quadrant™ für Endpoint Protection Platforms (EPP) 2023 ausgezeichnet wurde.
+        Secario Labs utilizes Bitdefender's advanced endpoint security solution, which excelled in 2024 independent tests. Bitdefender achieved a 100% protection rate in AV-Comparatives Business Security Test, earning the Approved Business Product Award.
 
-        Die KI-gestützte Crowdstrike Falcon®-Plattform bietet: breiten Schutz vor allen Bedrohungen, schnelle Reaktion in Echtzeit, verbesserte Prävention durch maschinelles Lernen und eine vereinfachte Verwaltung.
+        Recognized as a Visionary in Gartner's 2024 Magic Quadrant for Endpoint Protection Platforms and named Customers' Choice in EMEA, Bitdefender's GravityZone Platform offers comprehensive threat protection, real-time response, and enhanced prevention through machine learning, ideal for robust business security.
       image:
         path: https://placehold.co/1024x680
-        alt_text: 'Gartner Magic Quadrant for Endpoint Protection Plattforms – December 2023'
-        caption: 'Grafik 2: Gartner Magic Quadrant for Endpoint Protection Plattforms – December 2023'
-    - title: Abweichungen vom Normalverhalten identifizieren
-      # You can use markdown for the text
+        alt_text: "Gartner Magic Quadrant for Endpoint Protection Plattforms – December 2023"
+        caption: "Grafik 2: Gartner Magic Quadrant for Endpoint Protection Plattforms – December 2023"
+    - title: Identify deviations from normal behavior
       text: |-
-        Nach der Erfassung eines Normalverhaltens identifizieren und überprüfen wir davon abweichende Anomalien. Auf diese Weise werden auffällige Beziehungen zwischen Nutzern und Geräten erkannt – ohne die aufwendige Einrichtung und Pflege statischer Use Cases. Das heißt, die Analyse konzentriert sich nicht auf einzelne Logquellen oder verknüpfte Events, sondern auf das Gesamtverhalten Ihres Unternehmens, Ihrer Anwender und Ihrer Geräte.
+        After recording normal behavior, we identify and check any anomalies that deviate from it. In this way, conspicuous relationships between users and devices are identified - without the time-consuming setup and maintenance of static use cases. This means that the analysis does not focus on individual log sources or linked events, but on the overall behavior of your company, your users and your devices.
       image:
         path: https://placehold.co/900x900
-        alt_text: ''
-        caption: ''
+        alt_text: ""
+        caption: ""
 levels:
   id: levels
   heading: Servicelevel
   table:
     - title: Leistungen
       items:
-        - Automatisierte Angriffserkennung und Alarmierung
-        - Servicezeiten
-        - SLA-Qualifizierung von Alarmen und First Response
+        - Automated attack detection and alerting
+        - Service Times
+        - SLA qualification of alarms and first response
         - SLA Expert Response (remote)
-        - SLA Expert Response (onsite)
-        - 24x7 automatisierte Response 
-        - Proaktives Threat Hunting
+        - 24x7 Automatated Response
+        - Proactive Threat Hunting
     - title: Basic
       items:
-        - 24x7 
-        - 10x5 (Mo-Fr., 8:00-18:00 Uhr) 
-        - max. 2 Stunden
-        - max. 6 Stunden
-        - Next Business Day
-        - enthalten
+        - 24x7
+        - 10x5 (Mo-Fr., 8:00-18:00 Uhr)
+        - max. 6 hours
+        - max. 6 hours
+        - 24x7 - Activated after approval
         - optional
     - title: Premium
       items:
-        - 24x7 
-        - 24x7 
-        - max. 1 Stunden
-        - max. 4 Stunden
-        - Next Business Day
-        - enthalten
+        - 24x7
+        - 24x7
+        - max. 2 hours
+        - max. 4 hours
+        - 24x7 - Activated after approval
         - optional
-soc:
-  aside: SOC +<br>CERT
-  heading: SOC- und CERT-Leistungen aus einer Hand
-  # image is optional
-  image:
-    path: /assets/images/icons/light-bulb.svg
-    alt_text: ''
-  # You can use markdown for the text
-  text: |-
-    Die Angriffserkennung ist seit mehr als 25 Jahren unser Kerngeschäft. Im Managed Endpoint Detection and Response Service vereinen wir die erfahrenen IT-Security-Experten unseres Teams mit einem modernen Next-Generation-SIEM von Crowdstrike. So erhalten Sie alles, was Sie für die Angriffserkennung benötigen: Ein technisch hervorragend ausgestattetes SOC und ein Cyber Defence Center mit mehr als 25 Jahren Erfahrung.
-  # optional; if the entire group or just the texr is omitted, then nothing will be rendered  
-  footer:
-    text: Weitere Infos zum Cyber Defence Center
-    # if url is used, the text will be wrapped in a link
-    url: '/'
 faq:
   id: faq
-  aside: HÄUFIGE<br>FRAGEN
-  heading: ''
-  # image is optional
+  aside: FREQUENTLY ASKED<br>QUESTIONS
+  heading: ""
   image:
     path: /assets/images/icons/tools.svg
-    alt_text: ''
+    alt_text: ""
   items:
-    - q: Was ist Managed Endpoint Detection and Response? 
-      # You can use markdown for the answers
+    - q: What is Managed Endpoint Detection and Response?
       a: |-
-        Unser Managed Endpoint Detection and Response (EDR) Service deckt Angriffsversuche auf alle Endpunkte auf, die an Ihr Netzwerk angebunden sind. Das EDR-Team ist auf die speziellen Anforderungen von Geräten wie Laptops, Smartphones oder Tablets ausgerichtet. Zunächst werden Anomalien mithilfe von Machine Learning identifiziert. Diese werden anschließend von unseren Cyber-Security-Spezialisten bewertet und isoliert.
-    - q: Reicht es aus, eine NDR- oder eine EDR-Lösung zu betreiben?
+        Our Managed Endpoint Detection and Response (EDR) service detects attempted attacks on all endpoints, that are connected to your network. First, anomalies are detected using machine learning identified. These are then processed by us Cyber ​​security specialists assessed and isolated.
+    - q: Is it enough to operate an NDR or an EDR solution?
       a: |-
-        Bei Network- bzw. Endpoint-Detection-and-Response-Lösungen (NDR/EDR) liegt der Fokus auf der Analyse von Netzwerk- oder Endpunktdaten. Für eine ganzheitliche Überwachung einer IT-Umgebung sind sie daher nicht ausreichend. Sie können jedoch als wertvolle Informationsquellen für eine MDR-Lösung dienen.
-    - q: Welche Komponenten werden benötigt? 
+        Network Detection and Response (NDR) and Endpoint Detection and Response (EDR) solutions focus on analyzing network and endpoint data, respectively. While they are not sufficient for comprehensive monitoring of an entire IT environment, they serve as a very good starting point for enhancing security. These solutions provide valuable insights that can significantly contribute to a Managed Detection and Response (MDR) strategy.
+    - q: Which components are needed?
       a: |-
-        Es wird ein Site-Kollektor benötigt, der die Logdaten Ihrer Umgebung entgegennimmt und verschlüsselt an die cloudbasierte Analyseplattform überträgt. Zudem werden Agenten auf allen Server- und Clientsystemen installiert.
-    - q: Was passiert nach der Identifikation eines Angriffs? 
+        Bitdefender EDR solution offers a streamlined deployment process with its single-agent architecture. This unified approach eliminates the need for multiple components or separate installations.
+    - q: What happens after an attack is identified?
       a: |-
-        Wird ein Angriffsversuch identifiziert, liefern unsere Experten Maßnahmenempfehlungen oder führen optional selbst notwendige Maßnahmen durch. Bei Bedarf ist eine nahtlose Übergabe an unser Incident-Response-Team möglich. Somit stehen im Ernstfall sofort die richtigen Spezialisten zur Verfügung, die das erforderliche Know-how, die Erfahrung und die Werkzeuge sowie umfassendes Wissen über Ihre Umgebung und den entsprechenden Vorfall mitbringen.
-    - q: Gibt es auch eine On-Premise-Lösung? 
-      a: |-
-        Crowdstrike ist eine reine Cloud-Lösung, die aus einem deutschen DSGVO-konformen Rechenzentrum betrieben wird. So werden die ressourcenintensiven Analysen der großen Datenmengen ermöglicht. Weiterer Vorteil: Sie haben keine Investitionskosten für Hardware und können die Cloud-Ressourcen flexibel erweitern.
+        When an attack attempt is identified, our experts provide recommended actions or optionally carry out necessary measures themselves. If needed, a seamless handover to our Incident Response team is possible. This ensures that in case of an emergency, the right specialists are immediately available, bringing the required expertise, experience, tools, and comprehensive knowledge about your environment and the specific incident.
 info:
-  heading: Ergänzende Services
+  heading: Complementary Services
   items:
     - title: Managed Detection and Response Service
       highlight: true
-      # You can use markdown for the answers
       text: |-
-        Wir garantieren Ihnen eine permanente Qualifizierung, Risikoeinschätzung und frühzeitige Alarmierung der kritischen Security Incidents – und zwar 24x7 an 365 Tagen im Jahr. Im Angriffsfall sorgen wir zudem für die schnelle Wiederherstellung des Regelbetriebs.
-      # optinonal; if the field is missing or empty, then no link will be rendered
-      link: '/'
-    - title: Managed Detection and Response for OT
-      # You can use markdown for the answers
-      text: |-
-        Mit dem Managed Detection and Response Service für OT-Umgebungen bringen wir zwei Methoden der Angriffsprävention zusammen: Zum einen bieten wir neueste Technologien, zum anderen setzen wir auf erfahrene IT-Sicherheitsexperten, die Ihre Umgebung permanent überwachen. 
-      link: '/'
+        We guarantee you permanent qualification, risk assessment and early alerting of critical security incidents – 24x7, 365 days a year. In the event of an attack, we also ensure that normal operations are restored quickly.
+      link: "/"
     - title: Incident Response Service
-      # You can use markdown for the answers
       text: |-
-        Mit unserem Incident Response Service stellen wir sicher, dass Ihrem Unternehmen im Ernstfall die richtigen Ressourcen und Kompetenzen zur Verfügung stehen. Sie zahlen eine feste monatliche Pauschale und wir bieten Ihnen dafür einen zuverlässigen Bereitschaftsdienst.  
-      link: '/'
-    - title: Vulnerability Management
-      # You can use markdown for the answers
-      text: |-
-        Mit unserem Vulnerability Management Service identifizieren wir sicherheitsrelevante Schwachstellen in Hardware, Betriebssystemen und Applikationen. Anschließend unterstützen wir Sie bei der Einordnung, Priorisierung und Behebung der entdeckten Verwundbarkeiten.  
-      link: '/'
-more_info:
-  heading: Weitere Infos zum Thema EDR
-  items:
-    - title: Whitepaper | Angriffserkennung
-      categories:
-        - White paper
-      tags:
-        - Angriffserkennung                
-      highlight: true
-      # You can use markdown for the answers
-      text: |-
-        In unserem Whitepaper erfahren Sie, wie Sie eine effektive Angriffserkennung umsetzen können und welche technischen Komponenten dafür benötigt werden. Durch das Zusammenspiel...
-      # optinonal; if the field is missing or empty, then no link will be rendered
-      link: '/'      
-    - title: Webcast | Managed SOC
-      categories:
-        - Events
-      tags:
-        - Security Operations Center               
-      # You can use markdown for the answers
-      text: |-
-        Für Cyberkriminelle stellen klassische Security-Komponenten keine unüberwindbaren Hürden dar. Mit immer neuen Methoden verschaffen sie sich Zugang zu Netzwerken – oftmals unbemerkt. Um Attacken...
-      # optinonal; if the field is missing or empty, then no link will be rendered
-      link: '/'      
-    - title: Webcast | Angriffserkennung in Industrie- und KRITIS-Umgebungen 
-      categories:
-        - Events
-      tags:
-        - Consulting & Integration               
-      # You can use markdown for the answers
-      text: |-
-        Im Webcast geben wir einen Überblick über aktuelle Cyberrisiken, mit denen Produktionsumgebungen, Steuer- und Leitnetze konfrontiert sind. Darüber hinaus zeigen wir mit Blick auf aktuelle Vorgaben für...
-      # optinonal; if the field is missing or empty, then no link will be rendered
-      link: '/'      
-    - title: KRITIS 
-      categories:
-        - Success Stories              
-      # You can use markdown for the answers
-      text: |-
-        Ausgangspunkt des anonymisiert beschriebenen Projektes war der Angriff auf ein Energieversorgungsunternehmen. Die besondere Herausforderung bestand darin, in möglichst kurzer Zeit die erforderlichen Maßnahmen zur Aufklärung des Angriffs, Ab
-      # optinonal; if the field is missing or empty, then no link will be rendered
-      link: '/'      
-contact:
-  id: contact
-  heading: Warum Secario Labs?
-  background_image: /assets/images/contact-bg.webp
-  # Make sure the bottom of the image matches the background color somehow
-  background_color: '#275fae'
-  # The text is in markdown
-  text: |-
-    * Technisch voraus, menschlich auf Augenhöhe
-    * Passgenaue Servicelösungen, kurze Reaktionszeiten, schnelle Terminierung, direkter Expertenkontakt
-    * Schnelle Hilfe im Angriffsfall
-    * ausgeprägte Service Struktur
-    * 25 Jahre Erfahrung in Konzeption, Aufbau und Betrieb von Cyber Security Lösungen
-    * ISO 9001 und ISO 27001 zertifiziert
-  form:
-    heading: Kontaktieren<br>Sie uns!
-    description: |-
-      Sie haben ein IT Security-Projekt, bei dem wir Sie unterstützen können? Wir beraten Sie gerne! Hier können Sie ein unverbindliches und kostenloses Erstgespräch vereinbaren.                
-    button_text: Termin vereinbaren
+        With our Incident Response Service, we ensure that your company has the right resources and skills available in the event of an emergency. You pay a fixed monthly flat rate and we offer you a reliable on-call service.
+      link: "/"
 ---

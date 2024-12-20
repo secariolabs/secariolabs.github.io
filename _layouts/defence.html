@@ -137,7 +137,7 @@ layout: page
     </div>
 </section>
 
-<section class="section section--page defence__soc">
+<!-- <section class="section section--page defence__soc">
     <div class="container">
         <div class="cols cols--100">
             <div class="defence__vertical-text">
@@ -171,7 +171,7 @@ layout: page
             </div>
         </div>
     </div>
-</section>
+</section> -->
 
 <section id="{{- page.faq.id -}}" class="section section--page defence__faq">
     <div class="container">
@@ -247,7 +247,7 @@ layout: page
     </div>
 </section>
 
-<section class="section section--page defence__info defence__info--more">
+<!-- <section class="section section--page defence__info defence__info--more">
     <div class="container">
 
         <h2>
@@ -303,9 +303,9 @@ layout: page
         </div>
 
     </div>
-</section>
+</section> -->
 
-<section id="{{- page.contact.id -}}" class="section section--page defence__info defence__contact" style="--contact-bg-image: url({{ page.contact.background_image }});--contact-bg-color: {{ page.contact.background_color }}" >
+<!-- <section id="{{- page.contact.id -}}" class="section section--page defence__info defence__contact" style="--contact-bg-image: url({{ page.contact.background_image }});--contact-bg-color: {{ page.contact.background_color }}" >
     <div class="container">
 
         <div class="cols cols--2">
@@ -353,6 +353,9 @@ layout: page
 
 
     </div>        
-</section>
+</section> -->
 
-{%- include partials/lightbox.html -%}
+<!-- {%- include partials/lightbox.html -%} -->
+{%- if page.show_callout == true -%}
+    {%- include partials/callout.html -%}
+{%- endif -%}
