@@ -57,9 +57,9 @@ services:
         caption: ""
 levels:
   id: levels
-  heading: Servicelevel
+  heading: Service Level
   table:
-    - title: Leistungen
+    - title: Services
       items:
         - Automated attack detection and alerting
         - Service Times
