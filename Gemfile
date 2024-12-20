@@ -11,13 +11,5 @@ group :jekyll_plugins do
 end
 
 # Compress HTML pages
-gem "html_press"
+gem "jekyll-html-minifier"
 
-# Minify CSS
-gem "sassc", "~> 2.0"
-
-# Minify JavaScript
-gem "uglifier"
-
-# JRuby-specific HTTP parser
-gem "http_parser.rb", "~> 0.6.0", platforms: [:jruby]
