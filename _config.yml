@@ -55,7 +55,7 @@ defaults:
       path: "pages/technical-research.md"
     values:
       layout: "blog"
-      permalink: /technical-research/
+      permalink: /blog/
       type: "plain-page"
   - scope:
       path: "pages/defence.md"

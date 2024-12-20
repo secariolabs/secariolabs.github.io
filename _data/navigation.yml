@@ -5,9 +5,8 @@ main:
     url: /services/
   - text: Defence
     url: /defence/
-  - text: Technical Research
-    url: /technical-research/
+  - text: Blog
+    url: /blog/
   - text: Book a call
-    url: ''
+    url: ""
     type: button
-  

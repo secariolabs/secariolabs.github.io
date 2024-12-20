@@ -1,8 +1,8 @@
 ---
 meta:
-  title: Secario Labs — Services
+  title: Secario Labs — Security Assessments
   description: Combining skills, experience, and carefully crafted methodologies to provide offensive cybersecurity services that identify threats head-on.
-hero_title: Services
+hero_title: Security Assessments
 description: Combining skills, experience, and carefully crafted methodologies to provide offensive cybersecurity services that identify threats head-on. Secario Labs offer a robust approach to evaluate and help defend modern organisations. We offer Application Security, Penetration Testing, Adversary Emulation and more.
 show_callout: true
 items:
@@ -26,8 +26,8 @@ items:
       url: /contact/
     image:
       path: /assets/images/icons/database.png
-      alt_text: Database     
-    bg_image: /assets/images/white-dots-2-1.jpg 
+      alt_text: Database
+    bg_image: /assets/images/white-dots-2-1.jpg
   - title: Adversary Emulation
     # You can use markdown for the text field
     text: |-

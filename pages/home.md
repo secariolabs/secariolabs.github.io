@@ -3,27 +3,27 @@ meta:
   title: Secario Labs — Expertly delivered cyber security services.
   description: Offensive Cybersecurity Solutions. Combining skills, experience, and carefully crafted methodologies to provide offensive cyber security.
 hero:
-    heading: Expertly delivered cyber security services.
-    # You can use markdown for the description field
-    description: |-
-        Combining skills, experience, and carefully crafted methodologies to provide offensive cybersecurity services that identify threats head-on. Secario Labs offer a robust approach to evaluate and help defend modern organisations. 
-    cta:
-        text: Find out more
-        url: /about-us/
-show_services: true  
-show_callout: true      
+  heading: Expertly delivered cyber security services.
+  # You can use markdown for the description field
+  description: |-
+    Combining skills, experience, and carefully crafted methodologies to provide offensive cybersecurity services that identify threats head-on. Secario Labs offer a robust approach to evaluate and help defend modern organisations.
+  cta:
+    text: Find out more
+    url: /about-us/
+show_services: true
+show_callout: true
 why:
-  heading: Offensive Cybersecurity Solutions 
+  heading: Offensive Cybersecurity Solutions
   superheading: Why Choose Secario Labs
   image:
     path: /assets/images/screens.png
-    alt_text: ''
+    alt_text: ""
     # declare the image's actual dimensions to avoid layout shifts
     width: 898
     height: 697
   # You can use markdown for the text field
   text: |-
-    Secario Labs operates in both the UK and Bulgaria, working in partnership with clients to provide comprehensive cybersecurity solutions that meet the highest industry standards. 
+    Secario Labs operates in both the UK and Bulgaria, working in partnership with clients to provide comprehensive cybersecurity solutions that meet the highest industry standards.
   checklist:
     - Threat-intelligence-led mapping, testing and solutions.
     - Real-time visibility of security vulnerabilities.
@@ -33,7 +33,7 @@ why:
     url: /about-us/
 partners:
   heading: Partners
-  superheading: ''
+  superheading: ""
   logos:
     - path: /assets/images/logos/cyberwales.png
       alt_text: Cyber Wales logo
@@ -70,7 +70,7 @@ research:
     One of the most common ways of bypassing a Web Application Firewall (WAF) involves finding out the backend servers’ address and connecting to it directly. An IP can be leaked in many ways, including DNS history, HTTP headers, cookies, virtual host routing with shared infrastructure, stack traces leaking source code, […]
   image:
     path: /assets/images/research.png
-    alt_text: ''
+    alt_text: ""
     # declare the image's actual dimensions to avoid layout shifts
     width: 962
     height: 944
@@ -78,5 +78,5 @@ research:
     - text: Read Full Article
       url: /protecting-assets-behind-cloudfront/
     - text: View All Research
-      url: /technical-research/ 
+      url: /blog/
 ---
