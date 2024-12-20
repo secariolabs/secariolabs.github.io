@@ -44,25 +44,31 @@ layout: page
 <section class="section section--page about__badges-section">
     <div class="container">
 
-    {%- if page.badges.heading.size > 0 -%}
-        <h2 class="section__heading">
-            {{- page.badges.heading -}}
-        </h2>
-    {%- endif -%}
+        {%- if page.badges.heading.size > 0 -%}
+            <h2 class="section__heading">
+                {{- page.badges.heading -}}
+            </h2>
+        {%- endif -%}
+
+        {%- if page.badges.text.size > 0 -%}
+            <div>
+                {{ page.badges.text | markdownify }}
+            </div>
+        {%- endif -%}
     
-    <div class="about__badges">
-        {% for item in page.badges.items %}
-            {%- if item.url.size > 0 -%}
-                <a class="about__badge-item" href="{{- item.url -}}" target="_blank">
-                    <img class="about__badge-img" src="{{- item.path | relative_url -}}" alt="{{- item.alt_text -}}" loading="lazy"{% if item.width.size > 0 and item.height.size > 0 %} width="{{- item.width -}}" height="{{- item.height -}}"{% endif %}>
-                </a>
-            {%- else -%}                
-                <span class="about__badge-item">
-                    <img class="about__badge-img" src="{{- item.path | relative_url -}}" alt="{{- item.alt_text -}}" loading="lazy"{% if item.width.size > 0 and item.height.size > 0 %} width="{{- item.width -}}" height="{{- item.height -}}"{% endif %}>
-                </span>
-            {%- endif -%}
-        {% endfor %}
-    </div>
+        <div class="about__badges">
+            {% for item in page.badges.items %}
+                {%- if item.url.size > 0 -%}
+                    <a class="about__badge-item" href="{{- item.url -}}" target="_blank">
+                        <img class="about__badge-img" src="{{- item.path | relative_url -}}" alt="{{- item.alt_text -}}" loading="lazy"{% if item.width.size > 0 and item.height.size > 0 %} width="{{- item.width -}}" height="{{- item.height -}}"{% endif %}>
+                    </a>
+                {%- else -%}                
+                    <span class="about__badge-item">
+                        <img class="about__badge-img" src="{{- item.path | relative_url -}}" alt="{{- item.alt_text -}}" loading="lazy"{% if item.width.size > 0 and item.height.size > 0 %} width="{{- item.width -}}" height="{{- item.height -}}"{% endif %}>
+                    </span>
+                {%- endif -%}
+            {% endfor %}
+        </div>
 
     </div>
 </section>
