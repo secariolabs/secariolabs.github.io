@@ -89,7 +89,7 @@ plugins:
   - jekyll-sitemap
   - jekyll-paginate-v2
   # - jekyll-seo-tag
-  - jekyll-html-minifier
+  - jekyll-minifier
 
 # Pagination Settings
 pagination:
