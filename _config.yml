@@ -52,7 +52,7 @@ defaults:
       permalink: /contact/
       type: "plain-page"
   - scope:
-      path: "pages/technical-research.md"
+      path: "pages/blog.md"
     values:
       layout: "blog"
       permalink: /blog/
