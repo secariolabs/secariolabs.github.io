@@ -21,19 +21,19 @@ footer:
   description: |-
     Secario Labs offers expertly delivered cyber security services, security testing and solutions that are geared to your risk profile and security needs. Combining skills, experience and methodologies to provide offensive cyber security solutions.
 
-signup: 
+signup:
   label: Sign up to our newsletter
   button_text: Subscribe
 
-location1: 
+location1:
   title: Bulgaria Office
   details: 66 Vitosha Blvd.<br>Sofia, 1463<br>Bulgaria
   phone: +359 882 357332
   email: info@secariolabs.com
 
-location2: 
+location2:
   title: UK Office
-  details: Regus House, Falcon Drive,<br>Cardiff, CF10 4RU<br>United Kingdom
+  details: Worth Corner, Pound Hill,<br>England, RH10 7SL<br>United Kingdom
   phone: +44 7389 796754
   email: info@secariolabs.com
 
