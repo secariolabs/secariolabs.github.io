@@ -13,3 +13,5 @@ end
 # Compress HTML pages
 gem "jekyll-html-minifier"
 
+# SEO tags
+# gem "jekyll-seo-tag"
