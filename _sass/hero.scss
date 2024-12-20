@@ -22,6 +22,10 @@
     @include breakpoint(small) {
       padding-top: 10rem;
     }
+
+    @include breakpoint(smaller) {
+      padding-top: 7.5rem;
+    }
   }
 
   &--home {
