@@ -36,7 +36,7 @@ services:
       text: |-
         Our experts monitor devices such as laptops and servers, analyzing suspicious events and raising alarms during attacks. We promptly implement necessary defensive measures. This service includes our full Incident Response capabilities, guaranteeing support within specified response times for attack defense and incident management.
       image:
-        path: https://placehold.co/1280x1024
+        path: /assets/images/coverage-lifecycle.png
         alt_text: ""
         caption: ""
     - title: State-of-the-art attack detection technologies
@@ -45,14 +45,14 @@ services:
 
         Recognized as a Visionary in Gartner's 2024 Magic Quadrant for Endpoint Protection Platforms and named Customers' Choice in EMEA, Bitdefender's GravityZone Platform offers comprehensive threat protection, real-time response, and enhanced prevention through machine learning, ideal for robust business security.
       image:
-        path: https://placehold.co/1024x680
+        path: /assets/images/edr-states.png
         alt_text: "Gartner Magic Quadrant for Endpoint Protection Plattforms – December 2023"
         caption: "Grafik 2: Gartner Magic Quadrant for Endpoint Protection Plattforms – December 2023"
     - title: Identify deviations from normal behavior
       text: |-
         After recording normal behavior, we identify and check any anomalies that deviate from it. In this way, conspicuous relationships between users and devices are identified - without the time-consuming setup and maintenance of static use cases. This means that the analysis does not focus on individual log sources or linked events, but on the overall behavior of your company, your users and your devices.
       image:
-        path: https://placehold.co/900x900
+        path: /assets/images/capabilities.png
         alt_text: ""
         caption: ""
 levels:
