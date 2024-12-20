@@ -1,41 +1,39 @@
-@use "vars" as *;
+@import "vars";
 
 .why {
+  background-repeat: no-repeat;
+  background-image: url(/assets/images/grey-background-secario.jpg);
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+  background-color: rgba(255, 255, 255, 0.7);
+  background-blend-mode: lighten;
 
-    background-repeat: no-repeat;
-    background-image: url(/assets/images/grey-background-secario.jpg);
-    background-position: center;
-    background-size: cover;
-    background-attachment: fixed;
-    background-color: rgba(255,255,255,0.7);
-    background-blend-mode: lighten;
-
-    &__img-wrapper {
-        @include breakpoint(small) {
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-        }
+  &__img-wrapper {
+    @include breakpoint(small) {
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
     }
+  }
 
-    &__img {
-        filter: url(#duotone-1a1a1a-c93b3b-4);
-        @supports(-moz-appearance:none){
-            filter: brightness(77%) contrast(192%) hue-rotate(72deg) saturate(104%) sepia(58%) invert(11%);
-        }
-
+  &__img {
+    filter: url(#duotone-1a1a1a-c93b3b-4);
+    @supports (-moz-appearance: none) {
+      filter: brightness(77%) contrast(192%) hue-rotate(72deg) saturate(104%)
+        sepia(58%) invert(11%);
     }
+  }
 
-    &__checklist {
-        margin-top: 3rem;
-    }
+  &__checklist {
+    margin-top: 3rem;
+  }
 
-    &__cta {
-        display: inline-block;
-        margin-top: 2rem;
-        border: 1px solid $light;
+  &__cta {
+    display: inline-block;
+    margin-top: 2rem;
+    border: 1px solid $light;
 
-        @include mobile_btn;
-    }
-
+    @include mobile_btn;
+  }
 }

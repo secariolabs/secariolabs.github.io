@@ -1,73 +1,75 @@
-@use "vars" as *;
+@import "vars";
 
 .research {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-image: linear-gradient(
+      135deg,
+      rgba(88, 14, 14, 0.9) 0%,
+      rgba(80, 14, 14, 0.9) 100%
+    ),
+    url(/assets/images/post-bg-right.png);
 
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    background-image:
-        linear-gradient( 135deg, rgba(88, 14, 14, 0.9) 0%, rgba(80, 14, 14, 0.9) 100% ),
-        url(/assets/images/post-bg-right.png);
+  &__cols {
+    grid-template-columns: 3fr 2fr;
+    gap: 3rem;
 
-    &__cols {
-        grid-template-columns: 3fr 2fr;
-        gap: 3rem;
-
-        @include breakpoint(medium) {
-            gap: 1rem;
-        }
-        
-        @include breakpoint(small) {
-            grid-template-columns: repeat(1, minmax(0, 1fr));
-            gap: 2rem;
-        }
+    @include breakpoint(medium) {
+      gap: 1rem;
     }
 
-    &__heading,
-    &__superheading {
-        text-align: left;
-        color: $light;
+    @include breakpoint(small) {
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+      gap: 2rem;
+    }
+  }
+
+  &__heading,
+  &__superheading {
+    text-align: left;
+    color: $light;
+  }
+
+  &__text {
+    color: $light;
+  }
+
+  &__img-wrapper {
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  &__img {
+    filter: url(#duotone-c93b3b-ffffff-7);
+    @supports (-moz-appearance: none) {
+      filter: brightness(110%) contrast(70%) hue-rotate(274deg) saturate(116%)
+        sepia(100%) invert(12%);
+    }
+  }
+
+  &__ctas {
+    display: flex;
+    margin-top: 2rem;
+
+    @include breakpoint(small) {
+      flex-direction: column;
+      align-items: flex-start;
     }
 
-    &__text {
-        color: $light;
+    @include mobile_btn;
+  }
+
+  &__cta {
+    border: 1px solid $light;
+    &:not(:last-child) {
+      margin-right: 1.5rem;
+
+      @include breakpoint(small) {
+        margin-right: 0;
+        margin-bottom: 1.5rem;
+      }
     }
-
-    &__img-wrapper {
-        max-width: 500px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    &__img {
-        filter: url(#duotone-c93b3b-ffffff-7);
-        @supports(-moz-appearance:none){
-            filter: brightness(110%) contrast(70%) hue-rotate(274deg) saturate(116%) sepia(100%) invert(12%);
-        }
-    }
-
-    &__ctas {
-        display: flex;
-        margin-top: 2rem;
-
-        @include breakpoint(small) {
-            flex-direction: column;      
-            align-items: flex-start;      
-        }
-
-        @include mobile_btn;
-    }
-
-    &__cta {
-        border: 1px solid $light;
-        &:not(:last-child) {
-            margin-right: 1.5rem;
-
-            @include breakpoint(small) {
-                margin-right: 0;
-                margin-bottom: 1.5rem;
-            }
-        }
-    }
-
+  }
 }

@@ -1,81 +1,81 @@
-@use "vars" as *;
+@import "vars";
 
 .opacity-0 {
-    opacity: 0;
+  opacity: 0;
 }
 
 .opacity-1 {
-    opacity: 1;
+  opacity: 1;
 }
 
 .hidden {
-    display: none;
+  display: none;
 }
 
 .z_-10 {
-    z-index: -10;
+  z-index: -10;
 }
 
 .no-scroll {
-    overflow: hidden;
+  overflow: hidden;
 }
 
 .py-0_5rem {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 
 .px-1rem {
-    padding-left: 1rem;
-    padding-right: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .translate-y-0 {
-    transform: translateY(0);
+  transform: translateY(0);
 }
 
 .flex {
-    display: flex !important;
+  display: flex !important;
 }
 
 .fixed {
-    position: fixed;
+  position: fixed;
 }
 
 .order-1 {
-    order: 1;
+  order: 1;
 
-    @include breakpoint(small) {
-        order: 0;
-    }
+  @include breakpoint(small) {
+    order: 0;
+  }
 }
 
 @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-  
-    to {
-      opacity: 1;
-    }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes fadeInDown {
-    from {
-      opacity: 0;
-      transform: translate3d(0, -100%, 0);
-    }
-  
-    to {
-      opacity: 1;
-      transform: translate3d(0, 0, 0);
-    }
+  from {
+    opacity: 0;
+    transform: translate3d(0, -100%, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
 }
-  
+
 .fadeInDown {
-    animation-name: fadeInDown;
+  animation-name: fadeInDown;
 }
-  
+
 .fadeIn {
-    animation-name: fadeIn;
+  animation-name: fadeIn;
 }

@@ -1,160 +1,159 @@
-@use "vars" as *;
+@import "vars";
 
 .hero {
-    margin-top: -6rem;
+  margin-top: -6rem;
 
+  padding-bottom: 7rem;
+
+  color: $light;
+
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+
+  & > .container {
+    padding-top: 15rem;
+
+    @include breakpoint(medium) {
+      padding-top: 12rem;
+    }
+
+    @include breakpoint(small) {
+      padding-top: 10rem;
+    }
+  }
+
+  &--home {
+    background-image: url(/assets/images/hero/background-hero.jpg);
+
+    .col--right {
+      @include breakpoint(small) {
+        text-align: center;
+      }
+    }
+  }
+
+  &--about-us {
+    background-image: url(/assets/images/call-background.jpg);
+  }
+
+  &--services {
+    background-image: url(/assets/images/Scattered-Lines-Dots-12-scaled.jpg);
+    background-color: rgba(0, 0, 0, 0.5);
+    background-blend-mode: color;
+  }
+
+  &--defence {
+    background-image: url(/assets/images/Scattered-Lines-Dots-12-scaled.jpg);
+    background-color: rgba(26, 0, 83, 0.8);
+    background-blend-mode: color;
+  }
+
+  &--technical-research {
+    background-color: rgba(146, 31, 32, 0.9);
+    background-image: url(/assets/images/post-bg-right.png);
+    background-blend-mode: overlay;
+
+    padding-bottom: 6rem;
+
+    @include breakpoint(medium) {
+      padding-bottom: 4rem;
+    }
+    @include breakpoint(smaller) {
+      padding-bottom: 3rem;
+    }
+  }
+
+  &__heading {
+    &--page {
+      text-align: center;
+    }
+    &--post {
+      text-align: left;
+      margin-bottom: 1.5rem;
+      max-width: 750px;
+    }
+  }
+
+  &__subheading {
+    text-align: center;
+    font-family: $text_font;
+    margin: 0;
+  }
+
+  &__desc {
+    font-size: 1.5rem;
+  }
+
+  &__cta {
+    display: inline-flex;
+    align-items: center;
+    text-transform: uppercase;
+    margin-top: 2rem;
+
+    svg {
+      width: 1.5em;
+      height: 1.5em;
+      margin-left: 0.5em;
+      position: relative;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    &:hover {
+      svg {
+        transform: translateX(4px);
+      }
+    }
+
+    @include mobile_btn(flex);
+
+    @include breakpoint(smaller) {
+      margin-top: 3rem;
+    }
+  }
+
+  &--page {
     padding-bottom: 7rem;
 
-    color: $light;
-
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
-    background-attachment: fixed;
-
     & > .container {
-        padding-top: 15rem;
-
-        @include breakpoint(medium) {
-            padding-top: 12rem;
-        }
-
-        @include breakpoint(small) {
-            padding-top: 10rem;
-        }
+      padding-top: 13rem;
     }
 
-    &--home {
-        background-image: url(/assets/images/hero/background-hero.jpg);
-        
-        .col--right {
-            @include breakpoint(small) {
-                text-align: center;
-            }
-        }
-    }
-    
-    &--about-us {
-        background-image: url(/assets/images/call-background.jpg);
-    }
-    
-    &--services {
-        background-image: url(/assets/images/Scattered-Lines-Dots-12-scaled.jpg);
-        background-color: rgba(0,0,0,0.5);
-        background-blend-mode: color;
+    @include breakpoint(medium) {
+      & > .container {
+        padding-top: 12rem;
+      }
+      padding-bottom: 4rem;
     }
 
-    &--defence {
-        background-image: url(/assets/images/Scattered-Lines-Dots-12-scaled.jpg);
-        background-color: rgba(26, 0, 83,0.8);
-        background-blend-mode: color;
+    @include breakpoint(smaller) {
+      & > .container {
+        padding-top: 8rem;
+      }
+      padding-bottom: 2rem;
+    }
+  }
+
+  &--post {
+    background-image: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.55) 0%,
+      rgba(0, 0, 0, 0.8) 100%
+    );
+    padding: 0;
+    height: 550px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    @include breakpoint(medium) {
+      height: auto;
     }
 
-    &--technical-research {
-        background-color: rgba(146, 31, 32, 0.9);
-        background-image: url(/assets/images/post-bg-right.png);
-        background-blend-mode: overlay;
-
-        padding-bottom: 6rem;
-
-        @include breakpoint(medium) {
-            padding-bottom: 4rem;
-        }
-        @include breakpoint(smaller) {
-            padding-bottom: 3rem;
-        }
-
+    .container {
+      padding-bottom: 2rem;
+      width: calc(100% - 3rem);
     }
-
-    &__heading {
-        &--page {
-            text-align: center;
-        }
-        &--post {
-            text-align: left;
-            margin-bottom: 1.5rem;
-            max-width: 750px;
-        }
-    }
-
-    &__subheading {
-        text-align: center;
-        font-family: $text_font;
-        margin: 0;
-    }
-
-    &__desc {
-        font-size: 1.5rem;
-    }
-
-    &__cta {
-        display: inline-flex;
-        align-items: center;
-        text-transform: uppercase;
-        margin-top: 2rem;
-
-        svg {
-            width: 1.5em;
-            height: 1.5em;
-            margin-left: .5em;
-            position: relative;
-            transition: transform .2s ease-in-out;
-        }
-
-        &:hover {
-            svg {
-                transform: translateX(4px);
-            }
-        }
-
-        @include mobile_btn(flex);
-
-        @include breakpoint(smaller) {
-            margin-top: 3rem;
-        }
-
-    }
-
-    &--page {
-
-        padding-bottom: 7rem;
-
-        & > .container {
-            padding-top: 13rem;
-        }
-
-        @include breakpoint(medium) {
-            & > .container {
-                padding-top: 12rem;
-            }
-            padding-bottom: 4rem;
-        }
-
-        @include breakpoint(smaller) {
-            & > .container {
-                padding-top: 8rem;
-            }
-            padding-bottom: 2rem;
-        }
-
-    }
-
-    &--post {
-        background-image: linear-gradient(0deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.8) 100%);
-        padding: 0;
-        height: 550px;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-
-        @include breakpoint(medium) {
-            height: auto;
-        }
-
-        .container {
-            padding-bottom: 2rem;
-            width: calc(100% - 3rem);
-        }
-    }
-
+  }
 }

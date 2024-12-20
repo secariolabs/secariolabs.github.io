@@ -1,203 +1,201 @@
-@use "vars" as *;
+@import "vars";
 
 .site-footer {
+  border-top: 1px solid $light;
+  padding: 4rem 0;
+  background-color: $dark;
+  color: $light;
+  font-size: 1.125rem;
 
-    border-top: 1px solid $light;
-    padding: 4rem 0;
-    background-color: $dark;
+  &__cols {
+    display: grid;
+    gap: 4rem;
+
+    @include breakpoint(small) {
+      gap: 3rem;
+    }
+
+    @include breakpoint(smaller) {
+      gap: 2rem;
+    }
+
+    &:not(:first-of-type) {
+      margin-top: 2rem;
+    }
+
+    &--2 {
+      grid-template-columns: 50% 1fr;
+
+      @include breakpoint(medium) {
+        grid-template-columns: 300px 1fr;
+      }
+
+      @include breakpoint(small) {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+      }
+    }
+
+    &--3 {
+      grid-template-columns: 50% 1fr 1fr;
+      gap: 2rem;
+
+      @include breakpoint(medium) {
+        max-width: 700px;
+        grid-template-columns: repeat((3, 1fr));
+      }
+
+      @include breakpoint(smaller) {
+        grid-template-columns: repeat((1, 1fr));
+      }
+    }
+  }
+
+  &__col {
+    &--desc {
+      @include breakpoint(medium) {
+        grid-column: 1/4;
+      }
+
+      @include breakpoint(smaller) {
+        grid-column: auto;
+      }
+    }
+
+    &--location {
+      line-height: 1.6;
+    }
+  }
+
+  &__logo-wrapper {
+    margin-bottom: 2rem;
+  }
+
+  &__logo-link {
+    display: inline-block;
+  }
+
+  &__logo {
+    width: 230px;
+  }
+
+  p {
+    margin-top: 0;
+  }
+
+  &__form-fields {
+    display: flex;
+    align-items: center;
+
+    @include breakpoint(medium) {
+      flex-direction: column;
+      align-items: flex-start;
+
+      @include breakpoint(small) {
+        flex-direction: row;
+        align-items: center;
+      }
+
+      @include breakpoint(smaller) {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      & > * {
+        width: 100%;
+
+        @include breakpoint(small) {
+          width: auto;
+        }
+
+        @include breakpoint(smaller) {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  &__form-label,
+  &__social-heading {
+    font-family: $heading_font;
+    display: block;
+    font-size: 1.375rem;
+    margin-bottom: 0.5rem;
+  }
+
+  &__form-submit {
+    border: 1px solid #fff;
+    margin-left: 0.75rem;
+
+    @include breakpoint(medium) {
+      margin-left: 0;
+      margin-top: 0.75rem;
+    }
+
+    @include breakpoint(small) {
+      margin-left: 0.75rem;
+      margin-top: 0;
+      padding: 1rem;
+    }
+
+    @include breakpoint(smaller) {
+      max-width: none;
+      margin-left: 0;
+      margin-top: 0.75rem;
+    }
+  }
+
+  &__link {
     color: $light;
-    font-size: 1.125rem;
+    text-decoration: underline;
+    text-underline-offset: 0.35em;
+  }
 
-    &__cols {
-        display: grid;
-        gap: 4rem;
+  &__social {
+    display: flex;
+    align-items: center;
+  }
 
-        @include breakpoint(small) {
-            gap: 3rem;
-        }
+  &__social-item {
+    background-color: $light;
+    width: 40px;
+    height: 38px;
+    border-radius: 100%;
+    color: $dark;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-        @include breakpoint(smaller) {
-            gap: 2rem;
-        }
+    &:not(:last-child) {
+      margin-right: 0.75rem;
+    }
+  }
 
-        &:not(:first-of-type) {
-            margin-top: 2rem;
-        }
-        
-        &--2 {
-            grid-template-columns: 50% 1fr;
+  &__bottom {
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid $light;
+    display: flex;
 
-            @include breakpoint(medium) {
-                grid-template-columns: 300px 1fr;
-            }
+    @include breakpoint(small) {
+      flex-wrap: wrap;
+    }
+  }
 
-            @include breakpoint(small) {
-                grid-template-columns: repeat(1, minmax(0, 1fr));
-            }
-        }
-
-        &--3 {
-            grid-template-columns: 50% 1fr 1fr;
-            gap: 2rem;
-
-            @include breakpoint(medium) {
-                max-width: 700px;
-                grid-template-columns: repeat((3, 1fr));
-            }
-            
-            @include breakpoint(smaller) {
-                grid-template-columns: repeat((1, 1fr));                
-            }
-        }
+  &__bottom-item {
+    &:not(:last-child) {
+      margin-right: 2rem;
     }
 
-    &__col {
-        &--desc {
-            @include breakpoint(medium) {
-                grid-column: 1/4;
-            }
-
-            @include breakpoint(smaller) {
-                grid-column: auto;
-            }
-        }
-
-        &--location {
-            line-height: 1.6;
-        }
+    @include breakpoint(small) {
+      margin-bottom: 0.5rem;
     }
 
-    &__logo-wrapper {
-        margin-bottom: 2rem;
+    &:first-child {
+      @include breakpoint(small) {
+        flex-basis: 100%;
+        margin: 0;
+        margin-bottom: 0.75rem;
+      }
     }
-
-    &__logo-link {
-        display: inline-block;
-    }
-
-    &__logo {
-        width: 230px;
-    }
-
-    p {
-        margin-top: 0;
-    }
-
-    &__form-fields {
-        display: flex;
-        align-items: center;
-
-        @include breakpoint(medium) {
-            flex-direction: column;
-            align-items: flex-start;
-            
-            @include breakpoint(small) {
-                flex-direction: row;
-                align-items: center;
-            }
-            
-            @include breakpoint(smaller) {
-                flex-direction: column;
-                align-items: flex-start;                
-            }
-
-            & > * {
-                width: 100%;
-
-                @include breakpoint(small) {
-                    width: auto;
-                }
-
-                @include breakpoint(smaller) {
-                    width: 100%;
-                }
-            }
-        }
-    }
-
-    &__form-label,
-    &__social-heading {
-        font-family: $heading_font;
-        display: block;
-        font-size: 1.375rem;
-        margin-bottom: 0.5rem;
-    }
-
-    &__form-submit {
-        border: 1px solid #fff;
-        margin-left: 0.75rem;
-
-        @include breakpoint(medium) {
-            margin-left: 0;
-            margin-top: 0.75rem;
-        }
-        
-        @include breakpoint(small) {
-            margin-left: 0.75rem;
-            margin-top: 0;
-            padding: 1rem;
-        }
-
-        @include breakpoint(smaller) {
-            max-width: none;
-            margin-left: 0;
-            margin-top: 0.75rem;
-        }
-    }
-
-    &__link {
-        color: $light;
-        text-decoration: underline;
-        text-underline-offset: .35em;
-    }
-
-    &__social {
-        display: flex;
-        align-items: center;
-    }
-
-    &__social-item {
-        background-color: $light;
-        width: 40px;
-        height: 38px;
-        border-radius: 100%;
-        color: $dark;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        &:not(:last-child) {
-            margin-right: 0.75rem;
-        }
-    }
-
-    &__bottom {
-        margin-top: 2.5rem;
-        padding-top: 2rem;
-        border-top: 1px solid $light;
-        display: flex;
-
-        @include breakpoint(small) {
-            flex-wrap: wrap;
-        }
-    }
-
-    &__bottom-item {
-        &:not(:last-child) {
-            margin-right: 2rem;
-        }
-
-        @include breakpoint(small) {
-            margin-bottom: 0.5rem;
-        }
-
-        &:first-child {
-            @include breakpoint(small) {
-                flex-basis: 100%;
-                margin: 0;
-                margin-bottom: 0.75rem;
-            }
-        }
-    }
-
+  }
 }

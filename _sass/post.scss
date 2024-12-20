@@ -1,77 +1,77 @@
-@use "vars" as *;
+@import "vars";
 
 .post {
+  color: $dark;
 
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: $alt_dark;
+  }
+
+  h2 {
+    font-size: 2rem;
+    margin: 1.75rem 0 1.5rem;
+  }
+
+  h3 {
+    margin: 1.5rem 0 1.25rem;
+  }
+
+  ul {
+    list-style-position: inside;
+    padding-left: 1rem;
+  }
+
+  a {
+    color: $darker;
+    text-decoration: underline;
+  }
+
+  &__bc {
+    margin-bottom: 2.25rem;
+
+    .text-muted {
+      color: rgb(33, 37, 41);
+      opacity: 1;
+    }
+
+    @include breakpoint(smaller) {
+      margin-bottom: 1.75rem;
+    }
+  }
+
+  &__nav-wrapper {
+    margin-top: 3rem;
+    border-top: 1px solid rgba(33, 37, 41, 0.3);
+    padding-top: 1.5rem;
+
+    @include breakpoint(smaller) {
+      margin-top: 2rem;
+    }
+  }
+
+  &__nav {
+    display: flex;
+    justify-content: space-between;
     color: $dark;
 
-    h1, h2, h3, h4, h5, h6 {
-        color: $alt_dark;
+    &-heading {
+      margin-bottom: 0.75rem;
+      color: $alt_dark;
     }
 
-    h2 {
-        font-size: 2rem;
-        margin: 1.75rem 0 1.5rem;
+    &-item {
+      color: $dark;
+      text-decoration: underline;
+      font-size: 1.2rem;
+
+      &--prev {
+        margin-right: 2rem;
+      }
     }
-
-    h3 {
-        margin: 1.5rem 0 1.25rem;
-    }
-
-    ul {
-        list-style-position: inside;
-        padding-left: 1rem;
-    }
-
-    a {
-        color: $darker;
-        text-decoration: underline;
-    }
-
-    &__bc {
-        margin-bottom: 2.25rem;
-
-        .text-muted {
-            color: rgb(33, 37, 41);
-            opacity: 1;
-        }
-
-        @include breakpoint(smaller) {
-            margin-bottom: 1.75rem;
-        }
-    }
-
-    &__nav-wrapper {
-        margin-top: 3rem;
-        border-top: 1px solid rgba(33, 37, 41, 0.3);
-        padding-top: 1.5rem;
-
-        @include breakpoint(smaller) {
-            margin-top: 2rem;
-        }
-    }
-    
-    &__nav {
-
-        display: flex;
-        justify-content: space-between;
-        color: $dark;
-
-        &-heading {
-            margin-bottom: 0.75rem;
-            color: $alt_dark;
-        }
-
-        &-item {
-            color: $dark;
-            text-decoration: underline;
-            font-size: 1.2rem;
-
-            &--prev {
-                margin-right: 2rem;
-            }
-
-        }
-
-    }
-
+  }
 }

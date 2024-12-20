@@ -1,102 +1,101 @@
-@use "vars" as *;
+@import "vars";
 
 .services-page {
+  &__desc {
+    font-family: $text_font;
+    text-align: center;
+    max-width: 950px;
+    margin-left: auto;
+    margin-right: auto;
+    font-weight: 500;
+  }
 
-    &__desc {
-        font-family: $text_font;
+  &__item {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: color;
+    background-color: rgba(243, 243, 243, 0.8);
+
+    &--1 {
+      background-color: rgba(243, 243, 243, 0.8);
+    }
+
+    &--2 {
+      background-color: rgba(255, 255, 255, 0.5);
+    }
+
+    &--3 {
+      background-color: rgba(243, 243, 243, 0.5);
+    }
+
+    &-content {
+      align-items: center;
+    }
+
+    &-text-wrapper {
+      @include breakpoint(small) {
+        order: 1;
         text-align: center;
-        max-width: 950px;
-        margin-left: auto;
-        margin-right: auto;
-        font-weight: 500;
+      }
     }
 
-    &__item {
+    &-cta {
+      margin-top: 1rem;
+      display: inline-flex;
+      align-items: center;
 
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center;
-        background-blend-mode: color;
-        background-color: rgba(243,243,243, 0.8);
-        
-        &--1 {
-            background-color: rgba(243,243,243, 0.8);
-        }
-        
-        &--2 {
-            background-color: rgba(255,255,255, 0.5);
-        }
+      svg {
+        width: 1.5em;
+        height: 1.5em;
+        margin-left: 0.5em;
+        position: relative;
+        transition: transform 0.2s ease-in-out;
+      }
 
-        &--3 {
-            background-color: rgba(243,243,243, 0.5);
-        }
+      @include mobile_btn(flex);
 
-        &-content {
-            align-items: center;
-        }
-
-        &-text-wrapper {
-            @include breakpoint(small) {
-                order: 1;
-                text-align: center;
-            }
-        }
-
-        &-cta {
-            margin-top: 1rem;
-            display: inline-flex;
-            align-items: center;
-
-            svg {
-                width: 1.5em;
-                height: 1.5em;
-                margin-left: 0.5em;
-                position: relative;
-                transition: transform 0.2s ease-in-out;
-            }
-
-            @include mobile_btn(flex);
-
-            @include breakpoint(smaller) {
-                margin-top: 2rem;
-            }
-        }
-
-        &-img-wrapper {
-            max-width: 365px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        &-img {
-            filter: url(#duotone-1a1a1a-c93b3b-1);
-
-            @supports(-moz-appearance:none){
-                filter: brightness(51%) contrast(200%) hue-rotate(177deg) saturate(300%);
-            }
-            
-            &--1 {
-                filter: url(#duotone-1a1a1a-c93b3b-1);
-                @supports(-moz-appearance:none){
-                    filter: brightness(51%) contrast(200%) hue-rotate(177deg) saturate(300%);
-                }
-            }
-            
-            &--2 {
-                filter: url(#duotone-1a1a1a-c93b3b-2);
-                @supports(-moz-appearance:none){
-                    filter: brightness(51%) contrast(200%) hue-rotate(177deg) saturate(300%);
-                }
-            }
-            
-            &--3 {
-                filter: url(#duotone-1a1a1a-c93b3b-3);
-                @supports(-moz-appearance:none){
-                    filter: brightness(51%) contrast(200%) hue-rotate(177deg) saturate(300%);
-                }
-            }
-        }
-
+      @include breakpoint(smaller) {
+        margin-top: 2rem;
+      }
     }
 
+    &-img-wrapper {
+      max-width: 365px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    &-img {
+      filter: url(#duotone-1a1a1a-c93b3b-1);
+
+      @supports (-moz-appearance: none) {
+        filter: brightness(51%) contrast(200%) hue-rotate(177deg) saturate(300%);
+      }
+
+      &--1 {
+        filter: url(#duotone-1a1a1a-c93b3b-1);
+        @supports (-moz-appearance: none) {
+          filter: brightness(51%) contrast(200%) hue-rotate(177deg)
+            saturate(300%);
+        }
+      }
+
+      &--2 {
+        filter: url(#duotone-1a1a1a-c93b3b-2);
+        @supports (-moz-appearance: none) {
+          filter: brightness(51%) contrast(200%) hue-rotate(177deg)
+            saturate(300%);
+        }
+      }
+
+      &--3 {
+        filter: url(#duotone-1a1a1a-c93b3b-3);
+        @supports (-moz-appearance: none) {
+          filter: brightness(51%) contrast(200%) hue-rotate(177deg)
+            saturate(300%);
+        }
+      }
+    }
+  }
 }

@@ -1,87 +1,85 @@
-@use "vars" as *;
+@import "vars";
 
 .banner {
+  position: relative;
+  background-color: #fff;
+  color: $dark;
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
+  text-align: center;
+  font-size: 1rem;
+  line-height: 1.1;
+  transition: opacity 0.2s linear;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
-    position: relative;
-    background-color: #fff;
-    color: $dark;
-    padding-top: .7rem;
-    padding-bottom: .7rem;
-    text-align: center;
-    font-size: 1rem;
-    line-height: 1.1;
-    transition: opacity .2s linear;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  @include breakpoint(smaller) {
+    font-size: 0.9rem;
+  }
 
-    @include breakpoint(smaller) {
-        font-size: .9rem;
+  .container {
+    @include breakpoint(small) {
+      padding-left: 2.5rem;
+      padding-right: 2.5rem;
+    }
+  }
+
+  // &__title {
+  //     line-height: 1rem;
+  //     margin-bottom: 3px;
+  // }
+
+  &__tag {
+    position: absolute;
+    top: -10px;
+    right: 10%;
+
+    @include breakpoint(medium) {
+      right: auto;
+      left: 0;
+    }
+  }
+
+  &__close {
+    border: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    background: none;
+    cursor: pointer;
+    opacity: 0.4;
+    transition: opacity 0.15s ease-in-out;
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+
+    svg {
+      width: 30px;
+      height: 30px;
     }
 
-    .container {
-        @include breakpoint(small) {
-            padding-left: 2.5rem;
-            padding-right: 2.5rem;
-        }
+    &:hover {
+      opacity: 1;
     }
 
-    // &__title {
-    //     line-height: 1rem;
-    //     margin-bottom: 3px;
-    // }
-
-    &__tag {
-        position: absolute;
-        top: -10px;
-        right: 10%;
-
-        @include breakpoint(medium) {
-            right: auto;
-            left: 0;
-        }
+    @include breakpoint(small) {
+      right: 0.5rem;
     }
+  }
 
-    &__close {
-        border: none;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        background: none;
-        cursor: pointer;
-        opacity: .4;
-        transition: opacity .15s ease-in-out;
-        position: absolute;
-        right: 1rem;
-        top: 1rem;
-        
-        svg {
-            width: 30px;
-            height: 30px;
-        }
+  p {
+    margin-top: 0;
+    margin-bottom: 0.125rem;
 
-        &:hover {
-            opacity: 1;
-        }
-
-        @include breakpoint(small) {
-            right: 0.5rem;
-        }
+    &:last-child {
+      margin-bottom: 0;
     }
+  }
 
-    p {
-        margin-top: 0;
-        margin-bottom: 0.125rem;
-
-        &:last-child {
-            margin-bottom: 0;
-        }
-    }
-
-    em {
-        font-style: normal;
-        background-repeat: no-repeat;
-        background: url(/assets/images/em-line.png) bottom left no-repeat;
-        background-size: 100% 10px;
-        padding-bottom: 8px;
-    }
-
+  em {
+    font-style: normal;
+    background-repeat: no-repeat;
+    background: url(/assets/images/em-line.png) bottom left no-repeat;
+    background-size: 100% 10px;
+    padding-bottom: 8px;
+  }
 }

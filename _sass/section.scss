@@ -1,50 +1,48 @@
-@use "vars" as *;
+@import "vars";
 
 .section {
+  padding: 8rem 0;
 
-    padding: 8rem 0;
+  &--dark {
+    background-color: $dark;
+    color: $light;
+  }
 
-    &--dark {
-        background-color: $dark;
-        color: $light;
-    }
+  &__header {
+    margin-bottom: 5rem;
+    max-width: 650px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 
-    &__header {
-        margin-bottom: 5rem;
-        max-width: 650px;
-        margin-left: auto;
-        margin-right: auto;
-    }
+  &__superheading {
+    text-align: center;
+    color: $secondary;
+    margin-bottom: 1rem;
+  }
 
-    &__superheading {
-        text-align: center;
-        color: $secondary;
-        margin-bottom: 1rem;
-    }
+  &__heading {
+    text-align: center;
+  }
 
-    &__heading {
-        text-align: center;
-    }
+  @include breakpoint(medium) {
+    padding: 5rem 0;
+  }
+
+  &--page {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
 
     @include breakpoint(medium) {
-        padding: 5rem 0;
+      padding-top: 2rem;
     }
+  }
 
-    &--page {
-        padding-top: 4rem;
-        padding-bottom: 4rem;
+  &--gray {
+    background-color: $gray;
+  }
 
-        @include breakpoint(medium) {
-            padding-top: 2rem;
-        }
-    }
-
-    &--gray {
-        background-color: $gray;
-    }
-
-    &--post {
-        padding-top: 2rem;
-    }
-
+  &--post {
+    padding-top: 2rem;
+  }
 }
