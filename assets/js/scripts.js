@@ -45,8 +45,29 @@ function handle_mobile_menu() {
 function handle_banner() {
     const banner = document.getElementById('banner');
     const btn = document.getElementById('close-banner');
+    const now_date = new Date().getTime();    
+    const the_period = 604800000;
 
+    if (localStorage.getItem('banner_closed_on')) {
+        // Retrieve the timestamp from local storage
+        const storedTimestamp = localStorage.getItem('banner_closed_on');
+        const stored_banner_closed_on = Number(storedTimestamp);
+
+        const diff = now_date - stored_banner_closed_on;
+
+
+        if(diff > the_period){
+            banner.classList.remove('hidden');
+        } else {
+            banner.classList.add('hidden')
+        }
+    } else {
+        banner.classList.remove('hidden');
+    }
+    
     btn.addEventListener('click', function(){
+        // Store the current timestamp in local storage
+        localStorage.setItem('banner_closed_on', now_date.toString());
         banner.classList.add('opacity-0');
         banner.addEventListener('transitionend', function(){
             banner.classList.add('hidden');
