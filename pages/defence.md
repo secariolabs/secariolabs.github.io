@@ -47,12 +47,12 @@ services:
       image:
         path: /assets/images/edr-states.png
         alt_text: "Gartner Magic Quadrant for Endpoint Protection Plattforms – December 2023"
-        caption: "Grafik 2: Gartner Magic Quadrant for Endpoint Protection Plattforms – December 2023"
+        # caption: "Grafik 2: Gartner Magic Quadrant for Endpoint Protection Plattforms – December 2023"
     - title: Identify deviations from normal behavior
       text: |-
         After recording normal behavior, we identify and check any anomalies that deviate from it. In this way, conspicuous relationships between users and devices are identified - without the time-consuming setup and maintenance of static use cases. This means that the analysis does not focus on individual log sources or linked events, but on the overall behavior of your company, your users and your devices.
       image:
-        path: /assets/images/capabilities.png
+        path: /assets/images/soc.jpeg
         alt_text: ""
         caption: ""
 levels:
