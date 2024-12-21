@@ -19,11 +19,9 @@
                 {{ the_callout.text | markdownify }}
             </div>
 
-            {%- if the_callout.cta -%}
-                <a href="#book-a-call" class="btn btn--xl btn--secondary btn--thin uppercase callout__cta" data-open-modal>
-                    {{- the_callout.cta.text -}}
-                </a>
-            {%- endif -%}
+            <a href="#book-a-call" class="btn btn--xl btn--secondary btn--thin uppercase callout__cta" data-open-modal>
+                {{- the_callout.cta.text | default: site.data.partials.callout.cta.text -}}
+            </a>
         </div>
 
     </div>

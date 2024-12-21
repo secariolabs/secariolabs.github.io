@@ -25,6 +25,9 @@ cta:
   text: Book a call
 badges:
   heading: Certifications
+  # You can use markdown for the text
+  text: |-
+    Exercitation est nisi do laboris laboris. Proident anim laborum pariatur consequat dolore laboris consectetur. Aliqua do duis esse culpa eiusmod ut enim. In anim amet cupidatat cupidatat.
   items:
     - path: /assets/images/badges/oswp.png
       alt_text: OSWP certificate badge

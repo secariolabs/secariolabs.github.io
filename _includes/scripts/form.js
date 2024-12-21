@@ -1,15 +1,15 @@
 function handle_form_behavior(){
 
     const pristineConfig = {
-        // class of the parent element where the error/success class is added
+        /* class of the parent element where the error/success class is added */
         classTo: 'contact__form-control',
         errorClass: 'has-danger',
         successClass: 'has-success',
-        // class of the parent element where error text element is appended
+        /* class of the parent element where error text element is appended */
         errorTextParent: 'contact__form-control',
-        // type of element to create for the error text
+        /* type of element to create for the error text */
         errorTextTag: 'div',
-        // class of the error text element
+        /* class of the error text element */
         errorTextClass: 'contact__form-text-help' 
     };
 
@@ -62,8 +62,8 @@ function handle_form_behavior(){
     form.addEventListener('submit', function (e) {
         e.preventDefault();
         
-        // check if the form is valid
-        var valid = pristine.validate(); // returns true or false
+        /* check if the form is valid */
+        var valid = pristine.validate(); /* returns true or false */
 
         console.log(valid);
  
@@ -76,26 +76,26 @@ function initValidation(){
     var form = document.getElementById("contact-form");
 
     let pristineConfig = {
-        // class of the parent element where the error/success class is added
+        /* class of the parent element where the error/success class is added */
         classTo: 'contact__form-control',
         errorClass: 'has-danger',
         successClass: 'has-success',
-        // class of the parent element where error text element is appended
+        /* class of the parent element where error text element is appended */
         errorTextParent: 'contact__form-control',
-        // type of element to create for the error text
+        /* type of element to create for the error text */
         errorTextTag: 'div',
-        // class of the error text element
+        /* class of the error text element */
         errorTextClass: 'contact__form-text-help' 
     };
     
-    // create the pristine instance
+    /* create the pristine instance */
     var pristine = new Pristine(form, pristineConfig);
 
     form.addEventListener('submit', function (e) {
        e.preventDefault();
        
-       // check if the form is valid
-       var valid = pristine.validate(); // returns true or false
+       /* check if the form is valid */
+       var valid = pristine.validate(); /* returns true or false */
 
     });
 

@@ -32,11 +32,13 @@
             </div>
         </div>
 
-        <div class="services__cta-wrapper">
-            <a href="#book-a-call" class="btn btn--xl btn--light uppercase" data-open-modal>
-                {{- the_services.cta.text -}}
-            </a>
-        </div>
+        {%- unless page.layout == 'about-us' -%}
+            <div class="services__cta-wrapper">
+                <a href="#book-a-call" class="btn btn--xl btn--light uppercase" data-open-modal>
+                    {{- the_services.cta.text -}}
+                </a>
+            </div>
+        {%- endunless -%}
     
     
     </div>

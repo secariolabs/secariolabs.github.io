@@ -6,14 +6,14 @@ function handle_inner_nav(){
             return;
         }
             
-        // Calculate the element's distance from the top of the page
+        /* Calculate the element's distance from the top of the page */
         const elementTop = element.getBoundingClientRect().top + window.scrollY;
     
-        // Scroll the window to position the element 50px from the top
+        /* Scroll the window to position the element 50px from the top */
         window.scrollTo({
-            top: elementTop - the_offset, // Adjust to make the element ${the_offset}px from the top
+            top: elementTop - the_offset, /* Adjust to make the element ${the_offset}px from the top */
             left: 0,
-            behavior: 'smooth' // Optional smooth scrolling
+            behavior: 'smooth' /* Optional smooth scrolling */
         });
     }
 

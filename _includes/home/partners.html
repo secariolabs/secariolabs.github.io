@@ -13,6 +13,12 @@
             </h2>
         </header>
 
+        {%- if page.partners.text.size > 0 -%}
+            <div class="partners__text">
+                {{ page.partners.text | markdownify }}
+            </div>
+        {%- endif -%}
+
         {%- if page.partners.logos.size > 4 -%}
             {%- assign logos_cols = 4 -%}
         {%- else -%}

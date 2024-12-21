@@ -1,8 +1,8 @@
-<div class="pagination">
-    {%- assign current_page = page.pagination_info.curr_page -%}
-    {%- assign total_pages = page.pagination_info.total_pages -%}
+{% if paginator.total_pages > 1 %}
+    <div class="pagination">
+        {%- assign current_page = page.pagination_info.curr_page -%}
+        {%- assign total_pages = page.pagination_info.total_pages -%}
 
-    {% if paginator.total_pages > 1 %}
         <ul class="pager">
             {% if paginator.previous_page %}
                 <li class="previous">
@@ -32,5 +32,5 @@
                 </li>
             {% endif %}
         </ul>
-    {% endif %}
-</div>
+    </div>
+{% endif %}
