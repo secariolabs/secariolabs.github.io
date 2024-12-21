@@ -52,7 +52,7 @@ defaults:
       permalink: /contact/
       type: "plain-page"
   - scope:
-      path: "pages/technical-research.md"
+      path: "pages/blog.md"
     values:
       layout: "blog"
       permalink: /blog/
@@ -89,12 +89,12 @@ plugins:
   - jekyll-sitemap
   - jekyll-paginate-v2
   # - jekyll-seo-tag
-  - jekyll-html-minifier
+  - jekyll-minifier
 
 # Pagination Settings
 pagination:
   enabled: true
-  per_page: 1
+  per_page: 10
   permalink: "/page/:num/"
   sort_reverse: true
   trail:

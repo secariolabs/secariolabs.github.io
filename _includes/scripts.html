@@ -1,4 +1,4 @@
-{%- if page.url == '/contact/' or page.layout == 'defence' -%}
+{%- if page.url == '/contact/' -%}
     <script src="{{- '/assets/js/pristine.min.js' | relative_url -}}"></script>
     <script>
         {%- include scripts/form.js -%}
@@ -8,6 +8,7 @@
 {%- if page.layout == 'defence' -%}
     <script>
         {%- include scripts/inner-nav.js -%}
+        {%- include scripts/defence-table.js -%}
     </script>
 {%- endif -%}
 
