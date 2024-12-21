@@ -52,17 +52,10 @@
 
         <div class="site-footer__cols site-footer__cols--2">
             <div class="site-footer__col">
-                <form action="" class="site-footer__form">
-                    <label class="site-footer__form-label" for="email">
-                        {{- site.data.global.signup.label -}}
-                    </label>
-                    <div class="site-footer__form-fields">
-                        <input type="email" name="email" class="input__text input__text--xl" placeholder="Your email" required>
-                        <button type="submit" class="site-footer__form-submit btn btn--xl btn--light uppercase">
-                            {{- site.data.global.signup.button_text -}}
-                        </button>
-                    </div>
-                </form>
+                <label class="site-footer__form-label" for="email">
+                    {{- site.data.global.signup.label -}}
+                </label>
+                {%- include partials/signup-form.html -%}
             </div>
             <div class="site-footer__col">
                 <h3 class="site-footer__social-heading">
