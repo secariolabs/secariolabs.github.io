@@ -26,8 +26,8 @@ inner_nav:
       target_id: levels
     - name: FAQ
       target_id: faq
-    - name: Contact
-      target_id: contact
+    # - name: Contact
+    #   target_id: contact
 services:
   id: services
   heading: Managed Endpoint Detection & Response Service
@@ -115,4 +115,8 @@ info:
       text: |-
         With our Incident Response Service, we ensure that your company has the right resources and skills available in the event of an emergency. You pay a fixed monthly flat rate and we offer you a reliable on-call service.
       link: "/"
+callout:
+  heading: Fortify Your Defenses
+  text: |-
+    Gain critical insights into your organization's resilience against sophisticated cyber threats.
 ---
