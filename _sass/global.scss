@@ -1,42 +1,42 @@
 @charset "utf-8";
 
-@import "normalize";
-@import "fonts";
-@import "typography";
-@import "layout";
-@import "elements";
-@import "helpers";
-@import "prism";
+@forward "normalize";
+@forward "fonts";
+@forward "typography";
+@forward "layout";
+@forward "elements";
+@forward "helpers";
+@forward "prism";
 
-@import "btn";
+@forward "btn";
 
-@import "banner";
+@forward "banner";
 
-@import "header";
+@forward "header";
 
-@import "hero";
-@import "section";
+@forward "hero";
+@forward "section";
 
 // Home page
-@import "services";
-@import "why";
-@import "partners";
-@import "testimonials";
-@import "splide-core";
-@import "research";
-@import "callout";
-@import "defence";
+@forward "services";
+@forward "why";
+@forward "partners";
+@forward "testimonials";
+@forward "splide-core";
+@forward "research";
+@forward "callout";
+@forward "defence";
 
-@import "plain-page";
+@forward "plain-page";
 
 // pages
-@import "about";
-@import "services-page";
-@import "contact";
-@import "blog";
-@import "post";
+@forward "about";
+@forward "services-page";
+@forward "contact";
+@forward "blog";
+@forward "post";
 
-@import "pagination";
+@forward "pagination";
 
-@import "form";
-@import "footer";
+@forward "form";
+@forward "footer";
