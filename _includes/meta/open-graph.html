@@ -12,7 +12,7 @@
     {%- if page.meta.description.size > 0 -%}
         {%- assign og_description = page.meta.description -%}
     {%- else -%}
-        {%- assign og_description = page.excerpt | strip_html | strip_newlines -%}
+        {%- assign og_description = page.excerpt | truncatewords: 50 | strip_html | escape | strip_newlines -%}
     {%- endif -%}
 {%- endif -%}
 
