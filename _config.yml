@@ -142,3 +142,7 @@ exclude:
   - vendor/ruby/
   - LICENSE.txt
   - README.md
+
+minify_js:
+  enabled: true
+  harmony: true
