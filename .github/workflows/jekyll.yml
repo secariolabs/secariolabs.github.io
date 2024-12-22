@@ -32,7 +32,7 @@ jobs:
       - name: Upload _site as artifact
         uses: actions/upload-artifact@v3
         with:
-          name: jekyll-site
+          name: github-pages
           path: ./_site
 
   deploy:
@@ -44,16 +44,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Download _site artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: jekyll-site
-          path: ./_site
+      # - name: Download _site artifact
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     name: jekyll-site
+      #     path: ./_site
 
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./_site
-          publish_branch: gh-pages
