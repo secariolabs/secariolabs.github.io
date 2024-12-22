@@ -10,3 +10,5 @@ group :jekyll_plugins do
   gem "jekyll-minifier"                # Compress HTML pages
   # gem "jekyll-seo-tag"                 # SEO tags
 end
+
+gem 'jekyll-terser'

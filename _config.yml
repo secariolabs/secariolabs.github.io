@@ -143,6 +143,5 @@ exclude:
   - LICENSE.txt
   - README.md
 
-minify_js:
+terser:
   enabled: true
-  harmony: true
