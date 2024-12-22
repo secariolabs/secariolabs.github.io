@@ -11,4 +11,4 @@ group :jekyll_plugins do
   # gem "jekyll-seo-tag"                 # SEO tags
 end
 
-gem 'jekyll-terser'
+# gem 'jekyll-terser'

@@ -89,7 +89,7 @@ plugins:
   - jekyll-sitemap
   - jekyll-paginate-v2
   # - jekyll-seo-tag
-  - jekyll-minifier
+  # - jekyll-minifier
 
 # Pagination Settings
 pagination:
@@ -142,6 +142,3 @@ exclude:
   - vendor/ruby/
   - LICENSE.txt
   - README.md
-
-terser:
-  enabled: true
