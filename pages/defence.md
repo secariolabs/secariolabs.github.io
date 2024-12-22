@@ -70,7 +70,7 @@ levels:
     - title: Basic
       items:
         - 24x7
-        - 10x5 (Mo-Fr., 8:00-18:00 Uhr)
+        - 10x5 (Mo-Fr., 8:00-18:00)
         - max. 6 hours
         - max. 6 hours
         - 24x7 - Activated after approval
