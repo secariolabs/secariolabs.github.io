@@ -1,4 +1,4 @@
-@import "vars";
+@use "vars" as *;
 
 a {
   transition: opacity 0.15s ease-in-out;
@@ -195,14 +195,13 @@ article.post p:has(img:only-of-type) img {
 }
 
 #mc_embed_signup {
-
   div#mce-responses {
     display: flex;
     margin: 0 !important;
     padding: 0 !important;
     width: 100%;
   }
-  
+
   #mce-success-response,
   #mce-error-response {
     margin: 0;
@@ -213,7 +212,7 @@ article.post p:has(img:only-of-type) img {
   #mce-error-response {
     color: #e3b234 !important;
   }
-  
+
   form {
     margin: 0 !important;
   }
@@ -234,6 +233,4 @@ article.post p:has(img:only-of-type) img {
       width: 100% !important;
     }
   }
-
 }
-

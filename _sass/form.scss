@@ -1,4 +1,5 @@
-@import "vars";
+@use "vars" as *;
+@use "sass:color";
 
 .input {
   &__text,
@@ -12,7 +13,7 @@
     }
 
     &--bordered {
-      border: 2px solid lighten($dark, 50%);
+      border: 2px solid color.adjust($dark, $lightness: 50%);
     }
   }
 
@@ -28,7 +29,7 @@
       right: 0.25rem;
       width: 30px;
       height: 30px;
-      color: lighten($dark, 50%);
+      color: color.adjust($dark, $lightness: 50%);
       stroke-width: 1.5;
       cursor: pointer;
     }
@@ -36,7 +37,7 @@
 
   &__select {
     background: none;
-    border: 2px solid lighten($dark, 50%);
+    border: 2px solid color.adjust($dark, $lightness: 50%);
     cursor: pointer;
     appearance: none;
     padding-right: 2rem;
