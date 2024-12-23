@@ -40,6 +40,10 @@
     @include breakpoint(medium) {
       padding-top: 2rem;
     }
+
+    @include breakpoint(smaller) {
+      padding-bottom: 2rem;
+    }
   }
 
   &--gray {
