@@ -1,5 +1,5 @@
 {%- if page.url == '/contact/' -%}
-    <script src="{{- '/assets/js/pristine.min.js' | relative_url -}}"></script>
+    {%- comment -%} <script src="{{- '/assets/js/pristine.min.js' | relative_url -}}"></script> {%- endcomment -%}
     <script>
         {%- include scripts/form.js -%}
     </script>

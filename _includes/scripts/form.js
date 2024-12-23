@@ -1,21 +1,21 @@
 function handle_form_behavior(){
 
-    const pristineConfig = {
-        /* class of the parent element where the error/success class is added */
-        classTo: 'contact__form-control',
-        errorClass: 'has-danger',
-        successClass: 'has-success',
-        /* class of the parent element where error text element is appended */
-        errorTextParent: 'contact__form-control',
-        /* type of element to create for the error text */
-        errorTextTag: 'div',
-        /* class of the error text element */
-        errorTextClass: 'contact__form-text-help' 
-    };
+    // const pristineConfig = {
+    //     /* class of the parent element where the error/success class is added */
+    //     classTo: 'contact__form-control',
+    //     errorClass: 'has-danger',
+    //     successClass: 'has-success',
+    //     /* class of the parent element where error text element is appended */
+    //     errorTextParent: 'contact__form-control',
+    //     /* type of element to create for the error text */
+    //     errorTextTag: 'div',
+    //     /* class of the error text element */
+    //     errorTextClass: 'contact__form-text-help' 
+    // };
 
-    const form = document.getElementById("contact-form");
+    const form = document.getElementById("mc-embedded-subscribe-form");
 
-    let pristine = new Pristine(form, pristineConfig);
+    // let pristine = new Pristine(form, pristineConfig);
 
     const the_select = document.getElementById('select-contact-method');
     const the_email_heading = document.getElementById('email-heading');
@@ -55,19 +55,19 @@ function handle_form_behavior(){
             the_email_control.classList.remove('hidden');
         }
 
-        pristine = new Pristine(form, pristineConfig);
+        // pristine = new Pristine(form, pristineConfig);
 
     });
 
-    form.addEventListener('submit', function (e) {
-        e.preventDefault();
+    // form.addEventListener('submit', function (e) {
+    //     e.preventDefault();
         
-        /* check if the form is valid */
-        var valid = pristine.validate(); /* returns true or false */
+    //     /* check if the form is valid */
+    //     var valid = pristine.validate(); /* returns true or false */
 
-        console.log(valid);
+    //     console.log(valid);
  
-     });
+    //  });
 
 }
 

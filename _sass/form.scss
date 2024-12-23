@@ -4,16 +4,16 @@
 .input {
   &__text,
   &__select {
-    box-sizing: border-box;
-    border: none;
-    z-index: 0;
+    box-sizing: border-box !important;
+    border: none !important;
+    z-index: 0 !important;
 
     &--xl {
-      padding: 1rem 0.75rem;
+      padding: 1rem 0.75rem !important;
     }
 
     &--bordered {
-      border: 2px solid color.adjust($dark, $lightness: 50%);
+      border: 2px solid color.adjust($dark, $lightness: 50%) !important;
     }
   }
 
