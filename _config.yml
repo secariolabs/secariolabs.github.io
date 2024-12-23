@@ -43,6 +43,12 @@ defaults:
       permalink: /privacy-policy/
       type: "plain-page"
   - scope:
+      path: "pages/terms-and-conditions.md"
+    values:
+      layout: "plain-page"
+      permalink: /terms-and-conditions/
+      type: "plain-page"
+  - scope:
       path: "pages/modern-slavery-policy.md"
     values:
       layout: "plain-page"
