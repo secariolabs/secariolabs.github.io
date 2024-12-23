@@ -7,6 +7,7 @@
     box-sizing: border-box !important;
     border: none !important;
     z-index: 0 !important;
+    text-indent: 0 !important;
 
     &--xl {
       padding: 1rem 0.75rem !important;
@@ -36,10 +37,10 @@
   }
 
   &__select {
-    background: none;
-    border: 2px solid color.adjust($dark, $lightness: 50%);
-    cursor: pointer;
-    appearance: none;
-    padding-right: 2rem;
+    background: none !important;
+    border: 2px solid color.adjust($dark, $lightness: 50%) !important;
+    cursor: pointer !important;
+    appearance: none !important;
+    padding-right: 2rem !important;
   }
 }

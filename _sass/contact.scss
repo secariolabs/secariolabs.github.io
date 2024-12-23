@@ -21,7 +21,7 @@
     &--left {
       border: 1px solid color.adjust($dark, $lightness: 50%);
       border-radius: 6px;
-      padding: 0 4rem 3rem 4rem;
+      padding: 3rem 4rem;
 
       @include breakpoint(large) {
         padding: 2rem;
@@ -126,9 +126,15 @@
       }
     }
 
+    .mc-field-group {
+      width: 100% !important;
+    }
+    
     .foot {
       grid-template-columns: 1fr !important;
+      width: 100% !important;
     }
+
 
     &--embedded {
       .contact__form {

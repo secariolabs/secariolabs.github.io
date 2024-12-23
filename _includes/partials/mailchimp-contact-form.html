@@ -2,33 +2,61 @@
 
     <div id="mc_embed_signup" class="contact__form">
         <form action="https://secariolabs.us6.list-manage.com/subscribe/post?u=daf217615566079f0ccc22426&amp;id=9fa5ad3243&amp;f_id=00151ce2f0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_self" novalidate="">
-            <div class="indicates-required">
-                <span class="asterisk">*</span> indicates required
-            </div>
             <div class="mc-field-group">
-                <label class="contact__form-label" for="mce-FNAME">First Name <span class="asterisk">*</span></label>
+                <label class="contact__form-label" for="mce-FNAME">First Name</label>
                 <input type="text" class="input__text input__text--xl input__text--bordered" name="FNAME" class="required text" id="mce-FNAME" required="" value="">
             </div>
             <div class="mc-field-group">
-                <label class="contact__form-label" for="mce-LNAME">Last Name <span class="asterisk">*</span></label>
+                <label class="contact__form-label" for="mce-LNAME">Last Name</label>
                 <input type="text" class="input__text input__text--xl input__text--bordered" name="LNAME" class="required text" id="mce-LNAME" required="" value="">
             </div>
-            <div class="mc-field-group">
-                <label class="contact__form-label" for="mce-EMAIL">Email Address <span class="asterisk">*</span></label>
+
+            <div class="contact__form-group">
+                <div class="contact__form-group-header">
+                    <h3 class="contact__form-group-heading">
+                        How Can We Reach You?
+                    </h3>
+
+                    <p>
+                        We would love to chat with you. How can we get in touch?
+                    </p>
+                </div>
+
+                <div class="contact__form-control">
+                    <label for="contact_method" class="contact__form-label contact__form-label--bold">
+                        Preferred Method of Contact
+                    </label>
+                    <div class="input__select-wrapper">
+                        <select data-id="select-contact-method" class="input__select input__select--xl">
+                            <option value="email">Email</option>
+                            <option value="phone">Phone</option>
+
+                        </select>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" stroke-width="1"> <path d="M6 9l6 6l6 -6"></path> </svg> 
+                    </div>
+                </div>
+            </div>
+
+            <div class="mc-field-group" id="email-control">
+                <label class="contact__form-label" for="mce-EMAIL">Email Address</label>
                 <input type="email" class="input__text input__text--xl input__text--bordered" name="EMAIL" class="required email" id="mce-EMAIL" required="" value="">
             </div>
-            <div class="mc-field-group">
+
+            <div id="phone-control" class="mc-field-group hidden--important">
                 <label class="contact__form-label" for="mce-PHONE">Phone Number </label>
                 <input type="text" class="input__text input__text--xl input__text--bordered" name="PHONE" class="REQ_CSS" id="mce-PHONE" value="">
             </div>
+
             <div id="mce-responses" class="clear foot">
                 <div class="response" id="mce-error-response" style="display: none;"></div>
                 <div class="response" id="mce-success-response" style="display: none;"></div>
             </div>
+
             <div aria-hidden="true" style="position: absolute; left: -5000px;">
                 /* real people should not fill this in and expect good things - do not remove this or risk form bot signups */
                 <input type="text" name="b_daf217615566079f0ccc22426_9fa5ad3243" tabindex="-1" value="">
             </div>
+
             <div class="optionalParent">
                 <div class="clear foot">
                     <input type="submit" name="subscribe" id="mc-embedded-subscribe" class="btn btn--lg btn--secondary contact__form-submit" value="Submit">
