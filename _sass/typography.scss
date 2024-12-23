@@ -107,5 +107,8 @@ a {
 .plain-page {
   &__heading {
     font-size: 3rem;
+    @include breakpoint(smaller) {
+      font-size: 2.5rem;
+    }
   }
 }
