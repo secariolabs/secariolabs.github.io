@@ -1,7 +1,7 @@
 ---
 meta:
   title: Defensive Services - Secario Labs
-  description: Offensive Cybersecurity Solutions. Combining skills, experience, and carefully crafted methodologies to provide offensive cyber security.
+  description: Providing tailored defensive cybersecurity services designed to safeguard endpoints and ensure rapid detection and response to emerging threats.
 hero_title: Managed Endpoint Detection and Response Service
 hero_subtitle: Secure Endpoints Effectively
 show_callout: true
