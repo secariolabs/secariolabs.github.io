@@ -3,7 +3,7 @@ meta:
   title: About Us — Secario Labs — Cybersecurity Solutions
   description: Secario Labs operates in both the UK and Bulgaria specialised in comprehensive cybersecurity solutions. Get in touch.
 hero_title: Cybersecurity Solutions
-description: Secario Labs operates in both the UK and Bulgaria, working in partnership with clients to provide comprehensive cybersecurity solutions that meet the highest industry standards. 
+description: Secario Labs operates in both the UK and Bulgaria, working in partnership with clients to provide comprehensive cybersecurity solutions that meet the highest industry standards.
 show_services: true
 show_callout: true
 text:
@@ -27,7 +27,7 @@ badges:
   heading: Certifications
   # You can use markdown for the text
   text: |-
-    Exercitation est nisi do laboris laboris. Proident anim laborum pariatur consequat dolore laboris consectetur. Aliqua do duis esse culpa eiusmod ut enim. In anim amet cupidatat cupidatat.
+    Our team proudly holds a range of industry-recognised certifications in both offensive and defensive capacity, showcasing our dedication to excellence and commitment to staying at the forefront of the field.
   items:
     - path: /assets/images/badges/oswp.png
       alt_text: OSWP certificate badge
