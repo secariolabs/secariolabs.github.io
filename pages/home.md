@@ -36,7 +36,7 @@ partners:
   superheading: ""
   # You can use markdown for the text
   text: |-
-    Sunt tempor deserunt do officia exercitation Lorem occaecat ullamco. Et mollit incididunt qui non nisi anim adipisicing reprehenderit minim duis Lorem sint ipsum. Duis excepteur esse exercitation veniam nostrud pariatur occaecat proident irure ullamco et. Cillum non laboris non voluptate veniam irure cupidatat non sint enim. Aliquip ad adipisicing proident anim duis esse consequat sunt.
+    Our valued partners are at the core of our success, reflecting mutual respect and shared goals. We are proud to collaborate with organisations that recognise our expertise and professionalism, building enduring relationships founded on trust and exceptional results.
   logos:
     - path: /assets/images/logos/cyberwales.png
       alt_text: Cyber Wales logo
