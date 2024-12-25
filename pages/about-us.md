@@ -7,7 +7,6 @@ description: Secario Labs operates in both the UK and Bulgaria, working in partn
 show_services: true
 show_callout: true
 text:
-  # the items can be in markdown
   - piece: |-
       Every day, at Secario Labs, we see first-hand the impact of cyber-attacks on organisations. The combination of our experience, skillset and methodologies allows us to offer a range of offensive and defensive cybersecurity solutions to tackle challenges for clients with varying levels of maturity – from conventional penetration testing engagements to threat-intelligence-led mapping, modelling and adversary simulation exercises.
   - piece: |-
@@ -25,42 +24,63 @@ cta:
   text: Book a call
 badges:
   heading: Certifications
-  # You can use markdown for the text
   text: |-
     Our team proudly holds a range of industry-recognised certifications in both offensive and defensive capacity, showcasing our dedication to excellence and commitment to staying at the forefront of the field.
   items:
     - path: /assets/images/badges/oswp.png
       alt_text: OSWP certificate badge
-      # Add image actual dimensions to prevent layout shifts
       width: 150
       height: 150
     - path: /assets/images/badges/oswe.png
       alt_text: OSWE certificate badge
-      url: https://www.credly.com/badges/274b71de-7dc3-4356-b359-284d55dd7758
-      # Add image actual dimensions to prevent layout shifts
       width: 150
       height: 150
     - path: /assets/images/badges/oscp.png
       alt_text: OSCP certificate badge
-      url: https://www.credly.com/badges/7a3158d7-de12-4d6e-a0a0-2e77bfefa0df
-      # Add image actual dimensions to prevent layout shifts
       width: 150
       height: 150
     - path: /assets/images/badges/osce.png
       alt_text: OSCE certificate badge
-      url: https://www.credly.com/badges/c005e433-d716-44a2-a157-8e1a522d657c
-      # Add image actual dimensions to prevent layout shifts
       width: 150
       height: 150
     - path: /assets/images/badges/crt.png
       alt_text: CRT certificate badge
-      # Add image actual dimensions to prevent layout shifts
       width: 150
       height: 150
-    - path: /assets/images/badges/cyberessentials.png
-      alt_text: Cyber essentials certificate badge
-      url: https://www.ncsc.gov.uk/cyberessentials/overview
-      # Add image actual dimensions to prevent layout shifts
-      width: 250
-      height: 300
+    # - path: /assets/images/badges/cyberessentials.png
+    #   alt_text: Cyber essentials certificate badge
+    #   width: 250
+    #   height: 300
+    - path: /assets/images/badges/aws-security-specialist.png
+      alt_text: AWS security specialist badge
+      width: 150
+      height: 150
+    - path: /assets/images/badges/aws-solutions-architect-associate.png
+      alt_text: AWS solutions architect associate badge
+      width: 150
+      height: 150
+    - path: /assets/images/badges/crowdstrike-falcon-administrator.png
+      alt_text: Crowdstirke falcon administrator badge
+      width: 150
+      height: 150
+    - path: /assets/images/badges/crowdstrike-falcon-hunter.png
+      alt_text: Crowdstirke falcon hunter badge
+      width: 150
+      height: 150
+    - path: /assets/images/badges/crowdstrike-falcon-responder.png
+      alt_text: Crowdstirke falcon responder badge
+      width: 150
+      height: 150
+    - path: /assets/images/badges/ecpptv2.png
+      alt_text: eLearnSecurity penetration tester badge
+      width: 150
+      height: 150
+    - path: /assets/images/badges/tcmsecurity-malwareresearch.png
+      alt_text: TCM Security malware researcher badge
+      width: 150
+      height: 150
+    - path: /assets/images/badges/zeropoint-redteam-ops1.png
+      alt_text: ZeroPoint red team operator v1 badge
+      width: 150
+      height: 150
 ---
