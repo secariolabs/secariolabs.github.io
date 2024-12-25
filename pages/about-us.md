@@ -75,10 +75,10 @@ badges:
       alt_text: eLearnSecurity penetration tester badge
       width: 150
       height: 150
-    - path: /assets/images/badges/tcmsecurity-malwareresearch.png
-      alt_text: TCM Security malware researcher badge
-      width: 150
-      height: 150
+    # - path: /assets/images/badges/tcmsecurity-malwareresearch.png
+    #   alt_text: TCM Security malware researcher badge
+    #   width: 150
+    #   height: 150
     - path: /assets/images/badges/zeropoint-redteam-ops1.png
       alt_text: ZeroPoint red team operator v1 badge
       width: 150
