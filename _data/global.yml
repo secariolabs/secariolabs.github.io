@@ -25,6 +25,11 @@ signup:
   label: Sign up to our newsletter
   button_text: Subscribe
 
+contact:
+  success_message: Thank you for your contacting us.
+  validation_error: Please check the fields for errors.
+  error_message: There was an error sending your message.
+
 location1:
   title: Bulgaria Office
   details: 66 Vitosha Blvd.<br>Sofia, 1463<br>Bulgaria

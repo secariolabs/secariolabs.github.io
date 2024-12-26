@@ -25,6 +25,16 @@ function handle_form_behavior(){
     const the_phone_control = document.getElementById('phone-control');
     const time_to_call = document.getElementById('time-to-call');
     const time_to_call_control = document.getElementById('time_to_call-control');
+    const success_message = document.getElementById('contact__form-message--success');
+    const error_message = document.getElementById('contact__form-message--error');
+    
+    function clear_messages(){
+        const the_messages = document.querySelectorAll('.contact__form-message');
+        the_messages.forEach(function(message){
+            message.classList.add('hidden');
+            message.textContent = '';
+        });
+    }
 
     the_select.addEventListener('change', (event) => {
         $this = event.target;
@@ -66,6 +76,37 @@ function handle_form_behavior(){
         var valid = pristine.validate(); /* returns true or false */
 
         console.log(valid);
+
+        if(valid){
+            const formData = new FormData(e.target);
+            fetch("https://getform.io/f/bqoodwyb", {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "Accept": "application/json",
+                },
+            })
+            .then(response => {
+                if (response.ok) {
+                    clear_messages();
+                    success_message.classList.remove('hidden');
+                    success_message.textContent = '{{ site.data.global.contact.success_message }}';
+                } else {
+                    throw new Error(`An error occurred: ${response.statusText}`);
+                }
+                console.log(response);
+            })
+            .catch(error => {
+                console.log(error);
+                clear_messages();
+                error_message.classList.remove('hidden');
+                error_message.textContent = '{{ site.data.global.contact.error_message }}';
+            });
+        } else {
+            clear_messages();
+            error_message.classList.remove('hidden');
+            error_message.textContent = '{{ site.data.global.contact.validation_error }}';
+        }
  
      });
 
