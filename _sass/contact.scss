@@ -75,6 +75,10 @@
       &.hidden {
         display: none;
       }
+
+      &--submit {
+        margin-top: 2rem;
+      }
     }
 
     &-label {
@@ -109,8 +113,6 @@
     }
 
     &-submit {
-      margin-top: 2.5rem;
-
       @include breakpoint(smaller) {
         max-width: none;
       }
@@ -122,6 +124,18 @@
 
       &.pristine-error {
         color: $secondary;
+      }
+    }
+
+    &-message {
+      margin: 0;
+      margin-bottom: 0.75rem;
+
+      &--error {
+        color: $secondary;
+      }
+      &--sucess {
+        color: #15803d;
       }
     }
 
