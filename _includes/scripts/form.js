@@ -41,13 +41,16 @@ function handle_form_behavior(){
         const the_value = $this.value;
 
         if(the_value == 'phone') {
+            the_email.name = '';
             the_email.value = '';
             the_email.required = false;
             the_email_heading.classList.add('hidden');
             the_email_control.classList.add('hidden');
             
             the_phone.required = true;
+            the_phone.name = 'phone';
             time_to_call.required = true;
+            time_to_call.name = 'time_to_call';
             the_phone_control.classList.remove('hidden');
             time_to_call_control.classList.remove('hidden');
         }
@@ -55,12 +58,15 @@ function handle_form_behavior(){
         if(the_value == 'email') {
             the_phone.required = false;
             time_to_call.required = false;
+            the_phone.name = '';
             the_phone.value = '';
+            time_to_call.name = '';
             time_to_call.selectedIndex = 0;
             the_phone_control.classList.add('hidden');
             time_to_call_control.classList.add('hidden');
 
             the_email.required = true;
+            the_email.name = 'email';
             the_email_heading.classList.remove('hidden');
             the_email_control.classList.remove('hidden');
         }
