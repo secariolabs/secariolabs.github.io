@@ -81,8 +81,6 @@ function handle_form_behavior(){
         /* check if the form is valid */
         var valid = pristine.validate(); /* returns true or false */
 
-        console.log(valid);
-
         if(valid){
             const formData = new FormData(e.target);
             fetch("https://getform.io/f/bqoodwyb", {
@@ -100,10 +98,8 @@ function handle_form_behavior(){
                 } else {
                     throw new Error(`An error occurred: ${response.statusText}`);
                 }
-                console.log(response);
             })
             .catch(error => {
-                console.log(error);
                 clear_messages();
                 error_message.classList.remove('hidden');
                 error_message.textContent = '{{ site.data.global.contact.error_message }}';
