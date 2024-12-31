@@ -109,3 +109,4 @@ exclude:
   - vendor/ruby/
   - LICENSE.txt
   - README.md
+  - gulpfile.js

@@ -4,5 +4,8 @@ _site
 .jekyll-metadata
 vendor
 Gemfile.lock
+package-lock.json
 .ruby-version
 .DS_Store
+node_modules
+opt_images
