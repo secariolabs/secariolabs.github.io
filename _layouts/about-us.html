@@ -35,7 +35,7 @@ layout: page
 {%- endif -%}
 
 <section class="section section--page about__badges-section">
-    <div class="container">
+    <div class="container container--sm">
 
         {%- if page.badges.heading.size > 0 -%}
             <h2 class="section__heading">
@@ -44,7 +44,7 @@ layout: page
         {%- endif -%}
 
         {%- if page.badges.text.size > 0 -%}
-            <div>
+            <div class="about__badges-text">
                 {{ page.badges.text | markdownify }}
             </div>
         {%- endif -%}
