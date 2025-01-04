@@ -205,8 +205,11 @@ ul {
   }
 }
 
-article.post p:has(img:only-of-type) img {
-  cursor: pointer;
+article.post p:has(img:only-of-type) {
+  text-align: center;
+  img {
+    cursor: pointer;
+  }
 }
 
 #mc-embedded-subscribe {
