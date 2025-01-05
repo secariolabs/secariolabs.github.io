@@ -205,13 +205,8 @@ ul {
   }
 }
 
-article.post {
-  counter-reset: 0;
-}
-
 article.post p:has(img:only-of-type) {
   text-align: center;
-  counter-increment: css-counter 1;
   img {
     cursor: pointer;
     border: 1px solid $dark_gray;
@@ -220,10 +215,12 @@ article.post p:has(img:only-of-type) {
     & + em {
       display: block;
       color: $dark_gray;
+      text-align: center;
 
-      &::before {
-        content: "Figure " counter(css-counter) " - ";
+      @include breakpoint(smaller) {
+        font-size: 1.125rem;
       }
+
     }
   }
 }
