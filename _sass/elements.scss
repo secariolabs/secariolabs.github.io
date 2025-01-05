@@ -218,6 +218,7 @@ article.post p:has(img:only-of-type) {
     padding: .75rem;
 
     & + em {
+      display: block;
       color: $dark_gray;
 
       &::before {
