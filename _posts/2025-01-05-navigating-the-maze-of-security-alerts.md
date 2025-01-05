@@ -37,7 +37,6 @@ Let's look at the following alert:
 _Figure 1 - Process tree execution of the alert._
 
 ![](/assets/images/posts/navigatingthemazeofsecurityalerts-image2.png)
-_Figure 2 - Details page of the alert._
 
 We can use the five Ws rule to perform some initial triaging.
 
@@ -79,7 +78,6 @@ An experienced security analyst would likely recognize the nature of this detect
 Since this detection involves PowerShell, it is important to understand what exactly was executed. Conveniently, the security solution provides detailed information about the executed command:
 
 ![](/assets/images/posts/navigatingthemazeofsecurityalerts-image1.png)
-
 _Figure 6 - Process operation section of the detection, showing command-line execution._
 
 Let's break it down together:

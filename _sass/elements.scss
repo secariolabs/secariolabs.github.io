@@ -209,6 +209,23 @@ article.post p:has(img:only-of-type) {
   text-align: center;
   img {
     cursor: pointer;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid rgba(97,97,97,0.3);
+    padding: .75rem;
+
+    & + em {
+      display: block;
+      margin-top: 0.3rem;
+      color: $dark_gray;
+      text-align: center;
+
+      @include breakpoint(smaller) {
+        font-size: 1.125rem;
+      }
+
+    }
   }
 }
 
