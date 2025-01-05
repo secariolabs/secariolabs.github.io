@@ -209,6 +209,12 @@ article.post p:has(img:only-of-type) {
   text-align: center;
   img {
     cursor: pointer;
+    border: 1px solid $dark_gray;
+    padding: .75rem;
+
+    & + em {
+      color: $dark_gray
+    }
   }
 }
 
