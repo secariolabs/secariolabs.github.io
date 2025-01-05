@@ -1,15 +1,42 @@
 {%- assign is_post = include.is_post -%}
 {%- if is_post == true -%}
     {%- assign the_page = page -%}
+    {%- if page.author.name.size > 0 -%}
+        {%- capture the_author -%}
+            <span>
+                {{ page.author.name }}
+            </span>
+        {%- endcapture -%}
+        {%- if page.author.url.size > 0 -%}
+            {%- capture the_author -%}
+                <a href="{{- page.author.url -}}" target="_blank">
+                    {{ page.author.name }}
+                </a>
+            {%- endcapture -%}
+        {%- endif -%}
+    {%- endif -%}
 {%- else -%}
     {%- assign the_page = post -%}
 {%- endif -%}
+
+{%- assign day_of_the_month = the_page.date | date: "%-d" -%}
+{%- if day_of_the_month == '1' -%}
+    {%- assign the_day = '1st' -%}
+{%- elsif day_of_the_month == '2' -%}
+    {%- assign the_day = '2nd' -%}
+{%- elsif day_of_the_month == '3' -%}
+    {%- assign the_day = '3rd' -%}
+{%- else -%}
+    {%- assign the_day = day_of_the_month | append: 'th' -%}
+{%- endif -%}
+{%- assign the_month = the_page.date | date: "%B" -%}
+{%- assign the_year = the_page.date | date: "%Y" -%}
 
 <div class="blog__teaser-meta">
     <div class="blog__teaser-date-wrapper">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7zM16 3v4M8 3v4M4 11h16M7 14h.013M10.01 14h.005M13.01 14h.005M16.015 14h.005M13.015 17h.005M7.01 17h.005M10.01 17h.005"/></svg>
         <time datetime="{{- the_page.date | date_to_xmlschema -}}" class="span blog__teaser-date text-sm">
-            {{ the_page.date | date: "%B %e, %Y" }}
+            {{ the_day }} of {{ the_month }} {{ the_year }}
         </time>
     </div>
 
@@ -26,6 +53,13 @@
                     {%- endif -%}
                 {% endfor %}
             </div>
+        </div>
+    {%- endif -%}
+
+    {%- if the_author.size > 0 -%}
+        <div class="blog__teaser-author-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" stroke-width="1.5"><path d="M4 20h4L18.5 9.5a2.828 2.828 0 1 0-4-4L4 16v4M13.5 6.5l4 4"/></svg>
+            <span class="blog__teaser-author text-sm text-light">authored by {{ the_author }}</span>
         </div>
     {%- endif -%}
 </div>

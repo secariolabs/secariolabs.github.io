@@ -2,6 +2,9 @@
 title: Logging Raw HTTP Requests in Python
 date: 2023-02-05T19:50:55+00:00
 bg_image: /assets/images/posts/data-center-with-server-racks-2022-07-26-17-02-57-utc-1200x470.jpg
+author:
+    name: '@saldat0'
+    url: https://x.com/saldat0
 ---
 Quite often, during our red team engagements, we find ourselves in a situation where we need to carry out web research & exploitation over several chained proxies. To that extended, to be able to do any reasonable web testing we need to be able to see the requests we send to the server and the corresponding replies. Tools like **BurpSuite** and **mitmproxy** can be helpful, however, by themselves, they introduce a lot of additional complexity, traffic overhead, and they are not very easy to configure in terms of what and how it is being logged. Sometimes you just want to have control over the data and do something with it. Because of that, our weapon of choice for most of these edge cases is **Python** with **ProxyChains**. The reason we like **Python** is because it is easy to enable HTTP request/response logging with the minimal amount of code.
 
@@ -348,5 +351,3 @@ X-Amz-Cf-Id: 7eReUC-yuJugzYBRCVoKauftHc53DvdsKi1hx1pU5M9TjJc_Ml6n9Q==
 This concludes our quick look into HTTP logging using Python.
 
 Future research could focus on websocket logging (something we are starting to see more of), as well as a way to add a default hook to `requests`, rather than having to set one per session and then having to manually track that all session objects have this hook.
-
-The article was written by [@saldat0](https://twitter.com/saldat0 "@saldat0")

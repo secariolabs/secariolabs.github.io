@@ -57,6 +57,27 @@
       margin-left: 0.25rem;
     }
 
+    &-author-wrapper {
+      margin-left: 0.75rem;
+      display: flex;
+      align-items: center;
+
+      svg {
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    &-author {
+     a,
+     span {
+      color: $light;
+     }
+     a {
+      text-decoration: underline;
+     }
+    }
+
     &-link-wrapper {
       margin-top: 1.5rem;
     }
