@@ -26,6 +26,7 @@ function handle_lightbox(figure_elements, element_type){
 
         } else if(element_type === 'img'){
             the_img = $this;
+            the_caption = '';
             if(the_img.nextElementSibling && the_img.nextElementSibling.tagName === 'EM'){
                 the_caption = the_img.nextElementSibling.innerHTML;
                 lightbox_caption.classList.add('py-0_5rem');
