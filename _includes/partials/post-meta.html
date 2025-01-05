@@ -1,6 +1,20 @@
 {%- assign is_post = include.is_post -%}
 {%- if is_post == true -%}
     {%- assign the_page = page -%}
+    {%- if page.author.name.size > 0 -%}
+        {%- capture the_author -%}
+            <span>
+                {{ page.author.name }}
+            </span>
+        {%- endcapture -%}
+        {%- if page.author.url.size > 0 -%}
+            {%- capture the_author -%}
+                <a href="{{- page.author.url -}}" target="_blank">
+                    {{ page.author.name }}
+                </a>
+            {%- endcapture -%}
+        {%- endif -%}
+    {%- endif -%}
 {%- else -%}
     {%- assign the_page = post -%}
 {%- endif -%}
@@ -26,6 +40,13 @@
                     {%- endif -%}
                 {% endfor %}
             </div>
+        </div>
+    {%- endif -%}
+
+    {%- if the_author.size > 0 -%}
+        <div class="blog__teaser-author-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" stroke-width="1.5"><path d="M4 20h4L18.5 9.5a2.828 2.828 0 1 0-4-4L4 16v4M13.5 6.5l4 4"/></svg>
+            <span class="blog__teaser-author text-sm text-light">authored by {{ the_author }}</span>
         </div>
     {%- endif -%}
 </div>

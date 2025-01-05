@@ -6,6 +6,9 @@ tags:
   - cloudfront
   - waf
 bg_image: /assets/images/posts/depositphotos_56589681-stock-photo-business-overcomes-obstacles-applying-different.webp
+author:
+    name: '@saldat0'
+    url: https://x.com/saldat0
 ---
 One of the most common ways of bypassing a Web Application Firewall (WAF) involves finding out the backend servers' address and connecting to it directly. An IP can be leaked in many ways, including DNS history, HTTP headers, cookies, virtual host routing with shared infrastructure, stack traces leaking source code, successful server-side request forgery attacks, even sometimes you can find it in the JavaScript source map. And assuming you locate the IP you can then directly reach the server and bypass all the protections and logging that a WAF provides.
 
@@ -603,5 +606,3 @@ By all means, the technique used in this blog could be applied in many different
 -   The concept of hiding an EC2 instance behind an AWS service has many *offensive* use cases. For example, hiding phishing infrastructure or C2 infrastructure from being publicly exposed.
 
 Hopefully, this article can help you better attack and defend systems behind CloudFront.
-
-The article was written by [@saldat0](https://twitter.com/saldat0)
