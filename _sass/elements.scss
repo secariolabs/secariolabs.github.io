@@ -205,15 +205,24 @@ ul {
   }
 }
 
+article.post {
+  counter-reset: 0;
+}
+
 article.post p:has(img:only-of-type) {
   text-align: center;
+  counter-increment: css-counter 1;
   img {
     cursor: pointer;
     border: 1px solid $dark_gray;
     padding: .75rem;
 
     & + em {
-      color: $dark_gray
+      color: $dark_gray;
+
+      &::before {
+        content: "Figure " counter(css-counter) " - ";
+      }
     }
   }
 }
