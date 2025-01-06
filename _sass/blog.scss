@@ -24,6 +24,14 @@
       }
     }
 
+    &-summary {
+      @include breakpoint(smaller) {
+        p {
+          margin-bottom: 0;
+        }
+      }
+    }
+
     &-meta {
       display: flex;
       align-items: baseline;

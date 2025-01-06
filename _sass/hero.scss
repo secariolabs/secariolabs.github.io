@@ -13,11 +13,7 @@
   background-attachment: fixed;
 
   & > .container {
-    padding-top: 15rem;
-
-    @include breakpoint(medium) {
-      padding-top: 12rem;
-    }
+    padding-top: 12rem;
 
     @include breakpoint(small) {
       padding-top: 10rem;
