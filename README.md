@@ -43,7 +43,7 @@ _Table Caption_
 
 **Patern:** The caption text should be between undercores and below the image line (there should be an empty line between them)
 
-### Responsive tables
+#### Responsive tables
 
 If you want the table to scroll horizontally in case the table is wider than the screen, then the table should be inside a `div` with a class of `table-responsive`. In this case, the table should be written in HTML. For example:
 
