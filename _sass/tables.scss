@@ -1,0 +1,90 @@
+@use "vars" as *;
+
+.table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+
+    & + p:has(em:only-of-type) {
+        text-align: center;
+        color: $dark_gray;
+        margin-top: 0.75rem;
+    }
+}
+
+table {
+    /* Remove spacing between table cells (from Normalize.css) */
+    border-collapse: collapse;
+    border-spacing: 0;
+    empty-cells: show;
+    border: 1px solid $zinc;
+    width: 100%;
+}
+
+table th {
+    text-align: center;
+}
+
+table td,
+table th {
+    border-left: 1px solid $zinc; /* inner column border */
+    border-width: 0 0 0 1px;
+    font-size: inherit;
+    margin: 0;
+    overflow: visible; /* to make this where the title is really long work */
+    padding: 0.5rem 1rem; /* cell padding */
+
+    @include breakpoint(smaller) {
+        padding: 0.5rem 0.75rem;
+    }
+}
+
+table thead {
+    background-color: $dark_gray;
+    color: $light;
+    text-align: left;
+    vertical-align: bottom;
+}
+
+/*
+striping
+*/
+table td {
+    background-color: transparent;
+}
+table-odd td {
+    background-color: $gray;
+}
+
+/* nth-child selector for modern browsers */
+table tr:nth-child(2n-1) td {
+    background-color: $gray;
+}
+
+/* BORDERED TABLES */
+table td {
+    border-bottom: 1px solid $zinc;
+}
+table tbody > tr:last-child > td {
+    border-bottom-width: 0;
+}
+
+
+/* HORIZONTAL BORDERED TABLES */
+
+table-horizontal td,
+table-horizontal th {
+    border-width: 0 0 1px 0;
+    border-bottom: 1px solid $zinc;
+}
+table-horizontal tbody > tr:last-child > td {
+    border-bottom-width: 0;
+}
+
+article.post {
+    table + p:has(em:only-of-type) {
+        text-align: center;
+        color: $dark_gray;
+        margin-top: 0.75rem;
+    }
+}
