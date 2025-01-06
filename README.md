@@ -13,7 +13,7 @@ You can add captions under images, like so:
 _Figure 1 - Caption for the image_
 ```
 
-**Patern:** The caption text should be between undercores and directly below the image line (no empty lines between them)
+**Pattern:** The caption text should be between undercores and directly below the image line (no empty lines between them)
 
 #### Code blocks
 
@@ -26,7 +26,7 @@ print('Hello')
 _Caption for the code block_
 `````
 
-**Patern:** The caption text should be between undercores and below the code block (the lines (if any) between them do not make a difference)
+**Pattern:** The caption text should be between undercores and below the code block (the lines (if any) between them do not make a difference)
 
 #### Tables
 
@@ -41,7 +41,7 @@ You can add captions under tables, like so:
 _Table Caption_
 ```
 
-**Patern:** The caption text should be between undercores and below the image line (there should be an empty line between them)
+**Pattern:** The caption text should be between undercores and below the image line (there should be an empty line between them)
 
 #### Responsive tables
 
