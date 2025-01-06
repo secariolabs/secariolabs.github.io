@@ -27,6 +27,10 @@
     &-meta {
       display: flex;
       align-items: baseline;
+
+      @include breakpoint(smallish) {
+        flex-direction: column;
+      }
     }
 
     &-date-wrapper {
@@ -47,6 +51,11 @@
       align-items: center;
       margin-left: 1rem;
 
+      @include breakpoint(smallish) {
+        margin-left: 0;
+        margin-top: 0.2rem;
+      }
+
       svg {
         width: 26px;
         height: 26px;
@@ -62,6 +71,11 @@
       display: flex;
       align-items: center;
 
+      @include breakpoint(smallish) {
+        margin-left: 0;
+        margin-top: 0.2rem;
+      }
+
       svg {
         width: 24px;
         height: 24px;
@@ -76,6 +90,15 @@
      a {
       text-decoration: underline;
      }
+    }
+
+    &-authored {
+      @include breakpoint(small) {
+        display: none;
+      }
+      @include breakpoint(smallish) {
+        display: inline;
+      }
     }
 
     &-link-wrapper {
