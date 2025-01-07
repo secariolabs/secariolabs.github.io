@@ -110,11 +110,11 @@ info:
       highlight: true
       text: |-
         We guarantee you permanent qualification, risk assessment and early alerting of critical security incidents – 24x7, 365 days a year. In the event of an attack, we also ensure that normal operations are restored quickly.
-      link: "/"
+      link: ""
     - title: Incident Response Service
       text: |-
         With our Incident Response Service, we ensure that your company has the right resources and skills available in the event of an emergency. You pay a fixed monthly flat rate and we offer you a reliable on-call service.
-      link: "/"
+      link: ""
 callout:
   heading: Fortify Your Defenses
   text: |-
