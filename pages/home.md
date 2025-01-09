@@ -40,16 +40,20 @@ partners:
   logos:
     - path: /assets/images/logos/cyberwales.png
       alt_text: Cyber Wales logo
-      # declare the image's actual dimensions to avoid layout shifts
       width: 524
       height: 303
       url: https://cyberwales.net/
     - path: /assets/images/logos/darktrace.png
       alt_text: Darktrace logo
-      # declare the image's actual dimensions to avoid layout shifts
       width: 1024
       height: 300
       url: https://darktrace.com/
+    - path: /assets/images/logos/computer2000.jpg
+      alt_text: Computer 2000 logo
+      width: 2316
+      height: 908
+      url: https://computer2000.bg
+
 testimonials:
   heading: What Our Clients Say
   items:
