@@ -2,10 +2,13 @@
 title: "Navigating the Maze of Security Alerts: First Steps into Effective Triage"
 date: 2025-01-05T10:24:47+00:00
 tags: 
-- SecOps
-- threat hunting
-- crowdstrike
+  - SecOps
+  - threat hunting
+  - crowdstrike
 bg_image: /assets/images/posts/navigatingthemazeofsecurityalerts-hero.webp
+author:
+    name: '@vibeszzzs'
+    url: https://x.com/vibeszzzs
 ---
 Have you ever encountered a security alert in your environment and wondered, "What is this, and how do we investigate it?" In this article, we'll aim to simplify the process of triaging an alert and provide best practices to identify malicious activity efficiently.
 

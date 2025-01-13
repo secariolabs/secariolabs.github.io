@@ -5,6 +5,9 @@ tags:
   - Apache
   - DNS resolver
 bg_image: /assets/images/posts/image-4.png
+author:
+    name: '@saldat0'
+    url: https://x.com/saldat0
 ---
 With its widespread adoption rate and the challenge enterprises face with tracking down where it is being used, log4j would likely continue to be a relevant attack vector for quite a long time. Because of this, we decided to showcase how one would go about building a local lab that could be used both for developing and testing an exploit, as well as help to confirm and adapt remedial actions.
 

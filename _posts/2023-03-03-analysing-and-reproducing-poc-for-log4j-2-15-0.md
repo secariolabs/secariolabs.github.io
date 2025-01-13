@@ -2,6 +2,9 @@
 title: Analysing and Reproducing PoC for Log4j 2.15.0
 date: 2023-03-03T07:18:45+00:00
 bg_image: /assets/images/posts/image-1092x470.png
+author:
+    name: '@saldat0'
+    url: https://x.com/saldat0
 ---
 Very shortly after the release of the patch for CVE-2021-44228, bundled by Apache as log4j 2.15.0, researchers already found ways of bypassing the fix: CVE-2021-45046. In particular, for less than a couple of days, a vulnerability was discovered, and while it was initially rated as 3.7, it was later elevated to 9.0. Needless to say, it captured our attention, especially considering the incident response work we were conducting at the time. It was important for us to understand the situation to better advise our clients. There were bits and pieces of research with some screenshots of the bypass circulating the Internet, but, at the time, we didn’t really find a vulnerable environment, with good explanation and well laid out pre-requisite for the bypass to work.
 
