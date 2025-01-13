@@ -37,6 +37,7 @@ Let's look at the following alert:
 _Figure 1 - Process tree execution of the alert._
 
 ![](/assets/images/posts/navigatingthemazeofsecurityalerts-image2.png)
+_Figure 2 - Details page of the alert._
 
 We can use the five Ws rule to perform some initial triaging.
 
