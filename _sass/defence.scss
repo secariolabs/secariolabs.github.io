@@ -505,6 +505,10 @@
     background-position: center;
     background-attachment: fixed;
 
+    @include touch_device {
+      background-attachment: scroll;
+    }
+
     background-image: var(--contact-bg-image);
 
     background-color: var(--contact-bg-color);

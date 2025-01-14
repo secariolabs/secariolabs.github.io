@@ -12,6 +12,10 @@
   background-size: cover;
   background-attachment: fixed;
 
+  @include touch_device {
+    background-attachment: scroll;
+  }
+
   & > .container {
     padding-top: 12rem;
 
