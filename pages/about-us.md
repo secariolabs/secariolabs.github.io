@@ -8,18 +8,18 @@ show_services: true
 show_callout: true
 text:
   - piece: |-
-      Every day, at Secario Labs, we see first-hand the impact of cyber-attacks on organisations. The combination of our experience, skillset and methodologies allows us to offer a range of offensive and defensive cybersecurity solutions to tackle challenges for clients with varying levels of maturity – from conventional penetration testing engagements to threat-intelligence-led mapping, modelling and adversary simulation exercises.
+      Every day, at Secario Labs, we see first-hand the impact of cyber-attacks on organisations. The combination of our experience, skill set and methodologies allows us to offer a range of offensive and defensive cybersecurity solutions to tackle challenges for clients with varying levels of maturity – from conventional penetration testing engagements to threat-intelligence-led mapping, modelling and adversary simulation exercises.
   - piece: |-
       We know how threat actors operate, and we have a comprehensive understanding of the risks associated with each vulnerability. We can outline the specific risks that your business faces with each issue we identify, and provide you with a bespoke risk matrix of our findings. Secario Labs’ security experts can be trusted to provide the insight and support needed to successfully identify and mitigate information security risks.
   - piece: |-
       Focusing on offensive cybersecurity means we can push clients’ security to its limit and our experts believe the best way to secure modern organisations is to test them against real life challenges and attacks. Everyone deserves to be safe and secure when operating in a dynamic online world and the Secario Labs experts combine expertise and experience with new technologies to create bespoke cybersecurity solutions.
 features:
   - text: Threat-intelligence-led mapping, testing and solutions.
-    icon: /assets/images/icons/network-globe-outline-alerted-svgrepo-com.svg
+    icon: "/assets/images/icons/network-globe-outline-alerted-svgrepo-com.svg"
   - text: Real-time visibility of security vulnerabilities.
-    icon: /assets/images/icons/radar-svgrepo-com.svg
+    icon: "/assets/images/icons/radar-svgrepo-com.svg"
   - text: Expert-led testing and solutions to identify and close security gaps.
-    icon: /assets/images/icons/security-protection-shield-cog-config-svgrepo-com.svg
+    icon: "/assets/images/icons/security-protection-shield-cog-config-svgrepo-com.svg"
 cta:
   text: Book a call
 badges:
