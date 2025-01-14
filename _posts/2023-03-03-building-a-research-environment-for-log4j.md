@@ -140,7 +140,7 @@ user@ubuntu:~/poc$ ./jdk1.8.0_171/bin/java -cp apache-log4j-2.14.1-bin/log4j-cor
 
 At this point, the last element needed to complete the basic research environment would be to obtain visibility over the network traffic. Ideally, that would be done with a custom LDAP/DNS/RMI server that would be able to provide a clear indication of the request and any metadata it carries, as well as control over what data is sent back to the vulnerable application; however, some of that could be achieved with a simple packet analyser that can show if a request is being made, even if nothing is sent back. For a lot of the cases that should be enough to prove if the application is (still) vulnerable.
 
-We would recommend Wireshark as it will be easy to see the different protocols and it is very intuitive to apply filters (unlike tcpdump). With it running (do not forget to execute it with elevated privileges), listening on all interfaces, you should be able to rerun the POC script and see the network traffic, as shown below:
+We would recommend Wireshark as it will be easy to see the different protocols and it is very intuitive to apply filters (unlike `tcpdump`). With it running (do not forget to execute it with elevated privileges), listening on all interfaces, you should be able to rerun the POC script and see the network traffic, as shown below:
 
 ![](/assets/images/posts/image-19.png)
 

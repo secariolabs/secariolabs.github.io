@@ -1,14 +1,14 @@
 ---
-title: Protecting Assets Behind CloudFront
-date: 2023-04-09T12:24:47+00:00
+title: "Protecting Assets Behind CloudFront"
+date: "2023-04-09T12:24:47+00:00"
 tags: 
   - aws
   - cloudfront
   - waf
-bg_image: /assets/images/posts/depositphotos_56589681-stock-photo-business-overcomes-obstacles-applying-different.webp
+bg_image: "/assets/images/posts/depositphotos_56589681-stock-photo-business-overcomes-obstacles-applying-different.webp"
 author:
-    name: '@saldat0'
-    url: https://x.com/saldat0
+    name: "@saldat0"
+    url: "https://x.com/saldat0"
 ---
 One of the most common ways of bypassing a Web Application Firewall (WAF) involves finding out the backend servers' address and connecting to it directly. An IP can be leaked in many ways, including DNS history, HTTP headers, cookies, virtual host routing with shared infrastructure, stack traces leaking source code, successful server-side request forgery attacks, even sometimes you can find it in the JavaScript source map. And assuming you locate the IP you can then directly reach the server and bypass all the protections and logging that a WAF provides.
 
