@@ -27,60 +27,60 @@ badges:
   text: |-
     Our team proudly holds a range of industry-recognised certifications in both offensive and defensive capacity, showcasing our dedication to excellence and commitment to staying at the forefront of the field.
   items:
-    - path: /assets/images/badges/oswp.png
-      alt_text: OSWP certificate badge
+    - path: "/assets/images/badges/oswp.png"
+      alt_text: "OSWP certificate badge"
       width: 150
       height: 150
-    - path: /assets/images/badges/oswe.png
-      alt_text: OSWE certificate badge
+    - path: "/assets/images/badges/oswe.png"
+      alt_text: "OSWE certificate badge"
       width: 150
       height: 150
-    - path: /assets/images/badges/oscp.png
-      alt_text: OSCP certificate badge
+    - path: "/assets/images/badges/oscp.png"
+      alt_text: "OSCP certificate badge"
       width: 150
       height: 150
-    - path: /assets/images/badges/osce.png
-      alt_text: OSCE certificate badge
+    - path: "/assets/images/badges/osce.png"
+      alt_text: "OSCE certificate badge"
       width: 150
       height: 150
-    - path: /assets/images/badges/crt.png
-      alt_text: CRT certificate badge
+    - path: "/assets/images/badges/crt.png"
+      alt_text: "CRT certificate badge"
       width: 150
       height: 150
     # - path: /assets/images/badges/cyberessentials.png
     #   alt_text: Cyber essentials certificate badge
     #   width: 250
     #   height: 300
-    - path: /assets/images/badges/aws-security-specialist.png
-      alt_text: AWS security specialist badge
+    - path: "/assets/images/badges/aws-security-specialist.png"
+      alt_text: "AWS security specialist badge"
       width: 150
       height: 150
-    - path: /assets/images/badges/aws-solutions-architect-associate.png
-      alt_text: AWS solutions architect associate badge
+    - path: "/assets/images/badges/aws-solutions-architect-associate.png"
+      alt_text: "AWS solutions architect associate badge"
       width: 150
       height: 150
-    - path: /assets/images/badges/crowdstrike-falcon-administrator.png
-      alt_text: Crowdstirke falcon administrator badge
+    - path: "/assets/images/badges/crowdstrike-falcon-administrator.png"
+      alt_text: "CrowdStirke falcon administrator badge"
       width: 150
       height: 150
-    - path: /assets/images/badges/crowdstrike-falcon-hunter.png
-      alt_text: Crowdstirke falcon hunter badge
+    - path: "/assets/images/badges/crowdstrike-falcon-hunter.png"
+      alt_text: "CrowdStirke falcon hunter badge"
       width: 150
       height: 150
-    - path: /assets/images/badges/crowdstrike-falcon-responder.png
-      alt_text: Crowdstirke falcon responder badge
+    - path: "/assets/images/badges/crowdstrike-falcon-responder.png"
+      alt_text: "CrowdStirke falcon responder badge"
       width: 150
       height: 150
-    - path: /assets/images/badges/ecpptv2.png
-      alt_text: eLearnSecurity penetration tester badge
+    - path: "/assets/images/badges/ecpptv2.png"
+      alt_text: "eLearnSecurity penetration tester badge"
       width: 150
       height: 150
     # - path: /assets/images/badges/tcmsecurity-malwareresearch.png
     #   alt_text: TCM Security malware researcher badge
     #   width: 150
     #   height: 150
-    - path: /assets/images/badges/zeropoint-redteam-ops1.png
-      alt_text: ZeroPoint red team operator v1 badge
+    - path: "/assets/images/badges/zeropoint-redteam-ops1.png"
+      alt_text: "ZeroPoint red team operator v1 badge"
       width: 150
       height: 150
 ---

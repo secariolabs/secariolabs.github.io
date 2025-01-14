@@ -36,10 +36,6 @@ jobs:
               "Darktrace",
               "shellcode",
               "Mimikatz",
-              "OSCP",
-              "OSCE",
-              "OSWE",
-              "OSWP",
             ],
             "dictionaries": ["en-gb"],
             "ignoreRegExpList": [
