@@ -1,34 +1,25 @@
-name: Check British English
+name: Spellcheck
 
 on:
-  pull_request:
   push:
-    branches:
-      - main
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
 
 jobs:
   spellcheck:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Install spell checker
-        run: pip install codespell
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-        # TODO: --ignore-words=".codespell_ignore" \
-      - name: Run spell check for British English
-        run: |
-          codespell --ignore-words-list "colorize,localize" --quiet-level=2 \
-            --skip=".git,*.png,*.jpg,*.jpeg,*.svg,*.ico,*.woff,*.woff2,*.eot,*.ttf,*.otf,_site/" \
-            --check-hidden --write-changes \
-            pages/ _posts/
+      - name: Install cspell
+        run: npm install -g cspell
 
-      - name: Fail if American English words are found
-        run: |
-          if git diff --exit-code; then
-            echo "✅ No American English words found."
-          else
-            echo "❌ American English detected! Please use British spelling."
-            exit 1
-          fi
+      - name: Run spellcheck
+        run: cspell "pages/**/*.md" "_posts/**/*.md" --config .cspell.json
