@@ -59,12 +59,9 @@ First of all, let’s check if we can see any connection attempts towards the re
 ![](/assets/images/posts/threathunting101-image4.png)
 _Figure 4 - CrowdStrike query used in the Data Lake._
 
-Essentially, this first query just matches any string in any type of event that contains this domain. From the results, we can see that we have nine events, and one of them is an event related to a DNS request. What we want to do now is systematize the information to give us a better overview of the situation. Next, we want to check which hosts have generated these events and what exact type of event was generated. For that, we can build a simple query: 
+Essentially, this first query just matches any string in any type of event that contains this domain. From the results, we can see that we have nine events, and one of them is an event related to a DNS request. What we want to do now is systematize the information to give us a better overview of the situation. Next, we want to check which hosts have generated these events and what exact type of event was generated.
 
-```text
-tailofwhale.local 
-| table([ComputerName, #event_simpleName])
-```
+For that, we can use a light query: `tailofwhale.local | table([ComputerName, #event_simpleName])`
 
 ![](/assets/images/posts/threathunting101-image6.png)
 _Figure 5 - Table view of the above Data Lake query._
