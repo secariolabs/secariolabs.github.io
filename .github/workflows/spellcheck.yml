@@ -28,13 +28,13 @@ jobs:
             "version": "0.2",
             "language": "en-GB",
             "ignoreWords": [
-              "color",
-              "flavor",
-              "honor",
-              "organize",
-              "realize"
+              "Secario"
             ],
-            "dictionaries": ["en-gb"]
+            "dictionaries": ["en-gb"],
+            "ignoreRegExpList": [
+              "/`[^`]*`/",
+              "/```[^`]*```/"
+            ]
           }
           EOF
 
