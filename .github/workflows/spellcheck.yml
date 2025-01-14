@@ -16,13 +16,13 @@ jobs:
       - name: Install spell checker
         run: pip install codespell
 
+        # TODO: --ignore-words=".codespell_ignore" \
       - name: Run spell check for British English
         run: |
           codespell --ignore-words-list "colorize,localize" --quiet-level=2 \
             --skip=".git,*.png,*.jpg,*.jpeg,*.svg,*.ico,*.woff,*.woff2,*.eot,*.ttf,*.otf,_site/" \
             --check-hidden --write-changes \
-            --ignore-words=".codespell_ignore" \
-            pages/ _posts/ ./
+            pages/ _posts/
 
       - name: Fail if American English words are found
         run: |
