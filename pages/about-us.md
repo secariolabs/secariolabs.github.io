@@ -47,7 +47,7 @@ badges:
       alt_text: "CRT certificate badge"
       width: 150
       height: 150
-    # - path: /assets/images/badges/cyberessentials.png
+    # - path: "/assets/images/badges/cyberessentials.png"
     #   alt_text: Cyber essentials certificate badge
     #   width: 250
     #   height: 300
@@ -60,15 +60,15 @@ badges:
       width: 150
       height: 150
     - path: "/assets/images/badges/crowdstrike-falcon-administrator.png"
-      alt_text: "CrowdStirke falcon administrator badge"
+      alt_text: "CrowdStrike falcon administrator badge"
       width: 150
       height: 150
     - path: "/assets/images/badges/crowdstrike-falcon-hunter.png"
-      alt_text: "CrowdStirke falcon hunter badge"
+      alt_text: "CrowdStrike falcon hunter badge"
       width: 150
       height: 150
     - path: "/assets/images/badges/crowdstrike-falcon-responder.png"
-      alt_text: "CrowdStirke falcon responder badge"
+      alt_text: "CrowdStrike falcon responder badge"
       width: 150
       height: 150
     - path: "/assets/images/badges/ecpptv2.png"
