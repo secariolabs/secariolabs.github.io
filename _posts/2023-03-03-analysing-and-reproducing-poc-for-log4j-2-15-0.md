@@ -107,7 +107,7 @@ We managed to find a bit more information for these properties in the documentat
 
 **ALLOWED_PROTOCOLS** By default the JDNI Lookup only supports the java, ldap, and ldaps protocols or no protocol. Additional protocols may be supported by specifying them on the `log4j2.allowedJndiProtocols` property.
 
-**ALLOWED_HOSTS** System property that adds host names or ip addresses that may be access by LDAP. When using LDAP only references to the local host name or ip address are supported along with any hosts or ip addresses listed in the “log4j2.allowedLdapHosts” property.
+**ALLOWED_HOSTS** System property that adds host names or ip addresses that may be access by LDAP. When using LDAP only references to the local host name or ip address are supported along with any hosts or ip addresses listed in the `log4j2.allowedLdapHosts` property.
 
 To verify this, we also looked at the source code. The default “allowed protocols” were:
 
@@ -183,9 +183,9 @@ Using payload: ${jndi:dns://test.example.com}
 
 While we were not expecting to be seeing a DNS request in `wireshark`, there had to be at least an error indicating that our protocol and host were wrong, but there was nothing there.
 
-Our assumption was wrong – there had to be more changes that we were not aware of. We tried with “log4j2.formatMsgNoLookups=true”, as this was mentioned in the patch, but it didn’t change anything. There was no DNS or TCP outbound or any additional errors. Because of this we went back to the documentation and stumbled on this:
+Our assumption was wrong – there had to be more changes that we were not aware of. We tried with `log4j2.formatMsgNoLookups=true`, as this was mentioned in the patch, but it didn’t change anything. There was no DNS or TCP outbound or any additional errors. Because of this we went back to the documentation and stumbled on this:
 
-Pattern layout no longer enables lookups within message text by default for cleaner API boundaries and reduced formatting overhead. The old ‘log4j2.formatMsgNoLookups’ which enabled this behaviour has been removed as well as the ‘nolookups’ message pattern converter option. The old behaviour can be enabled on a per-pattern basis using ‘%m{lookups}’.
+Pattern layout no longer enables lookups within message text by default for cleaner API boundaries and reduced formatting overhead. The old `log4j2.formatMsgNoLookups` which enabled this behaviour has been removed as well as the `nolookups` message pattern converter option. The old behaviour can be enabled on a per-pattern basis using `%m{lookups}`.
 
 A quick check with meld to `/log4j-core/src/main/java/org/apache/logging/log4j/core/pattern/MessagePatternConverter.java` revealed that there no longer was a flag that we can enable for lookups unless the option was included in the config file.
 
