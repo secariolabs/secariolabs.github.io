@@ -16,10 +16,27 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Install cspell
         run: npm install -g cspell
+
+      - name: Create cspell config
+        run: |
+          cat <<EOF > .cspell.json
+          {
+            "version": "0.2",
+            "language": "en-GB",
+            "ignoreWords": [
+              "color",
+              "flavor",
+              "honor",
+              "organize",
+              "realize"
+            ],
+            "dictionaries": ["en-gb"]
+          }
+          EOF
 
       - name: Run spellcheck
         run: cspell "pages/**/*.md" "_posts/**/*.md" --config .cspell.json
