@@ -3,7 +3,7 @@ title: "Threat Hunting 101"
 date: 2025-01-13T10:10:47+00:00
 tags: 
   - threat hunting
-  - crowdstrike
+  - CrowdStrike
 bg_image: /assets/images/posts/threathunting101-image0.jpg
 author:
     name: '@vibeszzzs'
@@ -18,7 +18,7 @@ _Figure 1 - Where threat hunting fits from detection to resolution._
 
 ## Indicators of Compromise (IOCs)
 
-Indicators of compromise (IOCs) are specific pieces of information or data that suggest a potential security breach or compromise. They can be static or dynamic in nature, ranging from IP addresses and malware signatures to network traffic patterns and user behavior anomalies. IOCs act as red flags, indicating that something unusual or potentially malicious is happening within an organization's network or systems.
+Indicators of compromise (IOCs) are specific pieces of information or data that suggest a potential security breach or compromise. They can be static or dynamic in nature, ranging from IP addresses and malware signatures to network traffic patterns and user behaviour anomalies. IOCs act as red flags, indicating that something unusual or potentially malicious is happening within an organization's network or systems.
 
 Common examples of IOCs include:
 
@@ -31,7 +31,7 @@ Common examples of IOCs include:
 
 Tactics, techniques, and procedures (TTPs) represent the methods and strategies employed by attackers to carry out their malicious activities. They describe the 'how' of an attack, outlining the steps, processes, and tools used by attackers to gain access, move laterally, exfiltrate data, or maintain persistence within a compromised system or network.
 
-Understanding TTPs is crucial for threat hunting because it allows organizations to anticipate and identify attack patterns even before they have been observed or associated with specific IOCs. By identifying common TTPs used by known threat actors, organizations can develop proactive defenses and detection mechanisms to prevent or disrupt attacks.
+Understanding TTPs is crucial for threat hunting because it allows organizations to anticipate and identify attack patterns even before they have been observed or associated with specific IOCs. By identifying common TTPs used by known threat actors, organizations can develop proactive defences and detection mechanisms to prevent or disrupt attacks.
 
 Examples of common TTPs include:
 

@@ -20,7 +20,7 @@ items:
   - title: Penetration Testing
     # You can use markdown for the text field
     text: |-
-      Our Penetration Testing service offers a proactive defense against cyber threats by simulating sophisticated attack scenarios. We replicate the tactics of real-world adversaries to identify hidden vulnerabilities and security gaps in your digital infrastructure. Our tailored assessments cover various attack vectors, from network and application security to social engineering, providing a realistic evaluation of your organization’s resilience. With detailed findings and prioritized recommendations, we help you understand your current risk exposure and enhance your overall cybersecurity strategy.
+      Our Penetration Testing service offers a proactive defence against cyber threats by simulating sophisticated attack scenarios. We replicate the tactics of real-world adversaries to identify hidden vulnerabilities and security gaps in your digital infrastructure. Our tailored assessments cover various attack vectors, from network and application security to social engineering, providing a realistic evaluation of your organization’s resilience. With detailed findings and prioritized recommendations, we help you understand your current risk exposure and enhance your overall cybersecurity strategy.
     cta:
       text: Get started
       url: /contact/
@@ -31,7 +31,7 @@ items:
   - title: Adversary Emulation
     # You can use markdown for the text field
     text: |-
-      Our Adversary Emulation (or ‘Red Team’) service provides a realistic simulation of advanced cyber-attacks to test your organization’s defenses. By mimicking the tactics, techniques, and procedures of real threat actors, we assess your ability to detect, respond to, and recover from targeted attacks. This comprehensive exercise evaluates your defenses across people, processes, and technologies, offering valuable insights into potential vulnerabilities and improvement areas. Our Adversary Emulation helps strengthen your cybersecurity posture, preparing you to face real-world threats more effectively.
+      Our Adversary Emulation (or ‘Red Team’) service provides a realistic simulation of advanced cyber-attacks to test your organization’s defences. By mimicking the tactics, techniques, and procedures of real threat actors, we assess your ability to detect, respond to, and recover from targeted attacks. This comprehensive exercise evaluates your defences across people, processes, and technologies, offering valuable insights into potential vulnerabilities and improvement areas. Our Adversary Emulation helps strengthen your cybersecurity posture, preparing you to face real-world threats more effectively.
     cta:
       text: Get started
       url: /contact/

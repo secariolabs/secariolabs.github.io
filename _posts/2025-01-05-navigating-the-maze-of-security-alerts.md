@@ -4,7 +4,7 @@ date: 2025-01-05T10:24:47+00:00
 tags: 
   - SecOps
   - threat hunting
-  - crowdstrike
+  - CrowdStrike
 bg_image: /assets/images/posts/navigatingthemazeofsecurityalerts-hero.webp
 author:
     name: '@vibeszzzs'
@@ -30,7 +30,7 @@ Alright, we understand why triage is important—let's take a look at several di
 4. **Where**: Locate the affected systems or endpoints and identify any potential spread.
 5. **Why**: Analyze the motivations and objectives behind the alert to understand the threat.
 
-For the scenarios we will be analyzing below, we will be using [CrowdStrike Security Solution](https://www.crowdstrike.com/). CrowdStrike is a next-generation Endpoint Detection and Response (EDR) solution that provides enhanced protection capabilities beyond traditional antivirus (AV) solutions.
+For the scenarios we will be analysing below, we will be using [CrowdStrike Security Solution](https://www.crowdstrike.com/). CrowdStrike is a next-generation Endpoint Detection and Response (EDR) solution that provides enhanced protection capabilities beyond traditional antivirus (AV) solutions.
 
 ### 2.1 Scenario 1
 

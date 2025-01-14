@@ -7,7 +7,7 @@ on:
     branches: ["main"]
 
 jobs:
-  spellcheck:
+  British-English:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -29,7 +29,10 @@ jobs:
             "language": "en-GB",
             "ignoreWords": [
               "Secario",
-              "secariolabs"
+              "secariolabs",
+              "SIEM",
+              "CISO",
+              "AMSI"
             ],
             "dictionaries": ["en-gb"],
             "ignoreRegExpList": [
