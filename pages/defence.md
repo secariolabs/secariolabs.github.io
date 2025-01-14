@@ -46,8 +46,7 @@ services:
         Recognized as a Visionary in Gartner's 2024 Magic Quadrant for Endpoint Protection Platforms and named Customers' Choice in EMEA, Bitdefender's GravityZone Platform offers comprehensive threat protection, real-time response, and enhanced prevention through machine learning, ideal for robust business security.
       image:
         path: /assets/images/edr-states.png
-        alt_text: "Gartner Magic Quadrant for Endpoint Protection Plattforms – December 2023"
-        # caption: "Grafik 2: Gartner Magic Quadrant for Endpoint Protection Plattforms – December 2023"
+        alt_text: "Gartner Magic Quadrant for Endpoint Protection Platforms – December 2023"
     - title: Identify deviations from normal behaviour
       text: |-
         After recording normal behaviour, we identify and check any anomalies that deviate from it. In this way, conspicuous relationships between users and devices are identified - without the time-consuming setup and maintenance of static use cases. This means that the analysis does not focus on individual log sources or linked events, but on the overall behaviour of your company, your users and your devices.
@@ -116,7 +115,7 @@ info:
         With our Incident Response Service, we ensure that your company has the right resources and skills available in the event of an emergency. You pay a fixed monthly flat rate and we offer you a reliable on-call service.
       link: ""
 callout:
-  heading: Fortify Your Defenses
+  heading: Fortify Your Defences
   text: |-
     Gain critical insights into your organization's resilience against sophisticated cyber threats.
 ---
