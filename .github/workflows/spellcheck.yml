@@ -23,7 +23,7 @@ jobs:
 
       - name: Create cspell config
         run: |
-          cat <<EOF > .cspell.json
+          cat > .cspell.json << 'EOF'
           {
             "version": "0.2",
             "language": "en-GB",
@@ -33,9 +33,9 @@ jobs:
             ],
             "dictionaries": ["en-gb"],
             "ignoreRegExpList": [
-              "/`[^`]*`/",
-              "/```[^`]*```/",
-              "/```[a-z]*\\n[^`]*```/"
+              "`[^`]*`",
+              "```[^`]*```",
+              "```[a-z]*\\n[^`]*```"
             ]
           }
           EOF
