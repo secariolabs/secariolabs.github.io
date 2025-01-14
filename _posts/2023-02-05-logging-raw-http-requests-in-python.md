@@ -211,7 +211,7 @@ DEBUG:urllib3.connectionpool:https://secariolabs.com:443 "GET / HTTP/1.1" 200 16
 
 Again, this technique comes with the limitation that multiprocessing can create a havoc when trying to match a request with response as they are not directly tied. The data is being printed as it is read on the socket, and not in batches; because of that each HTTP header is printed separately, rather than the whole HTTP packet being a single object.
 
-## Roundtrip Hook
+## Round-trip Hook
 
 Finally, the most comprehensive -- but also involving -- technique of doing detailed logging is to use request "hooks". In essence they allow (either per session or per individual request) to set a hook for a particular action which will be invoked by the `requests` module when the action is triggered.
 
