@@ -33,7 +33,13 @@ jobs:
               "SIEM",
               "CISO",
               "AMSI",
-              "Darktrace"
+              "Darktrace",
+              "shellcode",
+              "Mimikatz",
+              "OSCP",
+              "OSCE",
+              "OSWE",
+              "OSWP",
             ],
             "dictionaries": ["en-gb"],
             "ignoreRegExpList": [

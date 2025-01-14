@@ -45,7 +45,7 @@ _Figure 2 - Details page of the alert._
 We can use the five Ws rule to perform some initial triaging.
 
 1. **Who**: We can see the user in the `username` field, which in this case is **Bob**.
-2. **What**: The alert has been classified as **Medium** severity. Furthermore, we can also see that it states custom intelligence via Indicator of Attack (IOA). In this case, the [custom IOA rules](https://www.crowdstrike.com/blog/tech-center/custom-ioas/) come from the vendor. The alert was triggered due to a connection towards a specified destination in the rule: **the sports news website sportal.bg**.
+2. **What**: The alert has been classified as **Medium** severity. Furthermore, we can also see that it states custom intelligence via Indicator of Attack (IOA). In this case, the [custom IOA rules](https://www.crowdstrike.com/blog/tech-center/custom-ioas/) come from the vendor. The alert was triggered due to a connection towards a specified destination in the rule: **the sports news website `sportal.bg`**.
 3. **When**: This can easily be seen in the `time` field, which states the date and hour.
 4. **Where**: The `hostname` field shows the system name, which in this case is a **MacBook device**.
 5. **Why**: The alert was raised due to a custom detection rule, as mentioned in the What question.
@@ -55,7 +55,7 @@ Next, we can focus on the alert named `Sportal.bg Test.` We can also check the d
 ![](/assets/images/posts/navigatingthemazeofsecurityalerts-image4.png)
 _Figure 3 - OSINT platform VirusTotal information about a particular domain._
 
-Let's look a bit deeper at the command line itself. The ping command is usually used to test connectivity and verify whether a destination is reachable. The command `ping -c 10 sportal.bg` sends 10 echo requests to the website **sportal.bg**. This means that the command asks the website to send back an echo response for each packet sent. The `-c` option specifies the number of packets to send, and 10 tells the command to send ten packets.
+Let's look a bit deeper at the command line itself. The ping command is usually used to test connectivity and verify whether a destination is reachable. The command `ping -c 10 sportal.bg` sends 10 echo requests to the website `sportal.bg`. This means that the command asks the website to send back an echo response for each packet sent. The `-c` option specifies the number of packets to send, and 10 tells the command to send ten packets.
 
 Combining the above-mentioned observations, we can draw some conclusions.
 
