@@ -37,6 +37,10 @@ jobs:
               "Darktrace",
               "shellcode",
               "Mimikatz",
+              "Bitdefender",
+              "Talos",
+              "Wireshark",
+              "ldaps"
             ],
             "dictionaries": ["en-gb"],
             "ignoreRegExpList": [
@@ -49,7 +53,4 @@ jobs:
           EOF
 
       - name: Run spellcheck
-        run: |
-          cspell "pages/**/*.md" "_posts/**/*.md" --config .cspell.json
-        #    \
-        #   || echo "⚠️ Spellcheck found American English words, but continuing."
+        run: cspell "pages/**/*.md" "_posts/**/*.md" --config .cspell.json
