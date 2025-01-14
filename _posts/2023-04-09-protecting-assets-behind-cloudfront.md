@@ -2,9 +2,9 @@
 title: "Protecting Assets Behind CloudFront"
 date: "2023-04-09T12:24:47+00:00"
 tags: 
-  - aws
-  - cloudfront
-  - waf
+  - "aws"
+  - "cloudfront"
+  - "waf"
 bg_image: "/assets/images/posts/depositphotos_56589681-stock-photo-business-overcomes-obstacles-applying-different.webp"
 author:
     name: "@saldat0"

@@ -41,7 +41,8 @@ jobs:
               "Talos",
               "Wireshark",
               "ldaps",
-              "vibeszzzs"
+              "vibeszzzs",
+              "saldat"
             ],
             "dictionaries": ["en-gb"],
             "ignoreRegExpList": [
