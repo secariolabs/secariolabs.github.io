@@ -48,6 +48,34 @@
         grid-template-columns: repeat((1, 1fr));
       }
     }
+
+    &--inner {
+      margin: 0;
+      gap: 1rem;
+
+      &:not(:first-of-type) {
+        margin: 0;
+      }
+    }
+
+    &--desktop {
+      @include breakpoint(medium) {
+        display: none;
+      }
+    }
+
+    &--mobile {
+      display: none;
+
+      @include breakpoint(medium) {
+        display: grid;
+        margin-top: 2rem;
+        &:not(:first-of-type) {
+          margin-top: 2rem;
+        }
+      }
+    }
+
   }
 
   &__col {
@@ -64,6 +92,19 @@
     &--location {
       line-height: 1.6;
     }
+
+    &--social {
+      grid-column: 1 / span 2;
+    }
+
+    &--mobile {
+      display: none;
+      @include breakpoint(medium) {
+        display: block;
+        margin-top: 2rem;
+      }
+    }
+
   }
 
   &__logo-wrapper {
@@ -82,34 +123,43 @@
     margin-top: 0;
   }
 
+  &-desc {
+    @include breakpoint(medium) {
+      max-width: 800px;
+    }
+  }
+
+  &-form {
+    margin-top: 1.75rem;
+
+    @include breakpoint(smaller) {
+      margin-top: 2rem;
+    }
+  }
+
   &__form-fields {
     display: flex;
     align-items: center;
 
-    @include breakpoint(medium) {
+    @include breakpoint(small) {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    @include breakpoint(smaller) {
       flex-direction: column;
       align-items: flex-start;
+    }
+
+    & > * {
+      // width: 100%;
 
       @include breakpoint(small) {
-        flex-direction: row;
-        align-items: center;
+        width: auto;
       }
 
       @include breakpoint(smaller) {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      & > * {
         width: 100%;
-
-        @include breakpoint(small) {
-          width: auto;
-        }
-
-        @include breakpoint(smaller) {
-          width: 100%;
-        }
       }
     }
   }
@@ -157,8 +207,8 @@
 
   &__social-item {
     background-color: $light;
-    width: 40px;
-    height: 38px;
+    width: 45px;
+    height: 43px;
     border-radius: 100%;
     color: $dark;
     display: flex;
