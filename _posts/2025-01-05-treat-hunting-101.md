@@ -14,7 +14,7 @@ First of all, it is necessary to define what threat hunting actually means in th
 IOCs and TTPs are two crucial concepts in the world of cybersecurity, particularly in the context of threat hunting. Understanding their distinct roles is essential for effective threat detection and mitigation.
 
 ![](/assets/images/posts/threathunting101-image17.png)
-<!-- _Figure 1 - ._ -->
+_Figure 1 - Where threat hunting fits from detection to resolution._
 
 ## Indicators of Compromise (IOCs)
 
@@ -54,7 +54,7 @@ _Figure 2 - Sample email from the TI team._
 First of all, let’s check if we can see any connection attempts towards the remote server. Let’s get into CrowdStrike and try to build our first query, which will focus on whether anything regarding this domain has been observed. In the Data Lake search, we can build the following query, which will give us initial information on whether anything attempted such a connection:
 
 ![](/assets/images/posts/threathunting101-image10.png)
-<!-- _Figure 3 - Using CrodStrike's basic search._ -->
+_Figure 3 - CrowdStrike simplified data lake search for any field containing the domain._
 
 ![](/assets/images/posts/threathunting101-image4.png)
 _Figure 4 - CrowdStrike query used in the Data Lake._
