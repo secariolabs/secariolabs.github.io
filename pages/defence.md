@@ -64,7 +64,7 @@ levels:
         - Service Times
         - SLA qualification of alarms and first response
         - SLA Expert Response (remote)
-        - 24x7 Automatated Response
+        - 24x7 Automated Response
         - Proactive Threat Hunting
     - title: Basic
       items:
