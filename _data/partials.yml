@@ -27,7 +27,7 @@ services:
     - title: Adversary Emulation
       # You can use markdown for the text field
       text: |-
-        Our Adversary Emulation (also known as ‘Red Team’) engagements are designed to provide a realistic demonstration of your organization’s vulnerability to sophisticated cyber-attacks and enhance overall cybersecurity. This exercise covers the full scope of a potential attack from an external threat actor’s perspective, assessing the organization’s defenses across all areas, including people, processes, and technologies. It identifies how these elements could be targeted and exploited by a malicious actor to achieve specific objectives, providing actionable insights to fortify your security posture. 
+        Our Adversary Emulation (also known as ‘Red Team’) engagements are designed to provide a realistic demonstration of your organization’s vulnerability to sophisticated cyber-attacks and enhance overall cybersecurity. This exercise covers the full scope of a potential attack from an external threat actor’s perspective, assessing the organization’s defences across all areas, including people, processes, and technologies. It identifies how these elements could be targeted and exploited by a malicious actor to achieve specific objectives, providing actionable insights to fortify your security posture. 
       image:
         path: /assets/images/icons/computer-repair.png
         alt_text: ''

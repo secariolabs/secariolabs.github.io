@@ -38,21 +38,21 @@ partners:
   text: |-
     Our valued partners are at the core of our success, reflecting mutual respect and shared goals. We are proud to collaborate with organisations that recognise our expertise and professionalism, building enduring relationships founded on trust and exceptional results.
   logos:
-    - path: /assets/images/logos/cyberwales.png
-      alt_text: Cyber Wales logo
+    - path: "/assets/images/logos/cyberwales.png"
+      alt_text: "Cyber Wales logo"
       width: 524
       height: 303
-      url: https://cyberwales.net/
-    - path: /assets/images/logos/darktrace.png
-      alt_text: Darktrace logo
+      url: "https://cyberwales.net/"
+    - path: "/assets/images/logos/darktrace.png"
+      alt_text: "Darktrace logo"
       width: 1024
       height: 300
-      url: https://darktrace.com/
-    - path: /assets/images/logos/computer2000.jpg
-      alt_text: Computer 2000 logo
+      url: "https://darktrace.com/"
+    - path: "/assets/images/logos/computer2000.jpg"
+      alt_text: "Computer 2000 logo"
       width: 2316
       height: 908
-      url: https://computer2000.bg
+      url: "https://computer2000.bg"
 
 testimonials:
   heading: What Our Clients Say

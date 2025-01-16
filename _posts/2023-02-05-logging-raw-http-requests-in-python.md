@@ -1,10 +1,10 @@
 ---
-title: Logging Raw HTTP Requests in Python
-date: 2023-02-05T19:50:55+00:00
-bg_image: /assets/images/posts/data-center-with-server-racks-2022-07-26-17-02-57-utc-1200x470.jpg
+title: "Logging Raw HTTP Requests in Python"
+date: "2023-02-05T19:50:55+00:00"
+bg_image: "/assets/images/posts/data-center-with-server-racks-2022-07-26-17-02-57-utc-1200x470.jpg"
 author:
-    name: '@saldat0'
-    url: https://x.com/saldat0
+    name: "@saldat0"
+    url: "https://x.com/saldat0"
 ---
 Quite often, during our red team engagements, we find ourselves in a situation where we need to carry out web research & exploitation over several chained proxies. To that extended, to be able to do any reasonable web testing we need to be able to see the requests we send to the server and the corresponding replies. Tools like **BurpSuite** and **mitmproxy** can be helpful, however, by themselves, they introduce a lot of additional complexity, traffic overhead, and they are not very easy to configure in terms of what and how it is being logged. Sometimes you just want to have control over the data and do something with it. Because of that, our weapon of choice for most of these edge cases is **Python** with **ProxyChains**. The reason we like **Python** is because it is easy to enable HTTP request/response logging with the minimal amount of code.
 
@@ -211,7 +211,7 @@ DEBUG:urllib3.connectionpool:https://secariolabs.com:443 "GET / HTTP/1.1" 200 16
 
 Again, this technique comes with the limitation that multiprocessing can create a havoc when trying to match a request with response as they are not directly tied. The data is being printed as it is read on the socket, and not in batches; because of that each HTTP header is printed separately, rather than the whole HTTP packet being a single object.
 
-## Roundtrip Hook
+## Round-trip Hook
 
 Finally, the most comprehensive -- but also involving -- technique of doing detailed logging is to use request "hooks". In essence they allow (either per session or per individual request) to set a hook for a particular action which will be invoked by the `requests` module when the action is triggered.
 
