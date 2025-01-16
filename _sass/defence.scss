@@ -505,11 +505,16 @@
     background-position: center;
     background-attachment: fixed;
 
+    
     background-image: var(--contact-bg-image);
-
+    
     background-color: var(--contact-bg-color);
-
+    
     color: $light;
+    
+    @include touch_device {
+      background-attachment: scroll;
+    }
 
     @include breakpoint(small) {
       background-image: none;
