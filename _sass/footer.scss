@@ -26,12 +26,15 @@
     &--2 {
       grid-template-columns: 50% 1fr;
 
+      gap: 2rem;
+
       @include breakpoint(medium) {
         grid-template-columns: 300px 1fr;
       }
 
       @include breakpoint(small) {
         grid-template-columns: repeat(1, minmax(0, 1fr));
+        gap: 1rem;
       }
     }
 
