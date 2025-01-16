@@ -60,7 +60,7 @@
 
     &--desktop {
       @include breakpoint(medium) {
-        display: none;
+        display: none !important;
       }
     }
 
