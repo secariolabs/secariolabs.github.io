@@ -241,13 +241,13 @@ article.post {
 
 #mc-embedded-subscribe {
   &.site-footer__form-submit {
-    @include breakpoint(medium) {
-      margin-left: 0;
-    }
+    margin-top: 0;
+    margin-bottom: 0;
     @include breakpoint(small) {
       margin-left: .5rem;
     }
     @include breakpoint(smaller) {
+      margin-top: 1rem;
       margin-left: 0;
     };
   }
