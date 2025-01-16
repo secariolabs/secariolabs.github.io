@@ -36,6 +36,14 @@ $zinc: #3f3f46;
   }
 }
 
+@mixin touch_device {
+  @media (any-pointer: coarse) and (any-hover: none) {
+    @media not all and (any-pointer: fine) {
+      @content;
+    }
+  }
+}
+
 @mixin mobile_btn($display: block) {
   @include breakpoint(smaller) {
     display: $display;
