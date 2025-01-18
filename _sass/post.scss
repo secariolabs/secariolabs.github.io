@@ -74,4 +74,17 @@
       }
     }
   }
+
+  &__share {
+    &-wrapper {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    &-text {
+      color: $alt_dark;
+      font-style: italic;
+    }
+  }
+
 }

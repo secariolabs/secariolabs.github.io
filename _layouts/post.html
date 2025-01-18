@@ -41,6 +41,20 @@ layout: default
 
       <article class="post">{{content}}</article>
 
+      <div class="post__share-wrapper">
+        <p class="post__share-text">
+          If you found this article useful, please feel free to share it
+        </p>
+        <div class="site-footer__social">
+          <a class="site-footer__social-item site-footer__social-item" href="https://x.com/share?url={{ page.url | absolute_url }}&text={{ page.title | uri_escape }}" target="_blank">
+            {%- include svg/social/x.svg -%}
+          </a>
+          <a class="site-footer__social-item site-footer__social-item" href="https://www.linkedin.com/shareArticle?mini=true&url={{ page.url | absolute_url }}" target="_blank">
+            {%- include svg/social/linkedin.svg -%}
+          </a>
+        </div>
+      </div>
+
       {%- if page.next or page.previous -%}
       <div class="post__nav-wrapper">
         <h3 class="post__nav-heading">More articles</h3>

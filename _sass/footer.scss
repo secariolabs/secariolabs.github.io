@@ -171,6 +171,25 @@
     &:not(:last-child) {
       margin-right: 0.75rem;
     }
+
+    svg {
+      filter: grayscale(1);
+      transition: filter .15s linear;
+    }
+    
+    &:not(.btn) {
+      transition: background-color .15s linear;
+      
+      &:hover {
+        opacity: 1;
+        background-color: rgba(255, 255, 255, .85);
+        svg {
+          filter: grayscale(0);
+        }
+      }
+    }
+
+
   }
 
   &__bottom {
