@@ -78,10 +78,16 @@
   &__share {
     &-wrapper {
       display: flex;
-      justify-content: flex-end;
+      margin-top: 3rem;
+
+      @include breakpoint(small) {
+        flex-direction: column;
+      }
     }
 
     &-text {
+      margin: 0;
+      margin-right: 1rem;
       color: $alt_dark;
       font-style: italic;
     }

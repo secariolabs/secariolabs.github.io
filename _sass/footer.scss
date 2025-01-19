@@ -156,6 +156,13 @@
   &__social {
     display: flex;
     align-items: center;
+
+
+    &--share {
+      @include breakpoint(small) {
+        margin-top: 1rem;
+      }
+    }
   }
 
   &__social-item {
@@ -187,6 +194,24 @@
           filter: grayscale(0);
         }
       }
+    }
+
+    &--share {
+      width: auto;
+      height: auto;
+
+      &:not(:last-child) {
+        margin-right: 1rem;
+      }
+      
+      svg {
+        width: auto;
+        height: 24px;
+        @include breakpoint(small) {
+          height: 28px;
+        }
+      } 
+
     }
 
 
