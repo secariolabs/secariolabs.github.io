@@ -72,6 +72,15 @@
       &--prev {
         margin-right: 2rem;
       }
+
+      &--even {
+        display: flex;
+        justify-content: flex-end;
+
+        @include breakpoint(small) {
+          display: block;
+        }
+      }
     }
   }
 

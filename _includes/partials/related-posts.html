@@ -1,0 +1,26 @@
+{%- assign related_posts = '' | split: '' -%}
+
+{%- for page_tag in page.tags -%}
+    {%- for post in site.tags[page_tag] -%}
+        {%- unless post.id == page.id -%}
+            {%- assign related_posts = related_posts | push: post -%}
+        {%- endunless -%}
+    {%- endfor -%}
+{%- endfor -%}
+
+{%- assign related_posts = related_posts | uniq -%}
+
+{%- if related_posts.size > 0 -%}
+    <div class="post__nav-wrapper">
+        <h3 class="post__nav-heading">More articles</h3>
+
+        <div class="cols{% if related_posts.size > 1 %} cols--2 cols--gap-2{% endif %}">
+            {%- for post in related_posts -%}
+                {%- assign mod2 = forloop.index | modulo: 2 -%}
+                <a href="{{- post.url | relative_url -}}" class="post__nav-item{% if mod2 == 0 %} post__nav-item--even{% endif %}">
+                    {{- post.title -}}
+                </a>
+            {%- endfor -%}
+        </div>
+    </div>
+{%- endif -%}

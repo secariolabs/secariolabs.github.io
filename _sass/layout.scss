@@ -64,6 +64,14 @@
     gap: 0;
   }
 
+  &--gap-2 {
+    gap: 2rem;
+
+    @include breakpoint(small) {
+      gap: 1rem;
+    }
+  }
+
   // &--2-thirds-1-third {
   //     grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
   //     gap: 4rem;
