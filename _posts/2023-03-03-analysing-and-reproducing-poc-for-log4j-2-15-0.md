@@ -14,7 +14,6 @@ This blog goes over the research we performed from start to finish to produce a 
 
 To start with, we downloaded the vulnerable 2.14.1 log4j library, as well as the patched 2.15.0:
 
-{: .no-stripes}
 ```bash
 user@ubuntu:~/poc$ wget -q https://archive.apache.org/dist/logging/log4j/2.14.1/apache-log4j-2.14.1-src.tar.gz
 user@ubuntu:~/poc$ tar zxf apache-log4j-2.14.1-src.tar.gz 
