@@ -75,3 +75,20 @@ _Responsive table caption_
 ```
 
 **Patern:** The caption text should be between undercores and below the `<div>` (the lines (if any) between them do not make a difference)
+
+## Code snippets
+
+### Switch zebra stripes off
+
+Taking advantage of the fact that Jekyll uses Kramdown for parsing markdown, we can inject custom classes into the code blocks.
+
+So in order to switch the zebra stripes off, just add `{: .no-styles}` right before the beginning of the code snippet. Do not leave empty lines between them.
+
+For example:
+
+`````
+{: .no-stripes}
+```bash
+user@ubuntu:~/poc$ clear
+user@ubuntu:~/poc$ ls -l
+```
