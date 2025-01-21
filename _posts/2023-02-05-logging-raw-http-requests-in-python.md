@@ -34,6 +34,7 @@ requests.get("http://secariolabs.com")
 
 Once you do that, you will have full visibility over the requests in their final form, as show next:
 
+{: .no-stripes}
 ```bash
 --------- BEGIN REQUEST ---------
 GET / HTTP/1.1
@@ -79,6 +80,7 @@ requests.get('http://secariolabs.com')
 
 The output of the above script is included below:
 
+{: .no-stripes}
 ```bash
 DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): secariolabs.com:80
 send: b'GET / HTTP/1.1\r\nHost: secariolabs.com\r\nUser-Agent: python-requests/2.27.0\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nConnection: keep-alive\r\n\r\n'
@@ -159,6 +161,7 @@ requests.get('http://secariolabs.com')
 
 While the output from the above script appears very similar, notice the presence of brackets around each line indicating that the data is stored as a tuple and we can manipulate and use it as we wish:
 
+{: .no-stripes}
 ```bash
 DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): secariolabs.com:80
 ('send:', "b'GET / HTTP/1.1\\r\\nHost: secariolabs.com\\r\\nUser-Agent: python-requests/2.27.0\\r\\nAccept-Encoding: gzip, deflate\\r\\nAccept: */*\\r\\nConnection: keep-alive\\r\\n\\r\\n'")
@@ -269,6 +272,7 @@ session.get('http://secariolabs.com')
 
 The output of the above command looks as follows:
 
+{: .no-stripes}
 ```bash
 2022-06-16 00:31:43,991 DEBUG urllib3.connectionpool Starting new HTTP connection (1): secariolabs.com:80
 2022-06-16 00:31:44,042 DEBUG urllib3.connectionpool http://secariolabs.com:80 "GET / HTTP/1.1" 301 183
@@ -345,7 +349,6 @@ X-Amz-Cf-Id: 7eReUC-yuJugzYBRCVoKauftHc53DvdsKi1hx1pU5M9TjJc_Ml6n9Q==
 
 <!DOCTYPE html>
 [...snip...]
-
 ```
 
 This concludes our quick look into HTTP logging using Python.

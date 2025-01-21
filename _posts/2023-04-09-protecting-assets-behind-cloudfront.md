@@ -28,25 +28,20 @@ For this example, we can create a simple web server in AWS with a *public* and a
 
 The first thing we need to do is create a security group with an inbound "allow all" rule for port 80:
 
+{: .no-stripes}
 ```bash
-$ aws ec2 create-security-group\
-	--group-name ExampleWebsite\
-	--description "Example Website for testing CloudFront with WAF rules"
+$ aws ec2 create-security-group --group-name ExampleWebsite --description "Example Website for testing CloudFront with WAF rules"
 {
     "GroupId": "sg-0de46ea030c72802c"
 }
-$ aws ec2 authorize-security-group-ingress\
-	--group-id sg-0de46ea030c72802c\
-	--protocol tcp --port 80 --cidr 0.0.0.0/0
+$ aws ec2 authorize-security-group-ingress --group-id sg-0de46ea030c72802c --protocol tcp --port 80 --cidr 0.0.0.0/0
 ```
 
 Next, optionally, we can quickly create an SSH key to use for the new system:
 
+{: .no-stripes}
 ```bash
-$ aws ec2 create-key-pair\
-	--key-name MyKeyPair\
-	--query 'KeyMaterial'\
-	--output text > MyKeyPair.pem
+$ aws ec2 create-key-pair --key-name MyKeyPair --query 'KeyMaterial' --output text > MyKeyPair.pem
 ```
 
 Finally, we will need a simple bash script `script.sh` to run at build time on the web server:
@@ -55,24 +50,22 @@ Finally, we will need a simple bash script `script.sh` to run at build time on t
 #!/bin/bash
 
 yum update -y
-
 yum install -y httpd.x86_64
-
 systemctl start httpd.service
 
 echo "This is a public page"  > /var/www/html/index.html
-
 echo "secret"  > /var/www/html/private.html
 ```
 
 With these prerequisites out of the way, now is time to just build the web server:
 
+{: .no-stripes}
 ```bash
-$ aws ec2 run-instances\
-	--image-id ami-0ad97c80f2dfe623b\
-	--instance-type t2.nano\
-	--user-data file://script.sh\
-	--security-group-ids sg-0de46ea030c72802c\
+$ aws ec2 run-instances \
+	--image-id ami-0ad97c80f2dfe623b \
+	--instance-type t2.nano \
+	--user-data file://script.sh \
+	--security-group-ids sg-0de46ea030c72802c \
 	--key-name MyKeyPair
 {
     "Groups": [],
@@ -85,16 +78,15 @@ $ aws ec2 run-instances\
 
 A couple of minutes later, it is possible to get the public IP of the system with the following command:
 
+{: .no-stripes}
 ```bash
-$ aws ec2 describe-instances\
-	--instance-ids i-0af0b1290214d5d95\
-	--query 'Reservations[*].Instances[*].PublicIpAddress'\
-	--output text
+$ aws ec2 describe-instances --instance-ids i-0af0b1290214d5d95 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text
 18.133.242.145
 ```
 
 Now is time to check the environment; we can quickly see that the server is up and the pages are there:
 
+{: .no-stripes}
 ```bash
 $ curl http://18.133.242.145
 This is a public page
@@ -106,6 +98,7 @@ secret
 
 To set up CloudFront, we will need to first create a DNS record for the web server. We already a hosted zone configured in the AWS account which we can use, as shown below:
 
+{: .no-stripes}
 ```bash
 $ aws route53 list-hosted-zones
 {
@@ -137,14 +130,14 @@ To create an `A` record mapping `private.demo.secariolabs.com` to the EC2 system
 
 Now is just a matter of making the request to Route 53, as shown below:
 
+{: .no-stripes}
 ```bash
-$ aws route53 change-resource-record-sets\
-	--hosted-zone-id "/hostedzone/Z0520503IHM7MMFXXXXX"\
-	--change-batch file://create-record.json
+$ aws route53 change-resource-record-sets --hosted-zone-id "/hostedzone/Z0520503IHM7MMFXXXXX" --change-batch file://create-record.json
 ```
 
 A couple of seconds later you can check that the record is active:
 
+{: .no-stripes}
 ```bash
 $ aws route53 get-change --id C018062338JPC4J7GN2I9
 {
@@ -159,6 +152,7 @@ $ aws route53 get-change --id C018062338JPC4J7GN2I9
 
 And we can confirm that the site is still accessible:
 
+{: .no-stripes}
 ```bash
 $ curl http://private.demo.secariolabs.com
 This is a public page
@@ -209,6 +203,7 @@ The next step is to finally create the CloudFront distribution routing traffic t
 
 And the final command to create it looks as follows:
 
+{: .no-stripes}
 ```bash
 $ aws cloudfront create-distribution --distribution-config file://distribution.json
 {
@@ -226,6 +221,7 @@ $ aws cloudfront create-distribution --distribution-config file://distribution.j
 
 A couple of minutes later we can go ahead and check the connection to the site:
 
+{: .no-stripes}
 ```bash
 $ curl http://d1489et6zspdol.cloudfront.net -L
 This is a public page
@@ -267,6 +263,7 @@ The next task for us is to create a WAF rule which we can use to protect everyth
 
 Time to create the rule, where you will notice it is specifically created for CloudFront and the `us-east-1` region even though our EC2 instance is in `eu-west-2`. The reason this is the case is because CloudFront only exists in `us-east-1` and the WAF rule(s) have to be in the same region, whereas because CloudFront maps to an external IP address, there is no strict requirement for the EC2 system to be in the same region.
 
+{: .no-stripes}
 ```bash
 $ aws wafv2 create-web-acl\
     --name TestWebAcl\
@@ -290,21 +287,21 @@ While the intuitive step at this moment would be to use `aws wafv2 associate-web
 
 To Download the configuration file we can use the following command:
 
+{: .no-stripes}
 ```bash
-$ aws cloudfront get-distribution-config\
-	--id E3OSJ4978QOTZ2\
-	--query "DistributionConfig"\
-	--output json > current-distribution.json
+$ aws cloudfront get-distribution-config --id E3OSJ4978QOTZ2 --query "DistributionConfig" --output json > current-distribution.json
 ```
 
 Next we can patch the `WebACLId` value to list the rule we want to be applied:
 
+{: .no-stripes}
 ```bash
 sed '/WebACLId/c\"WebACLId\":\"arn:aws:wafv2:us-east-1:9536171XXXXX:global/webacl/TestWebAcl/74941941-24b9-4b1e-b0c0-276a653aad85\",' current-distribution.json > updated-distribution.json
 ```
 
 Finally, we can make an update request, where you will notice we not only are passing the `DistributionId`, but also the `ETag` we received when we created the distribution.
 
+{: .no-stripes}
 ```bash
 $ aws cloudfront update-distribution\
 	--id E3OSJ4978QOTZ2\
@@ -324,6 +321,7 @@ $ aws cloudfront update-distribution\
 
 To make sure the rule is applied we can check the access to the pages:
 
+{: .no-stripes}
 ```bash
 $ curl https://d1489et6zspdol.cloudfront.net
 This is a public page
@@ -447,10 +445,9 @@ Starting with the IAM policy, we will need the following `lambdarole.json` file:
 
 The policy creation can be done with the following command:
 
+{: .no-stripes}
 ```bash
-$ aws iam create-policy\
-	--policy-name LambdaPolicy\
-	--policy-document file://lambdarole.json
+$ aws iam create-policy --policy-name LambdaPolicy --policy-document file://lambdarole.json
 {
     "Policy": {
         "PolicyName": "LambdaPolicy",
@@ -476,10 +473,9 @@ Next, we will need to create a Lambda-based IAM role and then attach to it the p
 
 The commands needed to create the role and attach the policy look as follows:
 
+{: .no-stripes}
 ```bash
-$ aws iam create-role\
-	--role-name LambdaExecutionRole\
-	--assume-role-policy-document  file://basepolicy.json
+$ aws iam create-role --role-name LambdaExecutionRole --assume-role-policy-document  file://basepolicy.json
 {
     "Role": {
         "Path": "/",
@@ -494,6 +490,7 @@ $ aws iam attach-role-policy\
 
 Finally, we can archive the Lambda function we wrote and upload it to AWS:
 
+{: .no-stripes}
 ```bash
 $ zip code.zip lambda_function.py
 $ aws lambda create-function\
@@ -513,11 +510,9 @@ $ aws lambda create-function\
 
 Before we can test the Lambda function it is important to note that on average there are around 145-6 IP addresses associated with CloudFront, and because we will need to list each one of these IPs as a separate rule in the security group, we will hit the default quota on AWS for the number of *Inbound or outbound rules per security group*. So, it is important before we move forward to increase our quota with the following command:
 
+{: .no-stripes}
 ```bash
-$ aws service-quotas request-service-quota-increase\
-    --service-code vpc\
-    --quota-code L-0EA8095F\
-    --desired-value 160
+$ aws service-quotas request-service-quota-increase --service-code vpc --quota-code L-0EA8095F --desired-value 160
 ```
 
 Keep in mind that the previous command could take an hour (or even more) to go into effect. But once ready, we can then use test input (file `lambdatestinput.json`) to run the command and see how it will behave. You will notice that this input appears to be an SNS event message, which is intentional. AWS has a public SNS topic that they use to notify whenever there is a change with the IP address association, so at the very end of our setup, we will subscribe to it, but before that, we will use it as test input:
@@ -548,11 +543,9 @@ Keep in mind that the previous command could take an hour (or even more) to go i
 
 To invoke the Lambda function with the test input we can use the following command:
 
+{: .no-stripes}
 ```bash
-$ aws lambda invoke\
-	--function-name UpdatingSGForCloudFront\
-	--payload fileb://lambdatestinput.json\
-	outputfile.txt
+$ aws lambda invoke --function-name UpdatingSGForCloudFront --payload fileb://lambdatestinput.json outputfile.txt
 {
     "StatusCode": 200,
     "ExecutedVersion": "$LATEST"
@@ -563,15 +556,15 @@ null
 
 And to verify that indeed the rules have been created, we can check how many rules our security group now has:
 
+{: .no-stripes}
 ```bash
-$ aws ec2 describe-security-group-rules\
-	--filter Name="group-id",Values="sg-0de46ea030c72802c" |\
-	jq -r '.SecurityGroupRules | length'
+$ aws ec2 describe-security-group-rules --filter Name="group-id",Values="sg-0de46ea030c72802c" | jq -r '.SecurityGroupRules | length'
 146
 ```
 
 The final check is to confirm that we can't reach the EC2 instance directly:
 
+{: .no-stripes}
 ```bash
 $ curl http://private.demo.secariolabs.com --connect-timeout 2
 curl: (28) Failed to connect to private.demo.secariolabs.com port 80 after 2001 ms: Timeout was reached
@@ -581,6 +574,7 @@ curl: (28) Failed to connect to private.demo.secariolabs.com port 80 after 2001 
 
 To ensure resilience and constant synchronization with the changes to the IP address space of CloudFront we can subscribe to the `AmazonIpSpaceChanged` public SNS topic and leave it alone.
 
+{: .no-stripes}
 ```bash
 $ aws sns subscribe\
 	--topic-arn "arn:aws:sns:us-east-1:806199016981:AmazonIpSpaceChanged"\
@@ -602,7 +596,7 @@ In this article, we demonstrated how we can create a strict firewall that only a
 
 By all means, the technique used in this blog could be applied in many different ways:
 
--   The IP address included in the SNS body (re: <https://ip-ranges.amazonaws.com/ip-ranges.json>) lists the IP addresses of all services in AWS and could also be useful in case you want to restrict access based on a different service, such as ELB, Lambda, etc.
--   The concept of hiding an EC2 instance behind an AWS service has many *offensive* use cases. For example, hiding phishing infrastructure or C2 infrastructure from being publicly exposed.
+- The IP address included in the SNS body (re: <https://ip-ranges.amazonaws.com/ip-ranges.json>) lists the IP addresses of all services in AWS and could also be useful in case you want to restrict access based on a different service, such as ELB, Lambda, etc.
+- The concept of hiding an EC2 instance behind an AWS service has many *offensive* use cases. For example, hiding phishing infrastructure or C2 infrastructure from being publicly exposed.
 
 Hopefully, this article can help you better attack and defend systems behind CloudFront.
