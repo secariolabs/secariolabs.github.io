@@ -9,7 +9,7 @@ author:
     name: "@saldat0"
     url: "https://x.com/saldat0"
 ---
-With its widespread adoption rate and the challenge enterprises face with tracking down where it is being used, log4j would likely continue to be a relevant attack vector for quite a long time. Because of this, we decided to showcase how one would go about building a local lab that could be used both for developing and testing an exploit, as well as help to confirm and adapt remedial actions.
+Given its widespread adoption rate and the challenge enterprises face with tracking down where it is being used, **Log4j** would likely continue to be a relevant attack vector for quite a long time. Because of this, we decided to showcase how one would go about building a local lab that can be used for developing and testing exploits, as well as validating and adapting remediation actions.
 
 For background, whenever we refer to the Apache log4j vulnerability, we mean the following CVEs:
 
@@ -25,11 +25,11 @@ And because of this, it is important to make sure that all the software matches 
 
 We will cover three different ways of building a vulnerable server:
 
-### Docker Container
+### Docker Containers
 
 Start right away with Docker, which is by far the easiest to set up. OpenJDK (an open-source implementation of the Java Platform, Standard Edition) offers [all the versions of Java](https://hub.docker.com/_/openjdk) that you may need; ready to be downloaded and used.
 
-Keep in mind that JDK versions greater than 6u211, 7u201, 8u191, and 11.0.1 are not affected by the LDAP attack vector. In these versions `com.sun.jndi.ldap.object.trustURLCodebase` is set to *false* meaning JNDI cannot load remote code using LDAP. However, the vulnerability is still exploitable using other methods, such as [beanfactory](https://www.veracode.com/blog/research/exploiting-jndi-injections-java).
+Keep in mind that JDK versions greater than **6u211**, **7u201**, **8u191**, and **11.0.1** are not affected by the LDAP attack vector. In these versions `com.sun.jndi.ldap.object.trustURLCodebase` is set to *false* meaning JNDI cannot load remote code using LDAP. However, the vulnerability is still exploitable using other methods, such as [beanfactory](https://www.veracode.com/blog/research/exploiting-jndi-injections-java).
 
 In the example below you will see how easy it is to download JDK 8u171 and jump right into it:
 
@@ -37,7 +37,7 @@ In the example below you will see how easy it is to download JDK 8u171 and jump 
 
 ### Linux Virtual Machine
 
-Alternatively, if you prefer to set up the testing environment directly on a Linux server, it is still relatively easy. You can go to the [Java SE archive](https://secariolabs.com/building-a-research-environment-for-log4j/o%09https:/www.oracle.com/uk/java/technologies/javase/javase8-archive-downloads.html) and select the version of Java that you need (we recommend the tar.gz format).
+Alternatively, if you prefer to set up the testing environment directly on a Linux server, it is still relatively easy. You can go to the [Java SE archive](https:/www.oracle.com/uk/java/technologies/javase/javase8-archive-downloads.html) and select the version of Java that you need (we recommend the tar.gz format).
 
 Once the version is downloaded, it is just a matter of extracting the archive, as shown below:
 
@@ -145,4 +145,6 @@ We would recommend Wireshark as it will be easy to see the different protocols a
 
 ![](/assets/images/posts/image-19.png)
 
-That concludes our small testing environment for log4j. In our next blog post, we would focus more on exploiting the vulnerability and research different patching methods.
+## Conclusion
+
+That concludes our build of a small testing environment for **Log4j**.  In the next blog, we will delve deeper into exploiting this vulnerability and examining different mitigation strategies.

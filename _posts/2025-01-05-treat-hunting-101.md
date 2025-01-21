@@ -9,36 +9,36 @@ author:
     name: "@vibeszzzs"
     url: "https://x.com/vibeszzzs"
 ---
-First of all, it is necessary to define what threat hunting actually means in the cybersecurity world. In the constantly evolving landscape of cybersecurity, threat hunting has emerged as a critical proactive approach to identifying and neutralizing malicious activities that may have evaded detection by conventional security measures. Unlike traditional reactive security strategies, which focus on responding to known threats and alerts, threat hunting adopts a proactive stance, actively searching for signs of potential intrusion or compromise.
+First of all, it is necessary to define what threat hunting actually means in the cybersecurity world. In today’s ever-changing cybersecurity landscape, threat hunting is a proactive approach to identify and neutralise malicious activities that may bypass traditional defences. Unlike traditional reactive security strategies, which focus on responding to known threats and alerts, threat hunting adopts a proactive stance, actively searching for signs of potential intrusion or compromise.
 
-IOCs and TTPs are two crucial concepts in the world of cybersecurity, particularly in the context of threat hunting. Understanding their distinct roles is essential for effective threat detection and mitigation.
+IOCs (Indicators of Compromise) and TTPs (Tactics, Techniques, and Procedures) are vital concepts in cybersecurity. Both play a significant role in effective threat detection and mitigation, particularly in the context of threat hunting.
 
 ![](/assets/images/posts/threathunting101-image17.png)
 _Figure 1 - Where threat hunting fits from detection to resolution._
 
 ## Indicators of Compromise (IOCs)
 
-Indicators of compromise (IOCs) are specific pieces of information or data that suggest a potential security breach or compromise. They can be static or dynamic in nature, ranging from IP addresses and malware signatures to network traffic patterns and user behaviour anomalies. IOCs act as red flags, indicating that something unusual or potentially malicious is happening within an organization's network or systems.
+IOCs are specific pieces of information or data that suggest a potential security breach or compromise. They can be static or dynamic in nature, ranging from IP addresses and malware signatures to network traffic patterns and user behaviour anomalies. IOCs act as red flags, indicating that something unusual or potentially malicious is happening within an organization's network or systems.
 
 Common examples of IOCs include:
 
-* **Malware signatures**: Unique identifiers embedded in malicious software that can be detected by security tools.
-* **IP addresses**: Network addresses associated with known malicious actors or compromised systems.
-* **File hashes**: Unique digital fingerprints of files, often used to identify malicious or suspicious files.
-* **Registry keys**: Windows system entries that attackers may modify to establish persistence or maintain control over compromised systems.
+- **Malware signatures**: Unique identifiers embedded in malicious software that can be detected by security tools.
+- **IP addresses**: Network addresses associated with known malicious actors or compromised systems.
+- **File hashes**: Unique digital fingerprints of files, often used to identify malicious or suspicious files.
+- **Registry keys**: Windows system entries that attackers may modify to establish persistence or maintain control over compromised systems.
 
 ## Tactics, Techniques, and Procedures (TTPs)
 
-Tactics, techniques, and procedures (TTPs) represent the methods and strategies employed by attackers to carry out their malicious activities. They describe the 'how' of an attack, outlining the steps, processes, and tools used by attackers to gain access, move laterally, exfiltrate data, or maintain persistence within a compromised system or network.
+TTPs describe how attackers execute their malicious activities, outlining the methods, tools, and processes they use to achieve their goals. They describe the 'how' of an attack, outlining the steps, processes, and tools used by attackers to gain access, move laterally, exfiltrate data, or maintain persistence within a compromised system or network.
 
 Understanding TTPs is crucial for threat hunting because it allows organizations to anticipate and identify attack patterns even before they have been observed or associated with specific IOCs. By identifying common TTPs used by known threat actors, organizations can develop proactive defences and detection mechanisms to prevent or disrupt attacks.
 
 Examples of common TTPs include:
 
-* **Initial Access**: Methods used by attackers to gain initial entry into a system or network, such as phishing emails, exploiting vulnerabilities, or social engineering.
-* **Lateral Movement**: Tactics used by attackers to move within a network to expand their access and reach sensitive data or systems. Examples include using stolen credentials to log into other systems, exploiting software vulnerabilities, or using remote access tools.
-* **Payload Delivery**: Methods used by attackers to deliver malicious code or payloads onto target systems, such as dropping malware, exploiting vulnerable applications, or using drive-by downloads.
-* **Persistence**: Techniques used by attackers to maintain ongoing access to a compromised system or network, such as creating backdoors, installing persistence mechanisms, or altering system configurations.
+- **Initial Access**: Methods attackers use to gain initial entry into a system or network, such as phishing emails, exploiting vulnerabilities, or social engineering.
+- **Lateral Movement**: Tactics attackers use to move within a network to expand their access and reach sensitive data or systems. Examples include using stolen credentials to log into other systems, exploiting software vulnerabilities, or using remote access tools.
+- **Payload Delivery**: Methods attackers use to deliver malicious code or payloads onto target systems, such as dropping malware, exploiting vulnerable applications, or using drive-by downloads.
+- **Persistence**: Techniques attackers use to maintain ongoing access to a compromised system or network, such as creating backdoors, installing persistence mechanisms, or altering system configurations.
 
 In this article, we will showcase hunting based on IOCs and TTPs using the CrowdStrike EDR solution. Hunting can be performed using various log sources, which include SIEM logs, firewall logs, Sysmon logs, etc.
 

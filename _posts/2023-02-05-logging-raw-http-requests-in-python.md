@@ -6,7 +6,7 @@ author:
     name: "@saldat0"
     url: "https://x.com/saldat0"
 ---
-Quite often, during our red team engagements, we find ourselves in a situation where we need to carry out web research & exploitation over several chained proxies. To that extended, to be able to do any reasonable web testing we need to be able to see the requests we send to the server and the corresponding replies. Tools like **BurpSuite** and **mitmproxy** can be helpful, however, by themselves, they introduce a lot of additional complexity, traffic overhead, and they are not very easy to configure in terms of what and how it is being logged. Sometimes you just want to have control over the data and do something with it. Because of that, our weapon of choice for most of these edge cases is **Python** with **ProxyChains**. The reason we like **Python** is because it is easy to enable HTTP request/response logging with the minimal amount of code.
+Quite often, during our red team engagements, we find ourselves in a situation where we need to carry out web research and exploitation over several chained proxies. To that extend, to be able to do any reasonable web testing we need to be able to see the requests we send to the server and the corresponding replies. Tools like **BurpSuite** and **mitmproxy** can be helpful, however, by themselves, they introduce a lot of additional complexity, traffic overhead, and they are not very easy to configure in terms of what and how it is being logged. Sometimes you just want to have control over the data and do something with it. Because of that, our weapon of choice for most of these edge cases is **Python** with **ProxyChains**. The reason we like **Python** is because it is easy to enable HTTP request/response logging with the minimal amount of code.
 
 The few techniques we are going to mention below could be used both for new scripts that you have built for a particular action, as well as if you want to modify an existing **Python** tool to have this additional, granular logging.
 
@@ -32,7 +32,7 @@ patch_send()
 requests.get("http://secariolabs.com")
 ```
 
-Once you do that, you will have full visibility over the requests in their final form, as show next:
+Once you do that, you will have full visibility over the requests in their final form, as shown next:
 
 {: .no-stripes}
 ```bash
@@ -58,7 +58,7 @@ Even though this technique is easy to implement and efficient, it is limited in 
 
 ## Verbose Logging
 
-One of the most popular and well documented techniques for implementing an additional logging could be enabled by setting `http.client.HTTPConnection.debuglevel` to **1**. Once you do that, you just need to create a logger and set the level to `DEBUG`, and you will be able to see the requests and responses.
+One of the most popular and well documented techniques for implementing additional logging can be enabled by setting `http.client.HTTPConnection.debuglevel` to **1**. Once you do that, you just need to create a logger and set the level to `DEBUG`, and you will be able to see the requests and responses.
 
 An example configuration looks as follows:
 
@@ -133,7 +133,7 @@ DEBUG:urllib3.connectionpool:https://secariolabs.com:443 "GET / HTTP/1.1" 200 16
 
 Even though this technique has many limitations, for the most part it could be considered sufficient if someone is just looking to collect full body requests and only response headers (notice there is no response body).
 
-In principle, we don't fine this technique sufficient, and because of that we actually use an "extended" version of it, where we add an additional hook which has visibility over the data and we can manipulate it as we best see fit.
+In principle, we don't find this technique sufficient, and because of that we actually use an "extended" version of it, where we add an additional hook which has visibility over the data and we can manipulate it as we best see fit.
 
 ```python
 import http

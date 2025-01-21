@@ -10,15 +10,15 @@ author:
     name: "@vibeszzzs"
     url: "https://x.com/vibeszzzs"
 ---
-Have you ever encountered a security alert in your environment and wondered, "What is this, and how do we investigate it?" In this article, we'll aim to simplify the process of triaging an alert and provide best practices to identify malicious activity efficiently.
+Have you ever encountered a security alert in your environment and wondered: 'What is this? How should we investigate it?'" In this article, we'll aim to simplify the process of triaging an alert and provide best practices to identify malicious activity efficiently.
 
-First, let's define **Security Operations (SecOps)** and how it functions. SecOps is a comprehensive discipline that encompasses the processes, tools, and personnel responsible for safeguarding an organization's information assets and infrastructure from cyberattacks. It involves continuous monitoring, analysis, and response to potential threats, ensuring that security measures are in place and operating effectively.
+First, let's define **Security Operations (SecOps)** and how it functions. SecOps is a multidisciplinary approach involving processes, tools, and personnel dedicated to safeguarding an organization's information assets and infrastructure from cyberattacks. It involves continuous monitoring, analysis, and response to potential threats, ensuring that security measures are in place and operating effectively.
 
 ## 1. The Importance of Effective Security Triage
 
 The typical day of a SecOps Analyst involves navigating through numerous security alerts. This can sometimes be overwhelming, especially if the company's resources only allow for a small SOC team. As a blue team, it's crucial to distinguish between _false positives_ and _genuine_ security threats that warrant further investigation. This article will provide examples to help correctly classify alerts and determine which ones require immediate attention.
 
-Investigations can often be time-consuming, and it's essential to prioritize tasks effectively to avoid alert fatigue, a prevalent issue in cybersecurity that can negatively impact an analyst's efficiency, as well as their physical and mental well-being. By effectively triaging alerts and prioritizing investigations, analysts can maintain focus and optimize their time, ensuring that genuine threats are addressed promptly.
+Investigations can be time-consuming, making prioritisation essential. Alert fatigue is a common issue in cybersecurity that negatively affects analysts' efficiency and well-being. By effectively triaging alerts and prioritizing investigations, analysts can maintain focus and optimize their time, ensuring that genuine threats are addressed promptly.
 
 ## 2. Fundamentals of Alert Triaging
 
@@ -61,7 +61,7 @@ Combining the above-mentioned observations, we can draw some conclusions.
 
 By its nature, a command that is legitimate could also be malicious—it depends on the intent. In this case, we see that this is a custom rule that also includes the "Test" string. It is not uncommon for IT personnel to test certain configurations, and in practice, we encounter this frequently. In large corporations, it is possible to see different IT teams changing configurations in security solutions like EDRs, firewalls, AVs, etc.
 
-All in all, this alert would be classified as a _false positive_. However, if you have contact with the person who triggered it, you could always reach out to confirm why they executed that command.
+In summary, this alert would be classified as a _false positive_. However, if you have contact with the person who triggered it, you could always reach out to confirm why they executed that command.
 
 ### 2.2 Scenario 2
 
@@ -88,7 +88,7 @@ Let's break it down together:
 
 1. The first three lines relate to manual checks for detecting malicious content. If **AMSI** is active, it allows defenders to inspect whether the threat actor's actions would be detected. AMSI (Antimalware Scan Interface) is a built-in Windows security feature that provides visibility into scripts executed by PowerShell, VBScript, and JScript.
 2. After that, we see the command `Invoke-Mimikatz`. A quick Google search reveals multiple articles about it. **Mimikatz** is a widely known tool used for credential theft, supporting attacks such as Pass-the-Hash, Golden Ticket, and DCSync attacks.
-3. With all this information, we can confidently conclude that the observed actions are highly likely malicious and require further investigation. The presence of the `Invoke-Mimikatz` command strongly suggests an attempt to steal credentials from the system. Even though the EDR blocked the execution, this does not mean the incident is resolved. A deeper investigation is necessary to determine whether other systems have been targeted, how the attacker gained access, and whether any credentials have already been compromised. These questions fall under the Incident Response process, which is beyond the scope of this article and deserves its own dedicated discussion.
+3. With all this information, we can confidently conclude that the observed actions are highly likely malicious and require further investigation. The presence of the `Invoke-Mimikatz` command strongly suggests an attempt to **steal credentials** from the system. Even though the EDR blocked the execution, this does not mean the incident is resolved. A deeper investigation is necessary to determine whether other systems have been targeted, how the attacker gained access, and whether any credentials have already been compromised. These questions fall under the Incident Response process, which is beyond the scope of this article and deserves its own dedicated discussion.
 
 ## 3. Tips on Triaging Alerts for Easier Investigations
 
@@ -98,10 +98,10 @@ A wealth of open-source tools is available to empower security analysts in their
 
 ### 3.2 Leveraging Artificial Intelligence (AI) Models
 
-AI has gained significant traction in recent years, offering immense potential to enhance the daily operations of security analysts. One notable application is command explanation. Not every analyst has expertise in all commands across various operating systems. However, AI-powered tools like ChatGPT and Gemini can bridge this gap. Analysts can effortlessly look up commands and obtain comprehensive explanations.
+AI has gained significant traction in recent years, offering immense potential to enhance the daily operations of security analysts. One notable application is command explanation. Not every analyst has expertise in all commands across various operating systems. However, AI-powered tools like ChatGPT and Gemini assist by providing detailed explanations of commands and processes, saving analysts valuable time.
 
-A crucial reminder: **Avoid submitting sensitive information to AI-powered tools.** If usernames, hosts, or other sensitive data are included, substitute them with fictitious values for security purposes.
+**Crucial Note**: Always anonymise sensitive data before submitting it to AI-powered tools, replacing real usernames or hostnames with fictitious values.
 
 ### 3.3 Reducing Repeat Investigations by Leveraging Historical Data
 
-The constant recurrence of alerts that have already been investigated and deemed _false positives_ is a frustratingly common issue. These repetitive events not only waste analysts' time but also divert attention away from genuine threats. To mitigate this, a system that leverages historical alert data is essential. We cannot stress enough how often alerts that were dismissed earlier in the week get re-investigated unnecessarily. Ongoing SOC fine-tuning is crucial to prevent these _false positives_ from recurring.
+Repetitive alerts classified as _false positives_ can waste time and distract analysts from genuine threats. Leveraging historical data effectively can mitigate this issue. These repetitive events not only waste analysts' time but also divert attention away from genuine threats. To mitigate this, a system that leverages historical alert data is essential. We cannot stress enough how often alerts that were dismissed earlier in the week get re-investigated unnecessarily. Ongoing SOC fine-tuning is crucial to prevent these _false positives_ from recurring.
