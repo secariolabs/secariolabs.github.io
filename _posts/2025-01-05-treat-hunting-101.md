@@ -51,7 +51,7 @@ In the day-to-day life of a Threat Hunter or SOC analyst, you will receive IOCs 
 ![](/assets/images/posts/threathunting101-image15.png)
 _Figure 2 - Sample email from the TI team._
 
-First of all, let’s check if we can see any connection attempts towards the remote server. Let’s get into CrowdStrike and try to build our first query, which will focus on whether anything regarding this domain has been observed. In the Data Lake search, we can build the following query, which will give us initial information on whether anything attempted such a connection:
+First of all, let's check if we can see any connection attempts towards the remote server. Let’s get into CrowdStrike and try to build our first query, which will focus on whether anything regarding this domain has been observed. In the Data Lake search, we can build the following query, which will give us initial information on whether anything attempted such a connection:
 
 ![](/assets/images/posts/threathunting101-image10.png)
 _Figure 3 - CrowdStrike simplified data lake search for any field containing the domain._
@@ -66,7 +66,7 @@ For that, we can use a light query:
 {: .no-stripes}
 ```text
 tailofwhale.local | table([ComputerName, #event_simpleName])
-````
+```
 
 ![](/assets/images/posts/threathunting101-image6.png)
 _Figure 5 - Table view of the above Data Lake query._
