@@ -96,7 +96,7 @@ user@ubuntu:~/poc$ ls -l
 
 ### Mark code lines
 
-You can add yellow marking to code lines, by using the `data-lines` attribute.
+You can add yellow marking to code lines, by using the `data-line` attribute.
 
 For instance, you mark line 1, like so:
 
