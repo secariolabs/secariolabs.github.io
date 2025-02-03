@@ -92,6 +92,7 @@ For example:
 user@ubuntu:~/poc$ clear
 user@ubuntu:~/poc$ ls -l
 ```
+`````
 
 ### Mark code lines
 
@@ -105,6 +106,7 @@ For instance, you mark line 1, like so:
 user@ubuntu:~/poc$ clear
 user@ubuntu:~/poc$ ls -l
 ```
+`````
 
 You can mark multilple lines, i.e. the first two, like so:
 
@@ -114,6 +116,7 @@ You can mark multilple lines, i.e. the first two, like so:
 user@ubuntu:~/poc$ clear
 user@ubuntu:~/poc$ ls -l
 ```
+`````
 
 Or you can mark lines 1 and 3:
 
@@ -124,6 +127,7 @@ user@ubuntu:~/poc$ clear
 user@ubuntu:~/poc$ ls -l
 user@ubuntu:~/poc$ touch config.txt
 ```
+`````
 
 Or you can mark lines 1 through 3, line 5 and lines 7 through 10:
 
@@ -134,6 +138,7 @@ user@ubuntu:~/poc$ clear
 user@ubuntu:~/poc$ ls -l
 user@ubuntu:~/poc$ touch file.txt
 ```
+`````
 
 You can even mix and match and highlight lines without having zebra styles:
 
