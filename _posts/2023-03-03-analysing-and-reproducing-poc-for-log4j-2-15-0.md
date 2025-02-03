@@ -6,19 +6,7 @@ author:
     name: "@saldat0"
     url: "https://x.com/saldat0"
 ---
-<pre data-line="2" class="highlight language-bash" tabindex="0"><code class="language-bash">
-$> ls -l
-$> clear
-</code></pre>
-
-{:data-line="1-2"}
-```bash
-cmd1
-cmd2
-cmd3
-```
-
-Very shortly after the release of the patch for CVE-2021-44228, bundled by Apache as log4j 2.15.0, researchers already found ways of bypassing the fix: CVE-2021-45046. In particular, for less than a couple of days, a vulnerability was discovered, and while it was initially rated as 3.7, it was later elevated to 9.0. Needless to say, it captured our attention, especially considering the incident response work we were conducting at the time. It was important for us to understand the situation to better advise our clients. There were bits and pieces of research with some screenshots of the bypass circulating the Internet, but, at the time, we didn’t really find a vulnerable environment, with good explanation and well laid out pre-requisite for the bypass to work.
+Shortly after the release of the patch for CVE-2021-44228, bundled by Apache as Log4j 2.15.0, researchers already found ways of bypassing the fix: CVE-2021-45046. In particular, for less than a couple of days, a vulnerability was discovered, and while it was initially rated 3.7 and later elevated to 9.0. Needless to say, it captured our attention, especially considering the incident response work we were conducting at the time. It was important for us to understand the situation to better advise our clients. There were bits and pieces of research with some screenshots of the bypass circulating the Internet, but, at the time, we didn’t really find a vulnerable environment, with good explanation and well-laid-out prerequisites for the bypass to work.
 
 This blog goes over the research we performed from start to finish to produce a PoC and, in the process, to very precisely understand the conditions which have to be present to successfully bypass the patch to log4j in 2.15.0.
 

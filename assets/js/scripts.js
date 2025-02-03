@@ -89,6 +89,12 @@ function handle_line_highlight(){
         pre.dataset.line = div.dataset.line;
     });
 
+    const lines = document.querySelectorAll('.line-highlight');
+
+    lines.forEach(function(line){
+        console.log(line);
+    });
+
 }
 
 handle_line_highlight()

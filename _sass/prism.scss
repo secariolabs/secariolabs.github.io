@@ -287,14 +287,14 @@ pre[data-line] {
 }
 
 .line-highlight {
-	top: 25px !important;
+	top: 25px;
 	position: absolute;
 	left: 0;
 	right: 0;
 	padding: inherit 0;
 	margin-top: 1em; /* Same as .prism’s padding-top */
-	background: hsla(62, 86%, 55%,.08);
-	background: linear-gradient(to right, hsla(62, 86%, 55%,.5) 70%, hsla(62, 86%, 55%,0));
+	background: hsla(60, 100%, 50%,.08);
+	background: linear-gradient(to right, hsla(60, 100%, 50%,0.4) 70%, hsla(60, 100%, 50%,0.3));
 
 	pointer-events: none;
 
