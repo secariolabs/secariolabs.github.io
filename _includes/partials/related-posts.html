@@ -14,13 +14,61 @@
     <div class="post__nav-wrapper">
         <h3 class="post__nav-heading">More articles</h3>
 
-        <div class="cols{% if related_posts.size > 1 %} cols--2 cols--gap-2{% endif %}">
-            {%- for post in related_posts -%}
-                {%- assign mod2 = forloop.index | modulo: 2 -%}
-                <a href="{{- post.url | relative_url -}}" class="post__nav-item{% if mod2 == 0 %} post__nav-item--even{% endif %}">
-                    {{- post.title -}}
+        <div class="post__nav">
+            {%- if related_posts.size > 1 -%}
+                {%- for post in related_posts limit: 2 -%}
+                    <a class="post__nav-item" href="{{- post.url | relative_url -}}">
+                        {{- post.title -}}
+                    </a>
+                {%- endfor -%}
+            {%- elsif related_posts.size == 1 -%}
+                {%- assign related_post = related_posts | first -%}
+                <a class="post__nav-item" href="{{- related_post.url | relative_url -}}">
+                    {{- related_post.title -}}
                 </a>
-            {%- endfor -%}
+
+                {%- assign next_post_found = false -%}
+                
+                {%- if page.next -%}
+                    {%- if page.next.id != related_post.id -%}
+                        {%- assign next_post = page.next -%}
+                        {%- assign next_post_found = true -%}
+                    {%- else -%}
+                        {%- assign the_next_post = page.next -%}
+                        {%- assign next_post = the_next_post.next -%}
+                        {%- assign next_post_found = true -%}
+                    {%- endif -%}
+                {%- endif -%}
+
+                {%- if next_post_found == true -%}
+                    <a class="post__nav-item" href="{{- next_post.url | relative_url -}}">
+                        {{- next_post.title -}}
+                    </a>
+                {%- endif -%}
+
+                {%- if next_post_found == false -%}
+                    {%- assign prev_post_found = false -%}
+
+                    {%- if page.previous -%}
+                        {%- if page.previous.id != related_post.id -%}
+                            {%- assign prev_post = page.previous -%}
+                            {%- assign prev_post_found = true -%}
+                        {%- else -%}
+                            {%- assign the_prev_post = page.previous -%}
+                            {%- assign prev_post = the_prev_post.previous -%}
+                            {%- assign prev_post_found = true -%}
+                        {%- endif -%}
+                    {%- endif -%}
+
+                    {%- if prev_post_found == true -%}
+                        <a class="post__nav-item" href="{{- prev_post.url | relative_url -}}">
+                            {{- prev_post.title -}}
+                        </a>
+                    {%- endif -%}
+                {%- endif -%}
+
+            {%- endif -%}
         </div>
+
     </div>
 {%- endif -%}
