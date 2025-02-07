@@ -5,13 +5,23 @@
         <div class="post__nav">
             {%- if page.previous -%}
                 <a class="post__nav-item post__nav-item--prev" href="{{- page.previous.url | relative_url -}}">
-                    {{- page.previous.title -}}
+                    {%- if page.previous.bg_image.size > 0 -%}
+                        <img src="{{- page.previous.bg_image | relative_url -}}" alt="" class="post__nav-item-image">
+                        <span class="post__nav-item-text">{{- page.previous.title -}}</span>
+                    {%- else -%}
+                        {{- page.previous.title -}}
+                    {%- endif -%}
                 </a>
             {%- endif -%}
 
             {%- if page.next -%}
                 <a class="post__nav-item post__nav-item--next" href="{{- page.next.url | relative_url -}}">
-                    {{- page.next.title -}}
+                    {%- if page.next.bg_image.size > 0 -%}
+                        <img src="{{- page.next.bg_image | relative_url -}}" alt="" class="post__nav-item-image">
+                        <span class="post__nav-item-text">{{- page.next.title -}}</span>
+                    {%- else -%}
+                        {{- page.next.title -}}
+                    {%- endif -%}
                 </a>
             {%- endif -%}
         </div>

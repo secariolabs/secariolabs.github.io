@@ -18,13 +18,23 @@
             {%- if related_posts.size > 1 -%}
                 {%- for post in related_posts limit: 2 -%}
                     <a class="post__nav-item" href="{{- post.url | relative_url -}}">
-                        {{- post.title -}}
+                        {%- if post.bg_image.size > 0 -%}
+                            <img src="{{- post.bg_image | relative_url -}}" alt="" class="post__nav-item-image">
+                            <span class="post__nav-item-text">{{- post.title -}}</span>
+                        {%- else -%}
+                            {{- post.title -}}
+                        {%- endif -%}
                     </a>
                 {%- endfor -%}
             {%- elsif related_posts.size == 1 -%}
                 {%- assign related_post = related_posts | first -%}
                 <a class="post__nav-item" href="{{- related_post.url | relative_url -}}">
-                    {{- related_post.title -}}
+                    {%- if related_post.bg_image.size > 0 -%}
+                        <img src="{{- related_post.bg_image | relative_url -}}" alt="" class="post__nav-item-image">
+                        <span class="post__nav-item-text">{{- related_post.title -}}</span>
+                    {%- else -%}
+                        {{- related_post.title -}}
+                    {%- endif -%}
                 </a>
 
                 {%- assign next_post_found = false -%}
@@ -55,7 +65,12 @@
 
                 {%- if next_post_found == true -%}
                     <a class="post__nav-item" href="{{- next_post.url | relative_url -}}">
-                        {{- next_post.title -}}
+                        {%- if next_post.bg_image.size > 0 -%}
+                            <img src="{{- next_post.bg_image | relative_url -}}" alt="" class="post__nav-item-image">
+                            <span class="post__nav-item-text">{{- next_post.title -}}</span>
+                        {%- else -%}
+                            {{- next_post.title -}}
+                        {%- endif -%}
                     </a>
                 {%- endif -%}
 
@@ -75,7 +90,12 @@
 
                     {%- if prev_post_found == true -%}
                         <a class="post__nav-item" href="{{- prev_post.url | relative_url -}}">
-                            {{- prev_post.title -}}
+                            {%- if prev_post.bg_image.size > 0 -%}
+                                <img src="{{- prev_post.bg_image | relative_url -}}" alt="" class="post__nav-item-image">
+                                <span class="post__nav-item-text">{{- prev_post.title -}}</span>
+                            {%- else -%}
+                                {{- prev_post.title -}}
+                            {%- endif -%}
                         </a>
                     {%- endif -%}
                 {%- endif -%}
