@@ -74,6 +74,13 @@
       margin-left: 0.25rem;
     }
 
+    &-tag {
+      &:hover {
+        text-decoration: underline;
+        opacity: 1;
+      }
+    }
+
     &-author-wrapper {
       margin-left: 0.75rem;
       display: flex;
@@ -96,7 +103,10 @@
       color: $light;
      }
      a {
-      text-decoration: underline;
+      &:hover {
+        opacity: 1;
+        text-decoration: underline;
+      }
      }
     }
 
