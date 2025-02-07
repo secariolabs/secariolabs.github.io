@@ -36,7 +36,20 @@
                     {%- else -%}
                         {%- assign the_next_post = page.next -%}
                         {%- assign next_post = the_next_post.next -%}
-                        {%- assign next_post_found = true -%}
+                        {%- if next_post and next_post.id != related_post.id -%}
+                            {%- assign next_post_found = true -%}
+                        {%- else -%}
+                            {%- if page.previous and page.previous.id != related_post.id -%}
+                                {%- assign next_post = page.previous -%}
+                                {%- assign next_post_found = true -%}
+                            {%- else -%}
+                                {%- assign the_previous_post = page.previous -%}
+                                {%- assign next_post = the_previous_post.previous -%}
+                                {%- if next_post and next_post.id != related_post.i -%}
+                                    {%- assign next_post_found = true -%}
+                                {%- endif -%}
+                            {%- endif -%}
+                        {%- endif -%}
                     {%- endif -%}
                 {%- endif -%}
 
