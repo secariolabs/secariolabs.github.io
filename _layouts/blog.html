@@ -13,17 +13,18 @@ layout: page
         <div class="blog__teasers cols cols--2">        
             {% for post in paginator.posts %}
                 <div class="blog__teaser">
-                
-                    <h2 class="blog__teaser-heading">
-                        <a href="{{ post.url | relative_url }}">
-                            {{ post.title }}
-                        </a>
-                    </h2>
 
-                    {%- include partials/post-meta.html -%}
+                    <div class="blog__teaser-header">
+                        <h2 class="blog__teaser-heading">
+                            <a href="{{ post.url | relative_url }}">
+                                {{ post.title }}
+                            </a>
+                        </h2>
 
-                    <div class="blog__teaser-summary text-lg">
-                        {{ post.excerpt | truncatewords: 50, ' […]' }}
+                        {%- include partials/post-meta.html -%}
+                        <div class="blog__teaser-summary text-lg">
+                            {{ post.excerpt | truncatewords: 50, ' […]' }}
+                        </div>
                     </div>
 
                     <div class="blog__teaser-link-wrapper">
@@ -31,7 +32,7 @@ layout: page
                             Read More
                         </a>
                     </div>
-
+                
                 </div>
             {% endfor %}
         </div>

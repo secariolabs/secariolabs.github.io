@@ -13,6 +13,16 @@
     display: flex;
     flex-direction: column;
 
+    &-header {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    &-body {
+      flex-grow: 1;
+    }
+
     &-heading {
       margin-bottom: 0.5rem;
       line-height: 0;
