@@ -95,18 +95,20 @@
   &__share {
     &-wrapper {
       display: flex;
+      justify-content: flex-end;
+      align-items: center;
       margin-top: 3rem;
-
-      @include breakpoint(small) {
-        flex-direction: column;
-      }
     }
 
     &-text {
+      font-family: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace; ;
       margin: 0;
       margin-right: 1rem;
       color: $alt_dark;
-      font-style: italic;
+
+      @include breakpoint(smaller) {
+        margin-right: 0.75rem;
+      }
     }
   }
 

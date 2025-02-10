@@ -156,13 +156,6 @@
   &__social {
     display: flex;
     align-items: center;
-
-
-    &--share {
-      @include breakpoint(small) {
-        margin-top: 1rem;
-      }
-    }
   }
 
   &__social-item {
@@ -199,18 +192,48 @@
     &--share {
       width: auto;
       height: auto;
+      background-color: $alt_dark;
+      border-radius: 0;
+      padding: 0.5rem;
+
+      transition: background-color .15s linear;
 
       &:not(:last-child) {
         margin-right: 1rem;
       }
+
+      &:not(.btn) {
+        &:hover {
+          background-color: $dark;
+        }
+      }
       
       svg {
         width: auto;
-        height: 24px;
-        @include breakpoint(small) {
-          height: 28px;
+        height: 22px;
+      }
+
+      &--x {
+        color: #fff;
+      }
+
+      &--in {
+        svg {
+          path.linked-in-wrapper {
+            fill: $alt_dark;
+            transition: fill .15s linear;
+          }
         }
-      } 
+        
+        &:hover {
+          svg {
+            path.linked-in-wrapper {
+              fill: #0077B5;
+            }
+          }
+
+        }
+      }
 
     }
 
