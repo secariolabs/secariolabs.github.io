@@ -91,10 +91,6 @@ function handle_line_highlight(){
 
     const lines = document.querySelectorAll('.line-highlight');
 
-    lines.forEach(function(line){
-        console.log(line);
-    });
-
 }
 
 handle_line_highlight()
