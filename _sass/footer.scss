@@ -72,10 +72,8 @@
 
       @include breakpoint(medium) {
         display: grid;
-        margin-top: 2rem;
-        &:not(:first-of-type) {
-          margin-top: 2rem;
-        }
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.3);
       }
     }
 
@@ -129,6 +127,7 @@
   &-desc {
     @include breakpoint(medium) {
       max-width: 800px;
+      padding-bottom: 0.5rem;
     }
   }
 
