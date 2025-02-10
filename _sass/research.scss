@@ -29,6 +29,13 @@
   &__superheading {
     text-align: left;
     color: $light;
+
+    a {
+      color: currentColor;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 
   &__text {

@@ -56,22 +56,60 @@
 
   &__nav {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     color: $dark;
 
     &-heading {
-      margin-bottom: 0.75rem;
+      margin-bottom: 1.25rem;
       color: $alt_dark;
     }
 
     &-item {
+      display: flex;
+      align-items: center;
       color: $dark;
       text-decoration: underline;
       font-size: 1.2rem;
+      margin-bottom: 1.5rem;
 
-      &--prev {
-        margin-right: 2rem;
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      &-image {
+        max-width: 6rem;
+        width: 100%;
+        height: auto;
+        margin-right: 1rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.5);
+
+        @include breakpoint(smaller) {
+          max-width: 4rem;
+          margin-right: 0.75rem;
+        }
       }
     }
   }
+
+  &__share {
+    &-wrapper {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-top: 3rem;
+    }
+
+    &-text {
+      font-family: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace; ;
+      margin: 0;
+      margin-right: 1rem;
+      color: $alt_dark;
+
+      @include breakpoint(smaller) {
+        margin-right: 0.75rem;
+      }
+    }
+  }
+
 }

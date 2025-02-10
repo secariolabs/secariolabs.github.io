@@ -9,9 +9,11 @@
 {%- assign og_description = page.meta.description | default: site.data.global.meta.description -%}
 
 {%- if page.collection == 'posts' -%}
+    <meta property="og:type" content="article" />
     {%- if page.meta.description.size > 0 -%}
         {%- assign og_description = page.meta.description -%}
     {%- else -%}
+    <meta property="og:type" content="website" />
         {%- assign og_description = page.excerpt | truncatewords: 20 | strip_html | escape | strip_newlines -%}
     {%- endif -%}
 {%- endif -%}

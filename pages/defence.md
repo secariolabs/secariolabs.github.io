@@ -34,7 +34,7 @@ services:
   items:
     - title: Attack detection and incident response from a single source
       text: |-
-        Our experts monitor devices such as laptops and servers, analyzing suspicious events and raising alarms during attacks. We promptly implement necessary defensive measures. This service includes our full Incident Response capabilities, guaranteeing support within specified response times for attack defense and incident management.
+        Our experts monitor devices such as laptops and servers, analysing suspicious events and raising alarms during attacks. We promptly implement necessary defensive measures. This service includes our full Incident Response capabilities, guaranteeing support within specified response times for attack defence and incident management.
       image:
         path: /assets/images/coverage-lifecycle.png
         alt_text: ""
@@ -46,11 +46,10 @@ services:
         Recognized as a Visionary in Gartner's 2024 Magic Quadrant for Endpoint Protection Platforms and named Customers' Choice in EMEA, Bitdefender's GravityZone Platform offers comprehensive threat protection, real-time response, and enhanced prevention through machine learning, ideal for robust business security.
       image:
         path: /assets/images/edr-states.png
-        alt_text: "Gartner Magic Quadrant for Endpoint Protection Plattforms – December 2023"
-        # caption: "Grafik 2: Gartner Magic Quadrant for Endpoint Protection Plattforms – December 2023"
-    - title: Identify deviations from normal behavior
+        alt_text: "Gartner Magic Quadrant for Endpoint Protection Platforms – December 2023"
+    - title: Identify deviations from normal behaviour
       text: |-
-        After recording normal behavior, we identify and check any anomalies that deviate from it. In this way, conspicuous relationships between users and devices are identified - without the time-consuming setup and maintenance of static use cases. This means that the analysis does not focus on individual log sources or linked events, but on the overall behavior of your company, your users and your devices.
+        After recording normal behaviour, we identify and check any anomalies that deviate from it. In this way, conspicuous relationships between users and devices are identified - without the time-consuming setup and maintenance of static use cases. This means that the analysis does not focus on individual log sources or linked events, but on the overall behaviour of your company, your users and your devices.
       image:
         path: /assets/images/soc.jpeg
         alt_text: ""
@@ -65,7 +64,7 @@ levels:
         - Service Times
         - SLA qualification of alarms and first response
         - SLA Expert Response (remote)
-        - 24x7 Automatated Response
+        - 24x7 Automated Response
         - Proactive Threat Hunting
     - title: Basic
       items:
@@ -96,7 +95,7 @@ faq:
         Our Managed Endpoint Detection and Response (EDR) service detects attempted attacks on all endpoints, that are connected to your network. First, anomalies are detected using machine learning identified. These are then processed by us Cyber ​​security specialists assessed and isolated.
     - q: Is it enough to operate an NDR or an EDR solution?
       a: |-
-        Network Detection and Response (NDR) and Endpoint Detection and Response (EDR) solutions focus on analyzing network and endpoint data, respectively. While they are not sufficient for comprehensive monitoring of an entire IT environment, they serve as a very good starting point for enhancing security. These solutions provide valuable insights that can significantly contribute to a Managed Detection and Response (MDR) strategy.
+        Network Detection and Response (NDR) and Endpoint Detection and Response (EDR) solutions focus on analysing network and endpoint data, respectively. While they are not sufficient for comprehensive monitoring of an entire IT environment, they serve as a very good starting point for enhancing security. These solutions provide valuable insights that can significantly contribute to a Managed Detection and Response (MDR) strategy.
     - q: Which components are needed?
       a: |-
         Bitdefender EDR solution offers a streamlined deployment process with its single-agent architecture. This unified approach eliminates the need for multiple components or separate installations.
@@ -116,7 +115,7 @@ info:
         With our Incident Response Service, we ensure that your company has the right resources and skills available in the event of an emergency. You pay a fixed monthly flat rate and we offer you a reliable on-call service.
       link: ""
 callout:
-  heading: Fortify Your Defenses
+  heading: Fortify Your Defences
   text: |-
     Gain critical insights into your organization's resilience against sophisticated cyber threats.
 ---

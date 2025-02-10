@@ -1,12 +1,12 @@
 ---
-title: Logging Raw HTTP Requests in Python
-date: 2023-02-05T19:50:55+00:00
-bg_image: /assets/images/posts/data-center-with-server-racks-2022-07-26-17-02-57-utc-1200x470.jpg
+title: "Logging Raw HTTP Requests in Python"
+date: "2023-02-05T19:50:55+00:00"
+bg_image: "/assets/images/posts/data-center-with-server-racks-2022-07-26-17-02-57-utc-1200x470.jpg"
 author:
-    name: '@saldat0'
-    url: https://x.com/saldat0
+    name: "@saldat0"
+    url: "https://x.com/saldat0"
 ---
-Quite often, during our red team engagements, we find ourselves in a situation where we need to carry out web research & exploitation over several chained proxies. To that extended, to be able to do any reasonable web testing we need to be able to see the requests we send to the server and the corresponding replies. Tools like **BurpSuite** and **mitmproxy** can be helpful, however, by themselves, they introduce a lot of additional complexity, traffic overhead, and they are not very easy to configure in terms of what and how it is being logged. Sometimes you just want to have control over the data and do something with it. Because of that, our weapon of choice for most of these edge cases is **Python** with **ProxyChains**. The reason we like **Python** is because it is easy to enable HTTP request/response logging with the minimal amount of code.
+Quite often, during our red team engagements, we find ourselves in a situation where we need to carry out web research and exploitation over several chained proxies. To that extend, to be able to do any reasonable web testing we need to be able to see the requests we send to the server and the corresponding replies. Tools like **BurpSuite** and **mitmproxy** can be helpful, however, by themselves, they introduce a lot of additional complexity, traffic overhead, and they are not very easy to configure in terms of what and how it is being logged. Sometimes you just want to have control over the data and do something with it. Because of that, our weapon of choice for most of these edge cases is **Python** with **ProxyChains**. The reason we like **Python** is because it is easy to enable HTTP request/response logging with the minimal amount of code.
 
 The few techniques we are going to mention below could be used both for new scripts that you have built for a particular action, as well as if you want to modify an existing **Python** tool to have this additional, granular logging.
 
@@ -32,8 +32,9 @@ patch_send()
 requests.get("http://secariolabs.com")
 ```
 
-Once you do that, you will have full visibility over the requests in their final form, as show next:
+Once you do that, you will have full visibility over the requests in their final form, as shown next:
 
+{: .no-stripes}
 ```bash
 --------- BEGIN REQUEST ---------
 GET / HTTP/1.1
@@ -57,7 +58,7 @@ Even though this technique is easy to implement and efficient, it is limited in 
 
 ## Verbose Logging
 
-One of the most popular and well documented techniques for implementing an additional logging could be enabled by setting `http.client.HTTPConnection.debuglevel` to **1**. Once you do that, you just need to create a logger and set the level to `DEBUG`, and you will be able to see the requests and responses.
+One of the most popular and well documented techniques for implementing additional logging can be enabled by setting `http.client.HTTPConnection.debuglevel` to **1**. Once you do that, you just need to create a logger and set the level to `DEBUG`, and you will be able to see the requests and responses.
 
 An example configuration looks as follows:
 
@@ -79,6 +80,7 @@ requests.get('http://secariolabs.com')
 
 The output of the above script is included below:
 
+{: .no-stripes}
 ```bash
 DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): secariolabs.com:80
 send: b'GET / HTTP/1.1\r\nHost: secariolabs.com\r\nUser-Agent: python-requests/2.27.0\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nConnection: keep-alive\r\n\r\n'
@@ -131,7 +133,7 @@ DEBUG:urllib3.connectionpool:https://secariolabs.com:443 "GET / HTTP/1.1" 200 16
 
 Even though this technique has many limitations, for the most part it could be considered sufficient if someone is just looking to collect full body requests and only response headers (notice there is no response body).
 
-In principle, we don't fine this technique sufficient, and because of that we actually use an "extended" version of it, where we add an additional hook which has visibility over the data and we can manipulate it as we best see fit.
+In principle, we don't find this technique sufficient, and because of that we actually use an "extended" version of it, where we add an additional hook which has visibility over the data and we can manipulate it as we best see fit.
 
 ```python
 import http
@@ -159,6 +161,7 @@ requests.get('http://secariolabs.com')
 
 While the output from the above script appears very similar, notice the presence of brackets around each line indicating that the data is stored as a tuple and we can manipulate and use it as we wish:
 
+{: .no-stripes}
 ```bash
 DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): secariolabs.com:80
 ('send:', "b'GET / HTTP/1.1\\r\\nHost: secariolabs.com\\r\\nUser-Agent: python-requests/2.27.0\\r\\nAccept-Encoding: gzip, deflate\\r\\nAccept: */*\\r\\nConnection: keep-alive\\r\\n\\r\\n'")
@@ -211,7 +214,7 @@ DEBUG:urllib3.connectionpool:https://secariolabs.com:443 "GET / HTTP/1.1" 200 16
 
 Again, this technique comes with the limitation that multiprocessing can create a havoc when trying to match a request with response as they are not directly tied. The data is being printed as it is read on the socket, and not in batches; because of that each HTTP header is printed separately, rather than the whole HTTP packet being a single object.
 
-## Roundtrip Hook
+## Round-trip Hook
 
 Finally, the most comprehensive -- but also involving -- technique of doing detailed logging is to use request "hooks". In essence they allow (either per session or per individual request) to set a hook for a particular action which will be invoked by the `requests` module when the action is triggered.
 
@@ -269,6 +272,7 @@ session.get('http://secariolabs.com')
 
 The output of the above command looks as follows:
 
+{: .no-stripes}
 ```bash
 2022-06-16 00:31:43,991 DEBUG urllib3.connectionpool Starting new HTTP connection (1): secariolabs.com:80
 2022-06-16 00:31:44,042 DEBUG urllib3.connectionpool http://secariolabs.com:80 "GET / HTTP/1.1" 301 183
@@ -345,7 +349,6 @@ X-Amz-Cf-Id: 7eReUC-yuJugzYBRCVoKauftHc53DvdsKi1hx1pU5M9TjJc_Ml6n9Q==
 
 <!DOCTYPE html>
 [...snip...]
-
 ```
 
 This concludes our quick look into HTTP logging using Python.

@@ -79,6 +79,22 @@ function handle_banner() {
     });
 }
 
+function handle_line_highlight(){
+
+    const divs  = document.querySelectorAll('div[data-line]');
+
+    divs.forEach(function(div){
+        const pre = div.querySelector('pre');
+
+        pre.dataset.line = div.dataset.line;
+    });
+
+    const lines = document.querySelectorAll('.line-highlight');
+
+}
+
+handle_line_highlight()
+
 if(the_header){
     handle_menu_on_scroll();
 }

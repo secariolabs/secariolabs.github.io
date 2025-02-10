@@ -1,0 +1,13 @@
+<div class="post__share-wrapper">
+    <p class="post__share-text">
+        Share:
+    </p>
+<div class="site-footer__social site-footer__social--share">
+    <a class="site-footer__social-item site-footer__social-item--share site-footer__social-item--share--x" href="https://x.com/share?url={{ page.url | absolute_url }}&text={{ page.title | uri_escape }}" target="_blank">
+        {%- include svg/social/x.svg -%}
+    </a>
+    <a class="site-footer__social-item site-footer__social-item--share site-footer__social-item--share--in" href="https://www.linkedin.com/shareArticle?mini=true&url={{ page.url | absolute_url }}" target="_blank">
+        {%- include svg/social/linkedin.svg -%}
+    </a>
+</div>
+</div>

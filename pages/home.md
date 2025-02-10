@@ -38,21 +38,21 @@ partners:
   text: |-
     Our valued partners are at the core of our success, reflecting mutual respect and shared goals. We are proud to collaborate with organisations that recognise our expertise and professionalism, building enduring relationships founded on trust and exceptional results.
   logos:
-    - path: /assets/images/logos/cyberwales.png
-      alt_text: Cyber Wales logo
+    - path: "/assets/images/logos/cyberwales.png"
+      alt_text: "Cyber Wales logo"
       width: 524
       height: 303
-      url: https://cyberwales.net/
-    - path: /assets/images/logos/darktrace.png
-      alt_text: Darktrace logo
+      url: "https://cyberwales.net/"
+    - path: "/assets/images/logos/darktrace.png"
+      alt_text: "Darktrace logo"
       width: 1024
       height: 300
-      url: https://darktrace.com/
-    - path: /assets/images/logos/computer2000.jpg
-      alt_text: Computer 2000 logo
+      url: "https://darktrace.com/"
+    - path: "/assets/images/logos/computer2000.jpg"
+      alt_text: "Computer 2000 logo"
       width: 2316
       height: 908
-      url: https://computer2000.bg
+      url: "https://computer2000.bg"
 
 testimonials:
   heading: What Our Clients Say
@@ -70,11 +70,7 @@ testimonials:
         Secario Labs were not only able to identify security vulnerabilities which other vendors have somehow missed, but they went above and beyond to help us remediate them and verify the patches. The whole process from scoping, the carrying out of the assessment, the delivered report, to the final debrief were well carried out.
       person: Project Manager, UK Utilities company
 research:
-  heading: Protecting Assets Behind CloudFront
   superheading: Our Technical Research
-  # You can use markdown for the text
-  text: |-
-    One of the most common ways of bypassing a Web Application Firewall (WAF) involves finding out the backend servers’ address and connecting to it directly. An IP can be leaked in many ways, including DNS history, HTTP headers, cookies, virtual host routing with shared infrastructure, stack traces leaking source code, […]
   image:
     path: /assets/images/research.png
     alt_text: ""
@@ -83,7 +79,6 @@ research:
     height: 944
   ctas:
     - text: Read Full Article
-      url: /protecting-assets-behind-cloudfront/
     - text: View All Research
       url: /blog/
 ---

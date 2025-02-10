@@ -1,0 +1,68 @@
+name: Spellcheck
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  British-English:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install cspell
+        run: npm install -g cspell
+
+      - name: Create cspell config
+        run: |
+          cat > .cspell.json << 'EOF'
+          {
+            "version": "0.2",
+            "language": "en-GB",
+            "ignoreWords": [
+              "Secario",
+              "secariolabs",
+              "SIEM",
+              "CISO",
+              "AMSI",
+              "Darktrace",
+              "shellcode",
+              "Mimikatz",
+              "Bitdefender",
+              "Talos",
+              "Wireshark",
+              "ldaps",
+              "vibeszzzs",
+              "saldat",
+              "JNDI",
+              "beanfactory",
+              "OSCP",
+              "OSWE",
+              "OSWP",
+              "OSCE",
+              "EMEA",
+              "JDNI"
+            ],
+            "dictionaries": ["en-gb"],
+            "ignoreRegExpList": [
+              "`[^`]*`",
+              "```[^`]*```",
+              "```[a-z]*\\n[^`]*```",
+              "(?<=^---[\\s\\S]*?\\n)(^[ ]*[a-zA-Z0-9_-]+:[ ]*)",
+              "\\[[^\\]]+\\]\\(([^\\)]+)\\)",
+              "\"/assets/[^ \"]+\""
+            ]
+          }
+          EOF
+
+      - name: Run spellcheck
+        run: cspell "pages/**/*.md" "_posts/**/*.md" --config .cspell.json

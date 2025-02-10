@@ -26,12 +26,15 @@
     &--2 {
       grid-template-columns: 50% 1fr;
 
+      gap: 2rem;
+
       @include breakpoint(medium) {
         grid-template-columns: 300px 1fr;
       }
 
       @include breakpoint(small) {
         grid-template-columns: repeat(1, minmax(0, 1fr));
+        gap: 1rem;
       }
     }
 
@@ -218,6 +221,60 @@
     &:not(:last-child) {
       margin-right: 0.75rem;
     }
+
+    svg {
+      filter: grayscale(1);
+      transition: filter .15s linear;
+    }
+    
+    &:not(.btn) {
+      transition: background-color .15s linear;
+      
+      &:hover {
+        opacity: 1;
+        background-color: rgba(255, 255, 255, .85);
+        svg {
+          filter: grayscale(0);
+        }
+      }
+    }
+
+    &--share {
+      width: 36px;
+      height: 36px;
+      background-color: $alt_dark;
+      border-radius: 0;
+
+      transition: background-color .15s linear;
+
+      &:not(:last-child) {
+        margin-right: 1rem;
+      }
+
+      &:not(.btn) {
+        &:hover {
+          background-color: $dark;
+        }
+      }
+      
+      svg {
+        width: auto;
+        height: 22px;
+      }
+
+      &--x {
+        color: #fff;
+      }
+
+      &--in {
+        svg {
+          height: 24px;
+        }
+      }
+
+    }
+
+
   }
 
   &__bottom {

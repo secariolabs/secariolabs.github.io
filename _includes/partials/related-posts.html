@@ -1,0 +1,107 @@
+{%- assign related_posts = '' | split: '' -%}
+
+{%- for page_tag in page.tags -%}
+    {%- for post in site.tags[page_tag] -%}
+        {%- unless post.id == page.id -%}
+            {%- assign related_posts = related_posts | push: post -%}
+        {%- endunless -%}
+    {%- endfor -%}
+{%- endfor -%}
+
+{%- assign related_posts = related_posts | uniq -%}
+
+{%- if related_posts.size > 0 -%}
+    <div class="post__nav-wrapper">
+        <h3 class="post__nav-heading">More articles</h3>
+
+        <div class="post__nav">
+            {%- if related_posts.size > 1 -%}
+                {%- for post in related_posts limit: 2 -%}
+                    <a class="post__nav-item" href="{{- post.url | relative_url -}}">
+                        {%- if post.bg_image.size > 0 -%}
+                            <img src="{{- post.bg_image | relative_url -}}" alt="" class="post__nav-item-image">
+                            <span class="post__nav-item-text">{{- post.title -}}</span>
+                        {%- else -%}
+                            {{- post.title -}}
+                        {%- endif -%}
+                    </a>
+                {%- endfor -%}
+            {%- elsif related_posts.size == 1 -%}
+                {%- assign related_post = related_posts | first -%}
+                <a class="post__nav-item" href="{{- related_post.url | relative_url -}}">
+                    {%- if related_post.bg_image.size > 0 -%}
+                        <img src="{{- related_post.bg_image | relative_url -}}" alt="" class="post__nav-item-image">
+                        <span class="post__nav-item-text">{{- related_post.title -}}</span>
+                    {%- else -%}
+                        {{- related_post.title -}}
+                    {%- endif -%}
+                </a>
+
+                {%- assign next_post_found = false -%}
+                
+                {%- if page.next -%}
+                    {%- if page.next.id != related_post.id -%}
+                        {%- assign next_post = page.next -%}
+                        {%- assign next_post_found = true -%}
+                    {%- else -%}
+                        {%- assign the_next_post = page.next -%}
+                        {%- assign next_post = the_next_post.next -%}
+                        {%- if next_post and next_post.id != related_post.id -%}
+                            {%- assign next_post_found = true -%}
+                        {%- else -%}
+                            {%- if page.previous and page.previous.id != related_post.id -%}
+                                {%- assign next_post = page.previous -%}
+                                {%- assign next_post_found = true -%}
+                            {%- else -%}
+                                {%- assign the_previous_post = page.previous -%}
+                                {%- assign next_post = the_previous_post.previous -%}
+                                {%- if next_post and next_post.id != related_post.i -%}
+                                    {%- assign next_post_found = true -%}
+                                {%- endif -%}
+                            {%- endif -%}
+                        {%- endif -%}
+                    {%- endif -%}
+                {%- endif -%}
+
+                {%- if next_post_found == true -%}
+                    <a class="post__nav-item" href="{{- next_post.url | relative_url -}}">
+                        {%- if next_post.bg_image.size > 0 -%}
+                            <img src="{{- next_post.bg_image | relative_url -}}" alt="" class="post__nav-item-image">
+                            <span class="post__nav-item-text">{{- next_post.title -}}</span>
+                        {%- else -%}
+                            {{- next_post.title -}}
+                        {%- endif -%}
+                    </a>
+                {%- endif -%}
+
+                {%- if next_post_found == false -%}
+                    {%- assign prev_post_found = false -%}
+
+                    {%- if page.previous -%}
+                        {%- if page.previous.id != related_post.id -%}
+                            {%- assign prev_post = page.previous -%}
+                            {%- assign prev_post_found = true -%}
+                        {%- else -%}
+                            {%- assign the_prev_post = page.previous -%}
+                            {%- assign prev_post = the_prev_post.previous -%}
+                            {%- assign prev_post_found = true -%}
+                        {%- endif -%}
+                    {%- endif -%}
+
+                    {%- if prev_post_found == true -%}
+                        <a class="post__nav-item" href="{{- prev_post.url | relative_url -}}">
+                            {%- if prev_post.bg_image.size > 0 -%}
+                                <img src="{{- prev_post.bg_image | relative_url -}}" alt="" class="post__nav-item-image">
+                                <span class="post__nav-item-text">{{- prev_post.title -}}</span>
+                            {%- else -%}
+                                {{- prev_post.title -}}
+                            {%- endif -%}
+                        </a>
+                    {%- endif -%}
+                {%- endif -%}
+
+            {%- endif -%}
+        </div>
+
+    </div>
+{%- endif -%}

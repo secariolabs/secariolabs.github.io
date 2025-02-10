@@ -7,6 +7,10 @@
   background-size: cover;
   background-attachment: fixed;
 
+  @include touch_device {
+    background-attachment: scroll;
+  }
+
   &__header {
     margin-bottom: 2rem;
   }

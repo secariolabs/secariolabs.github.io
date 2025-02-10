@@ -21,49 +21,13 @@ layout: default
 <section class="post-wrapper">
   <section class="section section--page section--post">
     <div class="container container--sm">
-      <div class="post__bc text-muted">
-        <a
-          class="post__bc-item text-muted underline"
-          href="{{- '/' | relative_url -}}"
-          >Home</a
-        >
-        »
-        <a
-          class="post__bc-item text-muted underline"
-          href="{{- '/blog/' | relative_url -}}"
-          >Blog</a
-        >
-        »
-        <strong class="post__bc-item text-muted post__bc-item--active"
-          >{{- page.title -}}</strong
-        >
-      </div>
 
       <article class="post">{{content}}</article>
 
-      {%- if page.next or page.previous -%}
-      <div class="post__nav-wrapper">
-        <h3 class="post__nav-heading">More articles</h3>
+      {%- include partials/share-links.html -%}
 
-        <div class="post__nav">
-          {%- if page.previous -%}
-          <a
-            class="post__nav-item post__nav-item--prev"
-            href="{{- page.previous.url | relative_url -}}"
-          >
-            {{- page.previous.title -}}
-          </a>
-          {%- endif -%} {%- if page.next -%}
-          <a
-            class="post__nav-item post__nav-item--next"
-            href="{{- page.next.url | relative_url -}}"
-          >
-            {{- page.next.title -}}
-          </a>
-          {%- endif -%}
-        </div>
-      </div>
-      {%- endif -%}
+      {%- include partials/more-articles.html -%}
+
     </div>
   </section>
 </section>

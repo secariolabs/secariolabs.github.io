@@ -9,18 +9,22 @@
                     </h3>
                 {%- endif -%}
 
+                {%- assign latest_article = site.posts | first -%}
+
                 <h2 class="section__heading research__heading">
-                    {{- page.research.heading -}}        
+                    <a href="{{- latest_article.url | relative_url -}}">
+                        {{- latest_article.title -}}        
+                    </a>
                 </h2>
 
                 <div class="research__text">
-                    {{ page.research.text | markdownify }}
+                    {{ latest_article.excerpt | truncatewords: 50, ' […]' | markdownify }}
                 </div>
 
                 {%- if page.research.ctas.size > 0 -%}
                     <div class="research__ctas">
-                        {% for cta in  page.research.ctas %}                           
-                            <a href="{{- cta.url | relative_url -}}" class="research__cta btn btn--md btn--thin {% cycle 'btn--light', 'btn--secondary' %}">
+                        {% for cta in page.research.ctas %}                           
+                            <a href="{{- cta.url | default: latest_article.url | relative_url -}}" class="research__cta btn btn--md btn--thin {% cycle 'btn--light', 'btn--secondary' %}">
                                 {{- cta.text -}}
                             </a>
                         {% endfor %}
