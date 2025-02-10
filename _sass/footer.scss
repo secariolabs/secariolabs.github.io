@@ -190,11 +190,10 @@
     }
 
     &--share {
-      width: auto;
-      height: auto;
+      width: 36px;
+      height: 36px;
       background-color: $alt_dark;
       border-radius: 0;
-      padding: 0.5rem;
 
       transition: background-color .15s linear;
 
@@ -219,19 +218,7 @@
 
       &--in {
         svg {
-          path.linked-in-wrapper {
-            fill: $alt_dark;
-            transition: fill .15s linear;
-          }
-        }
-        
-        &:hover {
-          svg {
-            path.linked-in-wrapper {
-              fill: #0077B5;
-            }
-          }
-
+          height: 24px;
         }
       }
 
