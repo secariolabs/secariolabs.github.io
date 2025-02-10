@@ -2,7 +2,7 @@
 
 .site-footer {
   border-top: 1px solid $light;
-  padding: 4rem 0;
+  padding: 2.5rem 0 3rem;
   background-color: $dark;
   color: $light;
   font-size: 1.125rem;
@@ -38,6 +38,10 @@
       }
     }
 
+    &--for-desktop {
+      gap: 12%;
+    }
+
     &--3 {
       grid-template-columns: 50% 1fr 1fr;
       gap: 2rem;
@@ -51,6 +55,40 @@
         grid-template-columns: repeat((1, 1fr));
       }
     }
+
+    &--inner {
+      margin: 0;
+      gap: 1rem;
+
+      &:not(:first-of-type) {
+        margin: 0;
+      }
+    }
+
+    &--desktop {
+      @include breakpoint(medium) {
+        display: none !important;
+      }
+    }
+
+    &--mobile {
+      display: none;
+
+      @include breakpoint(medium) {
+        display: grid;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.3);
+      }
+      @include breakpoint(small) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      @include breakpoint(smaller) {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+      }
+    }
+
+
   }
 
   &__col {
@@ -67,6 +105,19 @@
     &--location {
       line-height: 1.6;
     }
+
+    &--social {
+      grid-column: 1 / span 2;
+    }
+
+    &--mobile {
+      display: none;
+      @include breakpoint(medium) {
+        display: block;
+        margin-top: 2rem;
+      }
+    }
+
   }
 
   &__logo-wrapper {
@@ -85,34 +136,48 @@
     margin-top: 0;
   }
 
+  &-desc {
+    @include breakpoint(medium) {
+      max-width: 800px;
+      padding-bottom: 0.5rem;
+    }
+  }
+
+  &-form {
+    margin-top: 1.75rem;
+
+    @include breakpoint(small) {
+      margin-top: 1rem;
+    }
+
+    @include breakpoint(smaller) {
+      margin-top: 0.5rem;
+    }
+  }
+
   &__form-fields {
     display: flex;
     align-items: center;
 
-    @include breakpoint(medium) {
+    @include breakpoint(small) {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    @include breakpoint(smaller) {
       flex-direction: column;
       align-items: flex-start;
+    }
+
+    & > * {
+      // width: 100%;
 
       @include breakpoint(small) {
-        flex-direction: row;
-        align-items: center;
+        width: auto;
       }
 
       @include breakpoint(smaller) {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      & > * {
         width: 100%;
-
-        @include breakpoint(small) {
-          width: auto;
-        }
-
-        @include breakpoint(smaller) {
-          width: 100%;
-        }
       }
     }
   }
@@ -160,8 +225,8 @@
 
   &__social-item {
     background-color: $light;
-    width: 40px;
-    height: 38px;
+    width: 45px;
+    height: 43px;
     border-radius: 100%;
     color: $dark;
     display: flex;

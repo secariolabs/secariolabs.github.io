@@ -7,69 +7,78 @@
             </a>
         </div>
 
-        <div class="site-footer__cols site-footer__cols--3">
+        <div class="site-footer__cols site-footer__cols--2 site-footer__cols--for-desktop">
 
             <div class="site-footer__col site-footer__col--desc">
 
-                <div class="site-footer__desc">
+                <div class="site-footer-desc">
                     {{ site.data.global.footer.description | markdownify }}
+                </div>
+
+            <div class="site-footer__cols site-footer__cols--inner site-footer__cols--mobile site-footer__cols--2">
+                <div class="site-footer__col site-footer__col--location">
+                    <p>
+                        <strong>{{ site.data.global.location1.title }}</strong><br>
+                        {{ site.data.global.location1.details }}
+                    </p>
+                </div>
+
+                <div class="site-footer__col site-footer__col--location">
+                    <p>
+                        <strong>{{ site.data.global.location2.title }}</strong><br>
+                        {{ site.data.global.location2.details }}
+                    </p>      
+                </div>
+                
+            </div>
+
+                <div class="site-footer-form">
+                    <label class="site-footer__form-label" for="email">
+                        {{- site.data.global.signup.label -}}
+                    </label>
+                    {%- include partials/signup-form.html -%}
                 </div>
             </div>
 
-            <div class="site-footer__col site-footer__col--location">
-                <p>
-                    <strong>{{ site.data.global.location1.title }}</strong><br>
-                    {{ site.data.global.location1.details }}
-                </p>
-                <p>
-                    <a class="site-footer__link" href="tel:{{- site.data.global.location1.phone | replace: ' ', '' | replace: '-', '' -}}">
-                        {{ site.data.global.location1.phone }}
-                    </a>
-                    <br>
-                    <a class="site-footer__link" href="mailto:{{- site.data.global.location1.email -}}">
-                        {{ site.data.global.location1.email }}
-                    </a>
-                </p>
-            </div>
+            <div class="site-footer__cols site-footer__cols--inner site-footer__cols--desktop site-footer__cols--2">
+                <div class="site-footer__col site-footer__col--location"
+                    <p>
+                        <strong>{{ site.data.global.location1.title }}</strong><br>
+                        {{ site.data.global.location1.details }}
+                    </p>
+                </div>
 
-            <div class="site-footer__col site-footer__col--location">
-                <p>
-                    <strong>{{ site.data.global.location2.title }}</strong><br>
-                    {{ site.data.global.location2.details }}
-                </p>
-                <p>
-                    <a class="site-footer__link" href="tel:{{- site.data.global.location2.phone | replace: ' ', '' | replace: '-', '' -}}">
-                        {{ site.data.global.location2.phone }}
-                    </a>
-                    <br>
-                    <a class="site-footer__link" href="mailto:{{- site.data.global.location2.email -}}">
-                        {{ site.data.global.location2.email }}
-                    </a>
-                </p>                
+                <div class="site-footer__col site-footer__col--location">
+                    <p>
+                        <strong>{{ site.data.global.location2.title }}</strong><br>
+                        {{ site.data.global.location2.details }}
+                    </p>               
+                </div>
+                
+                <div class="site-footer__col site-footer__col--social">
+                    <div class="site-footer__social">
+                        {% for item in site.data.global.social %}
+                            {%- assign trimmed_url = item.url | strip -%}
+                            {%- assign sliced_url = trimmed_url | slice: 0, 4 -%}
+                            <a href="{{- item.url -}}" class="site-footer__social-item"{% if sliced_url == 'http' %} target="_blank"{% endif %}>
+                                {%- include {{ item.icon }} -%}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
 
         </div>
-
-        <div class="site-footer__cols site-footer__cols--2">
-            <div class="site-footer__col">
-                <label class="site-footer__form-label" for="email">
-                    {{- site.data.global.signup.label -}}
-                </label>
-                {%- include partials/signup-form.html -%}
-            </div>
-            <div class="site-footer__col">
-                <h3 class="site-footer__social-heading">
-                    Connect With Us
-                </h3>
-                <div class="site-footer__social">
-                    {% for item in site.data.global.social %}
-                        {%- assign trimmed_url = item.url | strip -%}
-                        {%- assign sliced_url = trimmed_url | slice: 0, 4 -%}
-                        <a href="{{- item.url -}}" class="site-footer__social-item"{% if sliced_url == 'http' %} target="_blank"{% endif %}>
-                            {%- include {{ item.icon }} -%}
-                        </a>
-                    {% endfor %}
-                </div>
+        
+        <div class="site-footer__col site-footer__col--mobile site-footer__col--social">
+            <div class="site-footer__social">
+                {% for item in site.data.global.social %}
+                    {%- assign trimmed_url = item.url | strip -%}
+                    {%- assign sliced_url = trimmed_url | slice: 0, 4 -%}
+                    <a href="{{- item.url -}}" class="site-footer__social-item"{% if sliced_url == 'http' %} target="_blank"{% endif %}>
+                        {%- include {{ item.icon }} -%}
+                    </a>
+                {% endfor %}
             </div>
         </div>
 
