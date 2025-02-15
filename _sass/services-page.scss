@@ -48,7 +48,7 @@
     &-content {
       align-items: center;
 
-      @include breakpoint(large) {
+      @include breakpoint(larger) {
         align-items: start;
       }
     }

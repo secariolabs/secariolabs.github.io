@@ -12,8 +12,13 @@ $dark_gray: #616161;
 $zinc: #3f3f46;
 
 @mixin breakpoint($point) {
-  @if $point == large {
+  @if $point == larger {
     @media (max-width: 1200px) {
+      @content;
+    }
+  }
+  @if $point == large {
+    @media (max-width: 1024px) {
       @content;
     }
   }

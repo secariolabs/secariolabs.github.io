@@ -16,7 +16,6 @@
     &-header {
       display: flex;
       flex-direction: column;
-      flex-grow: 1;
     }
 
     &-body {
@@ -35,6 +34,9 @@
     }
 
     &-summary {
+      p {
+        margin: .5rem 0;
+      }
       @include breakpoint(smaller) {
         p {
           margin-bottom: 0;
@@ -45,6 +47,14 @@
     &-meta {
       display: flex;
       align-items: baseline;
+
+      @include breakpoint(large) {
+        flex-direction: column;
+      }
+
+      @include breakpoint(small) {
+        flex-direction: row;
+      }
 
       @include breakpoint(smallish) {
         flex-direction: column;
@@ -68,6 +78,16 @@
       display: flex;
       align-items: center;
       margin-left: 1rem;
+
+      @include breakpoint(large) {
+        margin-left: 0;
+        margin-top: 0.2rem;
+      }
+
+      @include breakpoint(small) {
+        margin-left: 1rem;
+        margin-top: 0;
+      }
 
       @include breakpoint(smallish) {
         margin-left: 0;
@@ -130,7 +150,7 @@
     }
 
     &-link-wrapper {
-      margin-top: 1.5rem;
+      margin-top: 0.75rem;
     }
 
     &-link {
