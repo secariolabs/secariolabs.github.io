@@ -23,7 +23,7 @@
       border-radius: 6px;
       padding: 0 4rem 3rem 4rem;
 
-      @include breakpoint(large) {
+      @include breakpoint(larger) {
         padding: 2rem;
         padding-top: 0;
       }
