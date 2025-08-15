@@ -6,9 +6,6 @@ tags:
   - "threat hunting"
   - "CrowdStrike"
 bg_image: "/assets/images/posts/navigatingthemazeofsecurityalerts-hero.webp"
-author:
-    name: "@vibeszzzs"
-    url: "https://x.com/vibeszzzs"
 ---
 Have you ever encountered a security alert in your environment and wondered: 'What is this? How should we investigate it?'" In this article, we'll aim to simplify the process of triaging an alert and provide best practices to identify malicious activity efficiently.
 
