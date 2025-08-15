@@ -5,9 +5,6 @@ tags:
   - "threat hunting"
   - "CrowdStrike"
 bg_image: "/assets/images/posts/threathunting101-image0.jpg"
-author:
-    name: "@vibeszzzs"
-    url: "https://x.com/vibeszzzs"
 ---
 First of all, it is necessary to define what threat hunting actually means in the cybersecurity world. In today’s ever-changing cybersecurity landscape, threat hunting is a proactive approach to identify and neutralise malicious activities that may bypass traditional defences. Unlike traditional reactive security strategies, which focus on responding to known threats and alerts, threat hunting adopts a proactive stance, actively searching for signs of potential intrusion or compromise.
 
