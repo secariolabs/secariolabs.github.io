@@ -23,7 +23,7 @@ why:
     height: 697
   # You can use markdown for the text field
   text: |-
-    Secario Labs operates in both the UK and Bulgaria, working in partnership with clients to provide comprehensive cybersecurity solutions that meet the highest industry standards.
+    Secario Labs is headquartered in Sofia, Bulgaria, working in partnership with clients across Europe and internationally to provide comprehensive offensive and defensive cybersecurity solutions that meet the highest industry standards.
   checklist:
     - Threat-intelligence-led mapping, testing and solutions.
     - Real-time visibility of security vulnerabilities.
@@ -53,6 +53,11 @@ partners:
       width: 2316
       height: 908
       url: "https://computer2000.bg"
+    - path: "/assets/images/logos/exclusive-networks.png"
+      alt_text: "Exclusive Networks logo"
+      width: 960
+      height: 332
+      url: "https://www.exclusive-networks.com/bg"
 
 testimonials:
   heading: What Our Clients Say

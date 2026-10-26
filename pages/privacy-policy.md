@@ -23,9 +23,9 @@ The COO, along with the CEO, is responsible for the proper implementation of the
 
 ## About us
 
-Secario Labs Ltd provides information security assurance services and consultancy. We are based in the UK (Cardiff, South Wales). Secario Labs Ltd is committed to protecting and respecting your privacy and complying with the principles of applicable data protection laws.  This notice sets out how any personal data we collect from you, or that you provide to us, will be processed by us.
+Secario Labs provides information security assurance services and consultancy headquartered in Sofia, Bulgaria. Secario Labs is committed to protecting and respecting your privacy and complying with the principles of applicable data protection laws. This notice sets out how any personal data we collect from you, or that you provide to us, will be processed by us.
 
-Please read the following carefully to understand our views and practices regarding your personal data and how we will treat it. The data controller of the personal data referred to in this policy is Data Controller, Secario Labs Ltd, Worth Corner, Pound Hill, Crawley, West Sussex, England, RH10 7SL.
+Please read the following carefully to understand our views and practices regarding your personal data and how we will treat it. The data controller of the personal data referred to in this policy is Data Controller, Secario Labs, Metro City Business Center, Sofia, 1712, Bulgaria.
 
 ## Collection of personal data
 
@@ -114,4 +114,4 @@ If you would like to opt-out of our marketing communications, please email us at
 
 ## How to contact us
 
-If you wish to contact us about your personal data or exercise any of the rights described above please email: info@secariolabs.com or write to Data Controller, Secario Labs Ltd, Worth Corner, Pound Hill, Crawley, West Sussex, England, RH10 7SL.
+If you wish to contact us about your personal data or exercise any of the rights described above please email: info@secariolabs.com or write to Data Controller, Secario Labs, Metro City Business Center, Sofia, 1712, Bulgaria.

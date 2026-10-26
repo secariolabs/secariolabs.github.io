@@ -14,6 +14,7 @@ function handle_form_behavior(){
     };
 
     const form = document.getElementById("contact-form");
+    if (!form) return;
 
     let pristine = new Pristine(form, pristineConfig);
 
@@ -36,44 +37,53 @@ function handle_form_behavior(){
         });
     }
 
-    the_select.addEventListener('change', (event) => {
-        $this = event.target;
-        const the_value = $this.value;
+    if (the_select) {
+        the_select.addEventListener('change', (event) => {
+            $this = event.target;
+            const the_value = $this.value;
 
-        if(the_value == 'phone') {
-            the_email.name = '';
-            the_email.value = '';
-            the_email.required = false;
-            the_email_heading.classList.add('hidden');
-            the_email_control.classList.add('hidden');
+            if(the_value == 'phone') {
+                if (the_email) {
+                    the_email.name = '';
+                    the_email.value = '';
+                    the_email.required = false;
+                }
+                if (the_email_heading) the_email_heading.classList.add('hidden');
+                if (the_email_control) the_email_control.classList.add('hidden');
+                
+                if (the_phone) {
+                    the_phone.required = true;
+                    the_phone.name = 'phone';
+                }
+                if (time_to_call) {
+                    time_to_call.required = true;
+                    time_to_call.name = 'time_to_call';
+                }
+                if (the_phone_control) the_phone_control.classList.remove('hidden');
+                if (time_to_call_control) time_to_call_control.classList.remove('hidden');
+            }
             
-            the_phone.required = true;
-            the_phone.name = 'phone';
-            time_to_call.required = true;
-            time_to_call.name = 'time_to_call';
-            the_phone_control.classList.remove('hidden');
-            time_to_call_control.classList.remove('hidden');
-        }
-        
-        if(the_value == 'email') {
-            the_phone.required = false;
-            time_to_call.required = false;
-            the_phone.name = '';
-            the_phone.value = '';
-            time_to_call.name = '';
-            time_to_call.selectedIndex = 0;
-            the_phone_control.classList.add('hidden');
-            time_to_call_control.classList.add('hidden');
-
-            the_email.required = true;
-            the_email.name = 'email';
-            the_email_heading.classList.remove('hidden');
-            the_email_control.classList.remove('hidden');
-        }
-
-        pristine = new Pristine(form, pristineConfig);
-
-    });
+            if(the_value == 'email') {
+                if (the_phone) {
+                    the_phone.required = false;
+                    the_phone.name = '';
+                }
+                if (time_to_call) {
+                    time_to_call.required = false;
+                    time_to_call.name = '';
+                }
+                if (the_phone_control) the_phone_control.classList.add('hidden');
+                if (time_to_call_control) time_to_call_control.classList.add('hidden');
+                
+                if (the_email) {
+                    the_email.required = true;
+                    the_email.name = 'email';
+                }
+                if (the_email_heading) the_email_heading.classList.remove('hidden');
+                if (the_email_control) the_email_control.classList.remove('hidden');
+            }
+        });
+    }
 
     form.addEventListener('submit', function (e) {
         e.preventDefault();

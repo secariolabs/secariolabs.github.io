@@ -1,17 +1,9 @@
 @use "vars" as *;
 
 .why {
-  background-repeat: no-repeat;
-  background-image: url(/assets/images/grey-background-secario.jpg);
-  background-position: center;
-  background-size: cover;
-  background-attachment: fixed;
-  background-color: rgba(255, 255, 255, 0.7);
-  background-blend-mode: lighten;
-
-  @include touch_device {
-    background-attachment: scroll;
-  }
+  background-color: #121316;
+  border-top: 1px solid #282a33;
+  padding: 88px 0;
 
   &__img-wrapper {
     @include breakpoint(small) {
@@ -34,14 +26,72 @@
   }
 
   &__checklist {
-    margin-top: 3rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    list-style: none;
+    padding: 0;
+
+    li {
+      position: relative;
+      padding-left: 28px;
+      margin-bottom: 12px;
+      color: #e2e8f0;
+      font-size: 1.05rem;
+
+      &::before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: #e04f4f;
+        font-weight: 700;
+      }
+    }
   }
 
   &__cta {
     display: inline-block;
-    margin-top: 2rem;
     border: 1px solid $light;
 
     @include mobile_btn;
   }
+}
+
+.why-card {
+  background: #18191f;
+  border: 1px solid #282a33;
+  border-radius: 8px;
+  padding: 36px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+
+  h4 {
+    font-family: $heading_font;
+    font-size: 1.3rem;
+    color: #ffffff;
+    margin-bottom: 12px;
+  }
+
+  p {
+    color: #cbd5e1;
+    font-size: 0.98rem;
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+}
+
+.hub-tags {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.hub-tag {
+  background: #20222a;
+  border: 1px solid #313543;
+  color: #e2e8f0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 6px 14px;
+  border-radius: 4px;
 }

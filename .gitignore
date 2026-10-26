@@ -9,3 +9,5 @@ package-lock.json
 .DS_Store
 node_modules
 opt_images
+start-local-preview.bat
+build-site.js

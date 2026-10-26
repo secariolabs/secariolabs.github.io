@@ -31,15 +31,9 @@ contact:
   error_message: There was an error sending your message.
 
 location1:
-  title: Bulgaria Office
+  title: Headquarters (Sofia, Bulgaria)
   details: Metro City Business Center<br>Sofia, 1712<br>Bulgaria
-  phone: +359 882 357332
-  email: info@secariolabs.com
-
-location2:
-  title: UK Office
-  details: Worth Corner, Pound Hill,<br>Crawley, RH10 7SL<br>United Kingdom
-  phone: +44 7389 796754
+  phone: +359 88 565 6598
   email: info@secariolabs.com
 
 social:

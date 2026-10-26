@@ -41,24 +41,29 @@
 
   &__close {
     border: none;
-    padding: 0;
+    padding: 6px;
     margin: 0;
     display: flex;
+    align-items: center;
+    justify-content: center;
     background: none;
     cursor: pointer;
-    opacity: 0.4;
-    transition: opacity 0.15s ease-in-out;
+    color: #475569;
+    opacity: 0.7;
+    transition: all 0.15s ease-in-out;
     position: absolute;
-    right: 1rem;
-    top: 1rem;
+    right: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
 
     svg {
-      width: 30px;
-      height: 30px;
+      width: 20px;
+      height: 20px;
     }
 
     &:hover {
       opacity: 1;
+      color: #921f20;
     }
 
     @include breakpoint(small) {

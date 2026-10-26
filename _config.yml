@@ -34,7 +34,7 @@ defaults:
   - scope:
       path: "pages/defence.md"
     values:
-      layout: "defence"
+      layout: "default"
       permalink: /defence/
   - scope:
       path: "pages/privacy-policy.md"

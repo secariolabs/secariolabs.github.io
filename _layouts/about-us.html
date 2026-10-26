@@ -1,26 +1,26 @@
 ---
 layout: page
 ---
-<section class="section section--page">
-    <div class="container">
+<section class="section section--page" style="background: #121316; padding-top: 64px; padding-bottom: 64px;">
+    <div class="container container--xl">
     
-        <h2 class="about__desc text-2xl">
+        <h2 class="about__desc text-2xl" style="color: #ffffff; max-width: 900px; margin-bottom: 36px;">
             {{ page.description }}
         </h2>
 
-        <div class="about__text cols cols--2">
+        <div class="about__text cols cols--2" style="color: #e2e8f0; margin-bottom: 48px;">
             {% for item in page.text %}
-                <div class="about__text-item">
+                <div class="about__text-item" style="line-height: 1.7; font-size: 1.1rem;">
                     {{ item.piece | markdownify }}
                 </div>
             {% endfor %}
         </div>
 
-        <ul class="about__features cols cols--3">
+        <ul class="about__features cols cols--3" style="list-style: none; padding: 0; margin: 0;">
             {% for item in page.features %}
-                <li class="about__feature text-xl">
-                    <img src="{{- item.icon | relative_uirl -}}" alt="">
-                    <div class="about__feature-text">
+                <li class="about__feature text-xl" style="background: #18191f; border: 1px solid #282a33; border-radius: 8px; padding: 28px; display: flex; flex-direction: column; gap: 16px;">
+                    <img src="{{- item.icon | relative_url -}}" alt="" width="48" height="48" style="filter: brightness(0) invert(1);">
+                    <div class="about__feature-text" style="color: #ffffff; font-size: 1.05rem; font-weight: 600; line-height: 1.4;">
                         {{- item.text -}}
                     </div>
                 </li>
@@ -30,39 +30,67 @@ layout: page
     </div>
 </section>
 
-{%- if page.show_services == true -%}
-    {%- include partials/services.html -%}
-{%- endif -%}
+<!-- Certifications Section (Modern Light Texture) -->
+<section class="section section-certifications" id="certifications">
+    <div class="container container--xl">
 
-<section class="section section--page">
-    <div class="container container--sm">
+        <span class="section-badge-pill" style="border-color: #cbd5e1; color: #0f172a; background: rgba(255,255,255,0.9);">
+            <span class="dot"></span> Verified Capabilities
+        </span>
 
         {%- if page.badges.heading.size > 0 -%}
-            <h2 class="section__heading">
+            <h2 class="section__heading" style="color: #0f172a; margin-top: 12px; margin-bottom: 12px;">
                 {{- page.badges.heading -}}
             </h2>
         {%- endif -%}
 
         {%- if page.badges.text.size > 0 -%}
-            <div class="about__badges-text">
+            <div class="about__badges-text" style="color: #334155; font-size: 1.15rem; max-width: 800px; margin-bottom: 40px;">
                 {{ page.badges.text | markdownify }}
             </div>
         {%- endif -%}
     
-        <div class="about__badges">
+        <div class="cert-grid">
             {% for item in page.badges.items %}
-                {%- if item.url.size > 0 -%}
-                    <a class="about__badge-item" href="{{- item.url -}}" target="_blank">
-                        <img class="about__badge-img" src="{{- item.path | relative_url -}}" alt="{{- item.alt_text -}}" loading="lazy"{% if item.width.size > 0 and item.height.size > 0 %} width="{{- item.width -}}" height="{{- item.height -}}"{% endif %}>
-                    </a>
-                {%- else -%}                
-                    <span class="about__badge-item">
-                        <img class="about__badge-img" src="{{- item.path | relative_url -}}" alt="{{- item.alt_text -}}" loading="lazy"{% if item.width.size > 0 and item.height.size > 0 %} width="{{- item.width -}}" height="{{- item.height -}}"{% endif %}>
-                    </span>
-                {%- endif -%}
+                <div class="cert-card">
+                    <img class="cert-card__img" src="{{- item.path | relative_url -}}" alt="{{- item.alt_text -}}" loading="lazy"{% if item.width.size > 0 and item.height.size > 0 %} width="{{- item.width -}}" height="{{- item.height -}}"{% endif %}>
+                    <div class="cert-card__title">{{- item.alt_text | remove: " certificate badge" | remove: " badge" -}}</div>
+                </div>
             {% endfor %}
         </div>
 
+    </div>
+</section>
+
+<!-- Sofia Headquarters Location Section -->
+<section class="section section--dark" style="background: #121316; padding: 72px 0; border-top: 1px solid #282a33;">
+    <div class="container container--xl">
+        <div class="cols cols--2" style="align-items: center;">
+            <div>
+                <span class="section-badge-pill"><span class="dot"></span> Global Reach</span>
+                <h2 style="color: #fff; font-size: 2.2rem; margin-top: 12px; margin-bottom: 16px;">Sofia Engineering Headquarters</h2>
+                <p style="color: #cbd5e1; font-size: 1.1rem; line-height: 1.65; margin-bottom: 24px;">
+                    Secario Labs is based at the Metro City Business Center in Sofia, Bulgaria. From this European hub, our offensive penetration testers and 24/7 SOC analysts deliver mission-critical cyber defense for clients worldwide.
+                </p>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    <a href="{{- '/contact/' | relative_url -}}" class="btn btn--secondary uppercase">Contact Our Team</a>
+                    <button class="btn btn--light uppercase" data-open-modal>Schedule Call</button>
+                </div>
+            </div>
+            <div>
+                <div class="why-card">
+                    <h4>Headquarters Office</h4>
+                    <p style="color: #e2e8f0; margin-bottom: 16px; font-size: 1.05rem;">
+                        <strong>Metro City Business Center</strong><br>
+                        Sofia, 1712, Bulgaria
+                    </p>
+                    <p style="color: #94a3b8; font-size: 0.95rem; margin: 0;">
+                        Phone: <a href="tel:+359885656598" style="color: #e04f4f; text-decoration: none;">+359 88 565 6598</a><br>
+                        Email: <a href="mailto:info@secariolabs.com" style="color: #e04f4f; text-decoration: none;">info@secariolabs.com</a>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
