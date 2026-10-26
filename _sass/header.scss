@@ -7,9 +7,10 @@
   z-index: 10;
 
   &--dark {
-    transition: background-color 0.5s linear;
-    background-color: $dark;
-    box-shadow: rgba(255, 255, 255, 0.5) 0 -10px 42px;
+    transition: background-color 0.3s ease;
+    background-color: #0f1013;
+    border-bottom: 1px solid #232630;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
   }
 }
 

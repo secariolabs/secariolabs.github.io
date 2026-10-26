@@ -6,9 +6,10 @@ html {
 
 body {
   font-family: $text_font;
-
-  font-size: 1.25rem;
-  line-height: 1.5;
+  background-color: $dark;
+  color: $text_body;
+  font-size: 1.15rem;
+  line-height: 1.6;
 }
 
 h1,

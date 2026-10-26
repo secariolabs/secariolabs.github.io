@@ -1,63 +1,388 @@
 ---
-layout: page
+layout: default
 ---
-<section class="section section--page">
-    <div class="container">
-    
-        <h2 class="services-page__desc">
-            {{ page.description }}
-        </h2>
 
-    </div>
+<section class="hero hero--page hero--services" id="services">
+  <div class="container">
+    <h1 class="hero__heading">Security Assessments &amp; Engineering</h1>
+    <p class="hero__subheading">
+      Combining offensive security testing, 24/7 Managed Detection &amp; Response, Cloud and DevOps Engineering, and accredited ISO 27001 advisory.
+    </p>
+  </div>
 </section>
 
-{% for item in page.items %}
-    <section class="section section--page services-page__item services-page__item--{{ forloop.index }}" style="background-image: url({{- item.bg_image | relative_url -}})">
-        <div class="container">
+<!-- Sticky Quick Subnav Bar -->
+<nav class="services-subnav" aria-label="Services Navigation">
+  <div class="container container--xl">
+    <div class="subnav-inner">
+      <div class="subnav-links">
+        <a href="#offensive" class="subnav-btn active">
+          <span class="num">01.</span> Offensive Security
+        </a>
+        <a href="#defensive" class="subnav-btn">
+          <span class="num">02.</span> Blue Team &amp; MDR
+        </a>
+        <a href="#it-devops" class="subnav-btn">
+          <span class="num">03.</span> IT Support &amp; DevOps
+        </a>
+        <a href="#infosec" class="subnav-btn">
+          <span class="num">04.</span> InfoSec &amp; ISO 27001
+        </a>
+      </div>
+      <a href="{{ site.data.global.booking_url }}" target="_blank" data-open-modal class="btn btn--secondary" style="font-size: 12px; padding: 7px 14px;">
+        Book Scoping Call
+      </a>
+    </div>
+  </div>
+</nav>
 
-            {%- capture the_cycle -%}
-                {% cycle 'odd', 'even' %}
-            {%- endcapture -%}
+<article>
 
-            {%- capture the_text -%}
-                <div class="services-page__item-text-wrapper services-page__item-text-wrapper--{{ the_cycle }}">
-                    <h3 class="services-page__item-title">
-                        {{- item.title -}}
-                    </h3>
+  <!-- =================================================================== -->
+  <!-- BLOCK 01: OFFENSIVE SECURITY (Dark Cyber Surface, Softened Red) -->
+  <!-- =================================================================== -->
+  <section class="services-block block-theme--dark section--offensive" id="offensive">
+    <div class="container">
+      <span class="section-badge-pill">
+        <span class="dot"></span> 01. Offensive Services
+      </span>
+      <h2 class="services-block__heading">Find the gaps before attackers do.</h2>
+      <p class="services-block__subheading">
+        Combining skills, experience, and carefully crafted methodologies to simulate real-world threats and expose vulnerabilities across your applications, infrastructure, and people.
+      </p>
 
-                    <div class="services-page__item-text">
-                        {{ item.text | markdownify }}
-                    </div>
+      <div class="services-block__grid--3">
 
-                    <a class="services-page__item-cta btn btn--lg btn--dark" href="{{- item.cta.url | relative_url -}}">
-                        <span>{{- item.cta.text -}}</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" class="icon icon-tabler icon-tabler-circle-arrow-right-filled" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z"></path><path fill="currentColor" stroke="none" d="m12 2 .324.005a10 10 0 1 1-.648 0L12 2zm.613 5.21a1 1 0 0 0-1.32 1.497L13.584 11H8l-.117.007A1 1 0 0 0 8 13h5.584l-2.291 2.293-.083.094a1 1 0 0 0 1.497 1.32l4-4 .073-.082.064-.089.062-.113.044-.11.03-.112.017-.126L17 12l-.007-.118-.029-.148-.035-.105-.054-.113-.071-.111a1.008 1.008 0 0 0-.097-.112l-4-4z"></path></svg>
-                    </a>
-                </div>
-            {%- endcapture -%}
-
-            {%- capture the_image -%}
-                <div class="services-page__item-img-wrapper">
-                    <img class="services-page__item-img services-page__item-img--{{ the_cycle }} services-page__item-img--{{ forloop.index }}" src="{{- item.image.path | relative_url -}}" alt="{{- item.image.alt_text -}}">
-                </div>
-            {%- endcapture -%}
-        
-            <div class="services-page__item-content cols cols--2">
-                {%- if the_cycle == 'odd' -%}                    
-                    {{ the_text }}
-
-                    {{ the_image }}
-                {%- else -%}
-                    {{ the_image }}
-
-                    {{ the_text }}
-                {%- endif -%}
-            </div>
-
+        <!-- Card 1: Application Security -->
+        <div class="svc-card">
+          <div class="svc-card__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <h3 class="svc-card__title">Application Security</h3>
+          <p class="svc-card__text">
+            Thorough assessments of your web and mobile applications to identify vulnerabilities before attackers can exploit them. We verify that applications enforce proper controls, safeguard sensitive data, and comply with security policies.
+          </p>
+          <div class="svc-card__tags">
+            <span class="svc-card__tag">Web App Testing</span>
+            <span class="svc-card__tag">Mobile Security</span>
+            <span class="svc-card__tag">API Testing</span>
+            <span class="svc-card__tag">OWASP Top 10</span>
+          </div>
         </div>
-    </section>
-{% endfor %}
 
-{%- if page.show_callout == true -%}
-    {%- include partials/callout.html -%}
-{%- endif -%}
+        <!-- Card 2: Penetration Testing -->
+        <div class="svc-card">
+          <div class="svc-card__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <h3 class="svc-card__title">Penetration Testing</h3>
+          <p class="svc-card__text">
+            Simulated attacks across your network, systems, and people to uncover hidden vulnerabilities and security gaps. We replicate real adversary tactics and deliver prioritised findings to strengthen your defences.
+          </p>
+          <div class="svc-card__tags">
+            <span class="svc-card__tag">Internal &amp; External</span>
+            <span class="svc-card__tag">Cloud Infrastructure</span>
+            <span class="svc-card__tag">Social Engineering</span>
+          </div>
+        </div>
+
+        <!-- Card 3: Adversary Emulation -->
+        <div class="svc-card">
+          <div class="svc-card__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+          </div>
+          <h3 class="svc-card__title">Adversary Emulation</h3>
+          <p class="svc-card__text">
+            Full-scope Red Team operations that mirror the tactics of real threat actors. We test your ability to detect, respond, and recover — evaluating your defences across people, processes, and technology.
+          </p>
+          <div class="svc-card__tags">
+            <span class="svc-card__tag">Red Team</span>
+            <span class="svc-card__tag">TTP Simulation</span>
+            <span class="svc-card__tag">TIBER-EU</span>
+            <span class="svc-card__tag">Purple Team</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!-- BLOCK 02: BLUE TEAM & MDR (White Section with Modern Texture) -->
+  <!-- =================================================================== -->
+  <section class="services-block block-theme--light section--defensive" id="defensive">
+    <div class="container">
+      <span class="section-badge-pill">
+        <span class="dot"></span> 02. Defensive Services
+      </span>
+      <h2 class="services-block__heading">Build, monitor, and respond — at every layer.</h2>
+      <p class="services-block__subheading">
+        We don't just find the gaps. Our defensive services help you close them, watch for threats around the clock, and respond decisively when it counts.
+      </p>
+
+      <div class="services-block__grid--2">
+
+        <!-- Defensive Card 1: MDR -->
+        <div class="svc-card">
+          <div class="svc-card__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3 class="svc-card__title">Managed Detection &amp; Response</h3>
+          <p class="svc-card__text">
+            24/7 monitoring, detection, and active threat response across your environment. Our analysts identify malicious activity in real time and contain threats before they cause damage — extending your team's capabilities without the overhead.
+          </p>
+          <div class="svc-card__tags">
+            <span class="svc-card__tag">24/7 SOC</span>
+            <span class="svc-card__tag">Threat Intelligence</span>
+            <span class="svc-card__tag">Active Response</span>
+          </div>
+        </div>
+
+        <!-- Defensive Card 2: Incident Response -->
+        <div class="svc-card">
+          <div class="svc-card__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <h3 class="svc-card__title">Incident Response (DFIR)</h3>
+          <p class="svc-card__text">
+            When a breach occurs, speed is everything. We provide immediate expert assistance to contain threats, preserve forensic evidence, and restore operations — with clear post-incident reporting to prevent recurrence.
+          </p>
+          <div class="svc-card__tags">
+            <span class="svc-card__tag">Emergency Containment</span>
+            <span class="svc-card__tag">Forensics</span>
+            <span class="svc-card__tag">Root Cause Analysis</span>
+          </div>
+        </div>
+
+        <!-- Defensive Card 3: Threat Hunting -->
+        <div class="svc-card">
+          <div class="svc-card__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+          </div>
+          <h3 class="svc-card__title">Threat Hunting</h3>
+          <p class="svc-card__text">
+            Proactive pursuit of hidden threats that automated tools miss. Our analysts comb through endpoints, networks, and telemetry to surface indicators of compromise and dormant attacker behaviour before they escalate.
+          </p>
+          <div class="svc-card__tags">
+            <span class="svc-card__tag">IOC Analysis</span>
+            <span class="svc-card__tag">Behavioural Detection</span>
+            <span class="svc-card__tag">Endpoint Sweeps</span>
+          </div>
+        </div>
+
+        <!-- Defensive Card 4: Security Engineering -->
+        <div class="svc-card">
+          <div class="svc-card__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <h3 class="svc-card__title">Security Engineering</h3>
+          <p class="svc-card__text">
+            Design and build the technical foundations of your security programme. From detection engineering and SIEM deployment to EDR configuration and tool fine-tuning, we make sure your stack is optimised to detect real threats.
+          </p>
+          <div class="svc-card__tags">
+            <span class="svc-card__tag">Detection Engineering</span>
+            <span class="svc-card__tag">SIEM Setup</span>
+            <span class="svc-card__tag">EDR Tuning</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!-- BLOCK 03: IT SUPPORT & DEVOPS ENGINEERING (Dark Theme, High-Contrast) -->
+  <!-- =================================================================== -->
+  <section class="services-block block-theme--dark section--it-devops" id="it-devops">
+    <div class="container">
+      <span class="section-badge-pill">
+        <span class="dot"></span> 03. IT &amp; DevOps Engineering
+      </span>
+      <h2 class="services-block__heading">Modern cloud automation and hands-on IT support.</h2>
+      <p class="services-block__subheading">
+        Backed by our dedicated IT operations team and senior DevOps engineers. We deliver end-to-end cloud operations and daily corporate IT support — with security engineered into every layer.
+      </p>
+
+      <div class="services-block__grid--4">
+
+        <!-- DevOps 1: Operations -->
+        <div class="svc-card">
+          <div class="svc-card__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          </div>
+          <h3 class="svc-card__title">Cloud Infrastructure &amp; IaC Operations</h3>
+          <p class="svc-card__text">
+            Comprehensive architecture, deployment, and ongoing management of scalable, resilient cloud environments. We implement automated, declarative infrastructure to ensure high availability, efficiency, and continuous operational reliability.
+          </p>
+          <div class="svc-card__tags">
+            <span class="svc-card__tag">Cloud Architecture</span>
+            <span class="svc-card__tag">Infrastructure as Code</span>
+            <span class="svc-card__tag">High Availability</span>
+            <span class="svc-card__tag">Cloud Operations</span>
+          </div>
+        </div>
+
+        <!-- DevOps 2: Security -->
+        <div class="svc-card">
+          <div class="svc-card__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+          </div>
+          <h3 class="svc-card__title">DevSecOps &amp; Pipeline Security</h3>
+          <p class="svc-card__text">
+            Seamlessly embedding proactive security controls and automated governance into software development workflows. We enable continuous security validation and risk reduction across your release cycles before code reaches production.
+          </p>
+          <div class="svc-card__tags">
+            <span class="svc-card__tag">Pipeline Security</span>
+            <span class="svc-card__tag">Automated Guardrails</span>
+            <span class="svc-card__tag">Release Assurance</span>
+            <span class="svc-card__tag">Secure SDLC</span>
+          </div>
+        </div>
+
+        <!-- IT 1: Operations -->
+        <div class="svc-card">
+          <div class="svc-card__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <h3 class="svc-card__title">IT Operations &amp; Helpdesk Support</h3>
+          <p class="svc-card__text">
+            Reliable day-to-day corporate tech support for your team. We manage workstation setups across macOS and Windows, administer Microsoft 365 and Google Workspace, and streamline fast onboarding and offboarding.
+          </p>
+          <div class="svc-card__tags">
+            <span class="svc-card__tag">Helpdesk Support</span>
+            <span class="svc-card__tag">Mac &amp; Windows</span>
+            <span class="svc-card__tag">Microsoft 365</span>
+            <span class="svc-card__tag">Staff Onboarding</span>
+          </div>
+        </div>
+
+        <!-- IT 2: Security -->
+        <div class="svc-card">
+          <div class="svc-card__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <h3 class="svc-card__title">Corporate IT &amp; Endpoint Security</h3>
+          <p class="svc-card__text">
+            Hardening your organization's internal IT perimeter. We enforce device security policies via MDM (Intune / Jamf), configure Zero-Trust remote access and VPNs, manage Entra ID access, and maintain verified automated backup recovery.
+          </p>
+          <div class="svc-card__tags">
+            <span class="svc-card__tag">Device Hardening</span>
+            <span class="svc-card__tag">MDM (Intune/Jamf)</span>
+            <span class="svc-card__tag">Zero-Trust VPN</span>
+            <span class="svc-card__tag">Backup &amp; Recovery</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!-- BLOCK 04: INFORMATION SECURITY & ISO 27001 (White Section with Texture) -->
+  <!-- =================================================================== -->
+  <section class="services-block block-theme--light section--infosec" id="infosec">
+    <div class="container">
+      <span class="section-badge-pill">
+        <span class="dot"></span> 04. Information Security &amp; ISO 27001
+      </span>
+      <h2 class="services-block__heading">Accredited compliance without operational drag.</h2>
+      <p class="services-block__subheading">
+        Led by our Information Security &amp; ISO 27001 compliance team. We help organizations design, implement, and maintain practical Information Security Management Systems (ISMS) and pass external certification audits.
+      </p>
+
+      <div class="services-block__grid--4">
+
+        <!-- ISO Card 1: Implementation -->
+        <div class="svc-card">
+          <div class="svc-card__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <h3 class="svc-card__title">ISO/IEC 27001 Implementation</h3>
+          <p class="svc-card__text">
+            End-to-end guidance to achieve accredited ISO 27001:2022 certification. Our compliance team establishes your ISMS scope, writes the Statement of Applicability (SoA), implements Annex A controls, and accompanies you through Stage 1 and Stage 2 audits.
+          </p>
+          <div class="svc-card__tags">
+            <span class="svc-card__tag">ISO 27001:2022</span>
+            <span class="svc-card__tag">ISMS Scoping</span>
+            <span class="svc-card__tag">Annex A Controls</span>
+            <span class="svc-card__tag">Lead Auditor</span>
+          </div>
+        </div>
+
+        <!-- ISO Card 2: Compliance Frameworks -->
+        <div class="svc-card">
+          <div class="svc-card__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </div>
+          <h3 class="svc-card__title">Regulatory Compliance (SOC 2, NIS2)</h3>
+          <p class="svc-card__text">
+            Bridge the gap between complex legal mandates and engineering reality. We conduct gap analyses and construct practical control roadmaps for SOC 2 Type I/II, EU NIS2 directive, GDPR technical security, and DORA.
+          </p>
+          <div class="svc-card__tags">
+            <span class="svc-card__tag">SOC 2 Type I/II</span>
+            <span class="svc-card__tag">EU NIS2</span>
+            <span class="svc-card__tag">GDPR Security</span>
+            <span class="svc-card__tag">DORA</span>
+          </div>
+        </div>
+
+        <!-- ISO Card 3: Risk Assessment -->
+        <div class="svc-card">
+          <div class="svc-card__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <h3 class="svc-card__title">Security Risk Assessment</h3>
+          <p class="svc-card__text">
+            Transform subjective concerns into actionable risk data. We build pragmatic risk registries, conduct product threat modeling, evaluate third-party suppliers (TPRM), and deliver prioritized mitigation treatment plans.
+          </p>
+          <div class="svc-card__tags">
+            <span class="svc-card__tag">ISO 27005</span>
+            <span class="svc-card__tag">Vendor TPRM</span>
+            <span class="svc-card__tag">Threat Modeling</span>
+            <span class="svc-card__tag">Risk Treatment</span>
+          </div>
+        </div>
+
+        <!-- ISO Card 4: vCISO -->
+        <div class="svc-card">
+          <div class="svc-card__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3 class="svc-card__title">Virtual CISO (vCISO) Advisory</h3>
+          <p class="svc-card__text">
+            Senior security leadership on demand. We guide executive teams, draft and update security policies, help sales teams rapidly clear enterprise customer security questionnaires, and represent security before your board.
+          </p>
+          <div class="svc-card__tags">
+            <span class="svc-card__tag">Fractional CISO</span>
+            <span class="svc-card__tag">Security Reviews</span>
+            <span class="svc-card__tag">Policy Drafting</span>
+            <span class="svc-card__tag">Board Advisory</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!-- CALLOUT SECTION -->
+  <!-- =================================================================== -->
+  <section class="section section--dark callout">
+    <div class="container">
+      <header class="section__header callout__header">
+        <h2 class="section__heading callout__heading">
+          Understand how your company will respond to trained and skilled offensive actors.
+        </h2>
+      </header>
+      <div class="section__content callout__content">
+        <div class="callout__text text-xl">
+          <p>We understand real-world threat actors’ methodology, and our manual testing of your assets will help you develop and mature robust cybersecurity.</p>
+        </div>
+        <a href="{{ site.data.global.booking_url }}" target="_blank" data-open-modal class="btn btn--xl btn--secondary uppercase callout__cta">
+          Book a call
+        </a>
+      </div>
+    </div>
+  </section>
+
+</article>

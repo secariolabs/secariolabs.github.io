@@ -3,5 +3,8 @@
     "gulp": "^5.0.0",
     "gulp-imagemin": "^7.0.1",
     "gulp-newer": "^1.4.0"
+  },
+  "dependencies": {
+    "marked": "^18.1.1"
   }
 }

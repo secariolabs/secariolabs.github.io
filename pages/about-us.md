@@ -1,9 +1,9 @@
 ---
 meta:
   title: About Us — Secario Labs — Cybersecurity Solutions
-  description: Secario Labs operates in both the UK and Bulgaria specialised in comprehensive cybersecurity solutions. Get in touch.
+  description: Secario Labs is an elite cybersecurity engineering firm headquartered in Sofia, Bulgaria, providing offensive and defensive security solutions across Europe and globally.
 hero_title: Cybersecurity Solutions
-description: Secario Labs operates in both the UK and Bulgaria, working in partnership with clients to provide comprehensive cybersecurity solutions that meet the highest industry standards.
+description: Secario Labs is an elite cybersecurity engineering firm headquartered in Sofia, Bulgaria, working in partnership with clients across Europe and internationally to provide offensive and defensive security solutions that meet the highest industry standards.
 show_services: true
 show_callout: true
 text:

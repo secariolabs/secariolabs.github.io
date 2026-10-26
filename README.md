@@ -1,151 +1,79 @@
-# Secario labs static website
+# Secario Labs Website (Jekyll / GitHub Pages)
 
-## Blog posts
+Official production codebase for [secariolabs.com](https://secariolabs.com).
 
-### Captions
+## Overview & Architecture
 
-#### Images
+- **Static Site Generator**: Jekyll `~> 4.3.4`
+- **Hosting / CI**: GitHub Pages automated deployment via `.github/workflows/jekyll-action.yml`
+- **Design System**: Dark technical slate theme (`#121316`), elevated card surfaces (`#18191f`), crisp high-contrast typography (`#ffffff` headings, `#e2e8f0` body), softened brand red accents (`#921f20`, `#c93b3b`, `#e04f4f`), and modern light textured sections (`modern-light-mesh.jpg`).
+- **Headquarters**: Sofia, Bulgaria (`Metro City Business Center, Sofia 1712, Bulgaria`).
+- **Core Functionalities**:
+  - **Single Consolidated Services Page** (`/services/`): Unified 4-pillar catalog (Offensive Security, Blue Team & MDR, Cloud & DevOps Operations, Information Security & ISO 27001). `/defence/` cleanly redirects to `/services/#defensive`.
+  - **Discovery Call Booking**: Integrated Microsoft 365 calendar modal (`[data-open-modal]`) and direct booking buttons linked to `site.data.global.booking_url`.
+  - **Inquiry & Scoping Form**: Integrated with GetForm (`https://getform.io/f/bqoodwyb`) and client-side Pristine validation.
+  - **Blog & Technical Articles**: Paginated research feed with code block syntax highlighting (Prism.js) and click-to-zoom image lightboxes.
+  - **Promo Banner**: 15% quote discount banner with persistent dismissal state (`localStorage`).
 
-You can add captions under images, like so:
+---
 
+## Local Development & Testing
+
+### Prerequisites
+- **Ruby** `3.1+` with Bundler (`gem install bundler`)
+- **Node.js** `20+` and npm (for image optimization & asset pipeline)
+
+### Installation
+```bash
+# Install Ruby dependencies
+bundle install
+
+# Install npm tools
+npm install
+```
+
+### Running Locally
+```bash
+# Start the Jekyll development server
+bundle exec jekyll serve --livereload
+```
+Visit `http://localhost:4000` in your web browser.
+
+### Building for Production
+```bash
+bundle exec jekyll build --config _config.yml,_config.production.yml
+gulp go
+```
+
+---
+
+## Deploying to GitHub Pages
+
+This repository is pre-configured with `.github/workflows/jekyll-action.yml`.
+When you push the contents of this folder to the `main` branch of your GitHub repository:
+1. GitHub Actions automatically installs Ruby 3.1 and Node 20.
+2. Runs `bundle exec jekyll build --config _config.yml,_config.production.yml`.
+3. Optimizes web images via Gulp.
+4. Deploys the built site artifact directly to GitHub Pages.
+
+---
+
+## Content Authoring
+
+### Blog Posts
+Store new Markdown posts in `_posts/` with the filename format `YYYY-MM-DD-title.md`:
 ```markdown
-![](/assets/images/posts/image.png)
-_Figure 1 - Caption for the image_
+---
+layout: post
+title: "Article Title"
+date: YYYY-MM-DD
+tags: ["Offensive Security", "Research"]
+excerpt: "Short 1-2 sentence preview for search and index feeds."
+---
+
+Your content in Markdown...
 ```
 
-**Pattern:** The caption text should be between undercores and directly below the image line (no empty lines between them)
-
-#### Code blocks
-
-You can add captions under code blocks, like so:
-
-`````markdown
-```python
-print('Hello')
-```
-_Caption for the code block_
-`````
-
-**Pattern:** The caption text should be between undercores and below the code block (the lines (if any) between them do not make a difference)
-
-#### Tables
-
-You can add captions under tables, like so:
-
-```markdown
-|Heading|Heading|Heading|
-|-------|-------|-------|
-|cell   |cell   |cell   |
-|cell   |cell   |cell   |
-
-_Table Caption_
-```
-
-**Pattern:** The caption text should be between undercores and below the image line (there should be an empty line between them)
-
-#### Responsive tables
-
-If you want the table to scroll horizontally in case the table is wider than the screen, then the table should be inside a `div` with a class of `table-responsive`. In this case, the table should be written in HTML. For example:
-
-```markdown
-<div class="table-responsive">
-<table>
-  <thead>
-    <tr>
-      <th>Heading</th>
-      <th>Heading</th>
-      <th>Heading</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>cell</td>
-      <td>cell</td>
-      <td>cell</td>
-    </tr>
-    <tr>
-      <td>cell</td>
-      <td>cell</td>
-      <td>cell</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-_Responsive table caption_
-```
-
-**Patern:** The caption text should be between undercores and below the `<div>` (the lines (if any) between them do not make a difference)
-
-## Code snippets
-
-### Switch zebra stripes off
-
-Taking advantage of the fact that Jekyll uses Kramdown for parsing markdown, we can inject custom classes into the code blocks.
-
-So in order to switch the zebra stripes off, just add `{: .no-styles}` right before the beginning of the code snippet. Do not leave empty lines between them.
-
-For example:
-
-`````
-{: .no-stripes}
-```bash
-user@ubuntu:~/poc$ clear
-user@ubuntu:~/poc$ ls -l
-```
-`````
-
-### Mark code lines
-
-You can add yellow marking to code lines, by using the `data-line` attribute.
-
-For instance, you mark line 1, like so:
-
-`````
-{:data-line="1"}
-```bash
-user@ubuntu:~/poc$ clear
-user@ubuntu:~/poc$ ls -l
-```
-`````
-
-You can mark multilple lines, i.e. the first two, like so:
-
-`````
-{:data-line="1-2"}
-```bash
-user@ubuntu:~/poc$ clear
-user@ubuntu:~/poc$ ls -l
-```
-`````
-
-Or you can mark lines 1 and 3:
-
-`````
-{:data-line="1,3"}
-```bash
-user@ubuntu:~/poc$ clear
-user@ubuntu:~/poc$ ls -l
-user@ubuntu:~/poc$ touch config.txt
-```
-`````
-
-Or you can mark lines 1 through 3, line 5 and lines 7 through 10:
-
-`````
-{:data-line="1-3,5,7-10"}
-```bash
-user@ubuntu:~/poc$ clear
-user@ubuntu:~/poc$ ls -l
-user@ubuntu:~/poc$ touch file.txt
-```
-`````
-
-You can even mix and match and highlight lines without having zebra styles:
-
-`````
-{: .no-stripes data-line="1,3"}
-```bash
-user@ubuntu:~/poc$ clear
-user@ubuntu:~/poc$ ls -l
-user@ubuntu:~/poc$ touch config.txt
-```
+### Global Site Configuration
+- `_data/global.yml`: Site title, meta description, booking URL, office location, contact phone, email, social media links.
+- `_data/navigation.yml`: Header navigation items.

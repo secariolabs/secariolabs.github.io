@@ -1,12 +1,12 @@
 main:
   - text: About Us
-    url: /about-us
+    url: /about-us/
   - text: Services
     url: /services/
-  - text: Defence
-    url: /defence/
   - text: Blog
     url: /blog/
+  - text: Contact
+    url: /contact/
   - text: Book a call
     url: ""
     type: button

@@ -1,38 +1,74 @@
 ---
 layout: page
 ---
-<section class="section section--page">
-    <div class="container">
+<section class="section section--page" style="background: #121316; padding-top: 56px; padding-bottom: 72px;">
+    <div class="container container--xl">
 
         {%- if page.description.size > 0 -%}
-            <div class="blog__desc text-xl text-center">
+            <div class="blog__desc" style="color: #cbd5e1; font-size: 1.2rem; max-width: 780px; margin: 0 auto 48px; text-align: center; line-height: 1.6;">
                 {{ page.description | markdownify }}
             </div>
         {%- endif -%}
 
-        <div class="blog__teasers cols cols--2">        
-            {% for post in paginator.posts %}
-                <div class="blog__teaser">
+        {%- if paginator.page == 1 and paginator.posts.size > 0 -%}
+            {%- assign featured_post = paginator.posts.first -%}
+            <!-- Featured Lead Article -->
+            <div class="blog-featured" style="background: #18191f; border: 1px solid #282a33; border-radius: 8px; padding: 40px; margin-bottom: 48px;">
+                <span class="section-badge-pill" style="margin-bottom: 16px;"><span class="dot"></span> Featured Research</span>
+                <h2 style="font-size: 2.1rem; margin-bottom: 14px; margin-top: 8px;">
+                    <a href="{{ featured_post.url | relative_url }}" style="color: #ffffff; text-decoration: none;">
+                        {{ featured_post.title }}
+                    </a>
+                </h2>
+                <div style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 16px;">
+                    {{ featured_post.date | date: "%B %-d, %Y" }}
+                    {%- if featured_post.tags.size > 0 -%}
+                        <span style="margin: 0 8px;">·</span>
+                        <span style="color: #e04f4f;">{{ featured_post.tags | join: ", " }}</span>
+                    {%- endif -%}
+                </div>
+                <div style="color: #cbd5e1; font-size: 1.08rem; line-height: 1.65; margin-bottom: 24px; max-width: 880px;">
+                    {{ featured_post.excerpt | strip_html | truncatewords: 65, '...' }}
+                </div>
+                <a href="{{ featured_post.url | relative_url }}" class="btn btn--secondary uppercase" style="padding: 10px 22px; font-size: 0.9rem;">
+                    Read Full Article →
+                </a>
+            </div>
+        {%- endif -%}
 
-                    <div class="blog__teaser-header">
-                        <h2 class="blog__teaser-heading">
-                            <a href="{{ post.url | relative_url }}">
+        <!-- Blog Posts Grid -->
+        <div class="blog__grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 32px; margin-bottom: 48px;">        
+            {% for post in paginator.posts %}
+                {%- if paginator.page == 1 and forloop.first -%}
+                    {%- continue -%}
+                {%- endif -%}
+                <div class="blog-card" style="background: #18191f; border: 1px solid #282a33; border-radius: 8px; padding: 32px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                            <span>{{ post.date | date: "%B %-d, %Y" }}</span>
+                            {%- if post.tags.first -%}
+                                <span style="background: rgba(146, 31, 32, 0.2); color: #e04f4f; padding: 2px 8px; border-radius: 4px; font-size: 0.78rem; font-weight: 600;">
+                                    {{ post.tags.first }}
+                                </span>
+                            {%- endif -%}
+                        </div>
+
+                        <h3 style="font-size: 1.35rem; line-height: 1.35; margin-bottom: 14px;">
+                            <a href="{{ post.url | relative_url }}" style="color: #ffffff; text-decoration: none;">
                                 {{ post.title }}
                             </a>
-                        </h2>
+                        </h3>
 
-                        {%- include partials/post-meta.html -%}
-                        <div class="blog__teaser-summary text-lg">
-                            {{ post.excerpt | truncatewords: 50, ' […]' }}
+                        <div style="color: #cbd5e1; font-size: 0.98rem; line-height: 1.6; margin-bottom: 24px;">
+                            {{ post.excerpt | strip_html | truncatewords: 32, '...' }}
                         </div>
                     </div>
 
-                    <div class="blog__teaser-link-wrapper">
-                        <a href="{{- post.url | relative_url -}}" class="blog__teaser-link btn btn--light btn--md btn--thin btn--bordered">
-                            Read More
+                    <div style="margin-top: auto; border-top: 1px solid #222530; padding-top: 16px;">
+                        <a href="{{ post.url | relative_url }}" style="color: #e04f4f; font-weight: 600; text-decoration: none; font-size: 0.92rem; display: inline-flex; align-items: center; gap: 6px;">
+                            Read Article <span>→</span>
                         </a>
                     </div>
-                
                 </div>
             {% endfor %}
         </div>

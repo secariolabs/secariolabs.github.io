@@ -1,11 +1,11 @@
 @use "vars" as *;
 
 .site-footer {
-  border-top: 1px solid $light;
-  padding: 2.5rem 0 3rem;
-  background-color: $dark;
-  color: $light;
-  font-size: 1.125rem;
+  border-top: 1px solid #222530;
+  padding: 3.5rem 0 2rem;
+  background-color: #0f1013;
+  color: #94a3b8;
+  font-size: 0.95rem;
 
   &__cols {
     display: grid;

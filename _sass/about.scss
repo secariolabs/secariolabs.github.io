@@ -61,46 +61,70 @@
       margin-top: 2rem;
     }
   }
+}
 
-  &__badges {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    max-width: 850px;
-    margin-left: auto;
-    margin-right: auto;
+/* Modern Certifications Section */
+.section-certifications {
+  background-color: #fafbfc;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.93), rgba(255, 255, 255, 0.95)),
+    url('/assets/images/modern-light-mesh.jpg');
+  background-size: cover;
+  background-position: center;
+  border-top: 1px solid #e2e8f0;
+  padding: 88px 0;
+}
 
-    &-text {
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
-      text-align: center;
-    }
+.cert-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 18px;
+
+  @include breakpoint(large) {
+    grid-template-columns: repeat(4, 1fr);
   }
 
-  &__badge {
-    &-item {
-      padding: 1rem;
-      width: 16%;
-      text-align: center;
+  @include breakpoint(medium) {
+    grid-template-columns: repeat(3, 1fr);
+  }
 
-      @include breakpoint(medium) {
-        width: 25%;
-      }
+  @include breakpoint(small) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+}
 
-      @include breakpoint(small) {
-        width: 33%;
-      }
+.cert-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  border-radius: 8px;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  transition: all 0.25s ease;
 
-      @include breakpoint(smaller) {
-        width: 50%;
-      }
-    }
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px -4px rgba(15, 23, 42, 0.08);
+    border-color: #cbd5e1;
+  }
 
-    &-img {
-      max-height: 85px;
-      width: auto;
-    }
+  &__img {
+    height: 72px;
+    width: 72px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+  }
+
+  &__title {
+    font-family: $heading_font;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.3;
   }
 }

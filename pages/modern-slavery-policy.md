@@ -40,7 +40,7 @@ We aim to encourage openness and will support anyone who raises genuine concerns
 
 Detrimental treatment includes dismissal, disciplinary action, threats, or other unfavourable treatment connected with raising a concern.
 
-If you believe that you have suffered any such treatment, you should inform your line manager immediately. If the matter is not remedied, and you are an employee, you should raise it formally using our Grievance Procedure, which can be found in the current employee handbook. This Modern (Anti) Slavery Policy and Statement is intended for businesses in all countries, especially the United Kingdom; and was brought to you by Secario Labs UK.
+If you believe that you have suffered any such treatment, you should inform your line manager immediately. If the matter is not remedied, and you are an employee, you should raise it formally using our Grievance Procedure, which can be found in the current employee handbook. This Modern (Anti) Slavery Policy and Statement is intended for our global operations and supply chains and is maintained by Secario Labs.
 
 ## Communication & awareness of this policy
 

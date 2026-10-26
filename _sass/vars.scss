@@ -1,15 +1,22 @@
 $heading_font: "Ubuntu", sans-serif;
 $text_font: "Source Sans Pro", sans-serif;
 
-$dark: #1a1a1a;
-$darker: #000;
-$alt_dark: #404040;
+$dark: #121316;
+$darker: #0b0c0e;
+$card_dark: #18191f;
+$border_dark: #282a33;
+$alt_dark: #222530;
 $secondary: #921f20;
-$light: #fff;
-$gray: #f5f5f5;
-$alt_gray: #b7b7b7;
-$dark_gray: #616161;
-$zinc: #3f3f46;
+$secondary_light: #c93b3b;
+$secondary_accent: #e04f4f;
+$light: #ffffff;
+$text_body: #e2e8f0;
+$text_muted: #94a3b8;
+$text_subtle: #64748b;
+$gray: #f8fafc;
+$alt_gray: #cbd5e1;
+$dark_gray: #64748b;
+$zinc: #334155;
 
 @mixin breakpoint($point) {
   @if $point == larger {
