@@ -341,3 +341,88 @@ layout: default
   </section>
 
 </article>
+
+<script>
+  (function () {
+    const subnavLinks = document.querySelector('.subnav-links');
+    if (!subnavLinks) return;
+
+    const subnavBtns = subnavLinks.querySelectorAll('.subnav-btn');
+    const sectionIds = ['offensive', 'defensive', 'it-devops', 'infosec'];
+    const sections = sectionIds
+      .map(function (id) { return document.getElementById(id); })
+      .filter(Boolean);
+
+    function setActiveBtn(activeId) {
+      subnavBtns.forEach(function (btn) {
+        const href = btn.getAttribute('href') || '';
+        if (href === '#' + activeId) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    subnavBtns.forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        const href = btn.getAttribute('href');
+        if (!href || !href.startsWith('#')) return;
+
+        const targetId = href.substring(1);
+        const targetEl = document.getElementById(targetId);
+        if (targetEl) {
+          e.preventDefault();
+          setActiveBtn(targetId);
+
+          const headerOffset = 125;
+          const elementPosition = targetEl.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+
+          if (history.pushState) {
+            history.pushState(null, null, href);
+          } else {
+            location.hash = href;
+          }
+        }
+      });
+    });
+
+    var ticking = false;
+    function updateScrollSpy() {
+      const scrollPos = window.scrollY + 145;
+      let currentId = '';
+
+      for (let i = 0; i < sections.length; i++) {
+        const sec = sections[i];
+        if (sec.offsetTop <= scrollPos) {
+          currentId = sec.getAttribute('id');
+        }
+      }
+
+      if (currentId) {
+        setActiveBtn(currentId);
+      }
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', function () {
+      if (!ticking) {
+        window.requestAnimationFrame(updateScrollSpy);
+        ticking = true;
+      }
+    }, { passive: true });
+
+    if (window.location.hash) {
+      const hashId = window.location.hash.substring(1);
+      if (sectionIds.indexOf(hashId) !== -1) {
+        setActiveBtn(hashId);
+      }
+    }
+  })();
+</script>
