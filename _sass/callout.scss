@@ -1,35 +1,54 @@
 @use "vars" as *;
 
 .callout {
-  background-repeat: no-repeat;
-  background-image: url(/assets/images/call-background.jpg);
-  background-position: center;
-  background-size: cover;
-  background-attachment: fixed;
+  background-color: #121316;
+  background-image: 
+    radial-gradient(circle at 50% 40%, rgba(201, 59, 59, 0.12) 0%, transparent 65%),
+    linear-gradient(rgba(18, 19, 22, 0.94), rgba(18, 19, 22, 0.98));
+  padding: 104px 0;
+  border-top: 1px solid #282a33;
+  border-bottom: 1px solid #282a33;
+  position: relative;
+  text-align: center;
 
-  @include touch_device {
-    background-attachment: scroll;
+  @include breakpoint(medium) {
+    padding: 72px 0;
   }
 
   &__header {
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
   }
 
   &__heading {
-    @include breakpoint(small) {
-      font-size: 2.5rem;
-    }
+    font-family: $heading_font;
+    font-size: clamp(2rem, 3.6vw, 3rem);
+    font-weight: 700;
+    color: #ffffff;
+    max-width: 820px;
+    margin: 0 auto;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
   }
 
   &__content {
     text-align: center;
   }
 
+  &__text {
+    color: #cbd5e1;
+    font-size: 1.15rem;
+    line-height: 1.7;
+    max-width: 660px;
+    margin: 0 auto 36px;
+  }
+
   &__cta {
-    padding: 1.125rem 2rem;
-    margin-top: 1rem;
-    border: 1px solid $light;
-    display: inline-block;
-    letter-spacing: 1px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    text-transform: uppercase;
   }
 }

@@ -3,63 +3,92 @@
 .btn {
   cursor: pointer;
   background: none;
-  border: none;
-  transition: background-color 0.15s ease-in-out;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-family: $heading_font;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  line-height: 1.2;
 
   &--md {
-    font-family: $heading_font;
-    padding: 0.75rem 1.125rem;
-    font-size: 1.125rem;
+    padding: 10px 22px;
+    font-size: 0.95rem;
   }
 
   &--lg {
-    font-family: $heading_font;
-    padding: 1rem 1.25rem;
+    padding: 13px 28px;
+    font-size: 1rem;
   }
 
   &--xl {
-    font-family: $heading_font;
-    padding: 1rem 1.75rem;
+    padding: 15px 34px;
+    font-size: 1.05rem;
   }
 
   &--light {
-    background-color: $light;
-    color: $dark;
+    background-color: #ffffff;
+    color: #0f172a;
+    border-color: #ffffff;
 
     &:hover {
-      background-color: $alt_gray;
+      background-color: #f1f5f9;
+      border-color: #f1f5f9;
+      color: #000000;
+      box-shadow: 0 4px 14px rgba(255, 255, 255, 0.2);
     }
   }
 
   &--dark {
-    background-color: $dark;
-    color: $light;
+    background-color: #18191f;
+    color: #ffffff;
+    border-color: #282a33;
 
     &:hover {
-      background-color: $zinc;
+      background-color: #222530;
+      border-color: #3b4252;
+      color: #ffffff;
     }
   }
 
   &--secondary {
-    background-color: $secondary;
-    color: $light;
-
-    transition: opacity 0.15s ease-in-out;
+    background-color: #921F20;
+    color: #ffffff;
+    border-color: #921F20;
+    box-shadow: 0 4px 16px rgba(146, 31, 32, 0.35);
 
     &:hover {
-      opacity: 0.85;
+      background-color: #c93b3b;
+      border-color: #c93b3b;
+      color: #ffffff;
+      box-shadow: 0 6px 22px rgba(201, 59, 59, 0.5);
+      transform: translateY(-2px);
+    }
+  }
+
+  &--outline {
+    background: transparent;
+    color: #ffffff;
+    border: 1px solid #3b4252;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: #cbd5e1;
+      color: #ffffff;
     }
   }
 
   &--thin {
     font-family: $text_font;
+    font-weight: 600;
   }
 
   &--bordered {
-    border: 1px solid $dark;
+    border: 1px solid #282a33;
   }
-
-  @include mobile_btn;
 }
 
 a.btn {
