@@ -24,13 +24,11 @@ defaults:
     values:
       layout: "contact"
       permalink: /contact/
-      type: "plain-page"
   - scope:
       path: "pages/blog.md"
     values:
       layout: "blog"
       permalink: /blog/
-      type: "plain-page"
   - scope:
       path: "pages/defence.md"
     values:

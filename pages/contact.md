@@ -1,6 +1,5 @@
 ---
 meta:
   title: Contact — Secario Labs
-  description: ''
-heading: Contact Us
+  description: 'Initiate a technical security assessment, discuss penetration testing scope, or book a consultation.'
 ---

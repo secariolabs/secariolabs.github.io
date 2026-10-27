@@ -1,14 +1,220 @@
 ---
 layout: default
 ---
-{%- include home/hero.html -%}
-{%- if page.show_services == true -%}
-    {%- include partials/services.html -%}
-{%- endif -%}
-{%- include home/why.html -%}
-{%- include home/partners.html -%}
-{%- include home/testimonials.html -%}
-{%- include home/research.html -%}
-{%- if page.show_callout == true -%}
-    {%- include partials/callout.html -%}
-{%- endif -%}
+
+<!-- Home Hero Section -->
+<section class="home-hero">
+  <div class="container container--xl">
+    <div class="home-hero__grid">
+      <div>
+        <span class="hero-badge-pill">
+          <span class="dot"></span> Expertly Delivered Cybersecurity
+        </span>
+        <h1 class="home-hero__title">
+          Offensive Testing, 24/7 Defence &amp; Cloud Engineering.
+        </h1>
+        <p class="home-hero__desc">
+          Combining deep offensive experience, 24/7 SOC operations, Cloud and DevOps Engineering, and accredited ISO 27001 advisory to defend modern organizations.
+        </p>
+        <div class="home-hero__actions">
+          <a href="/services/" class="btn btn--secondary btn--xl">
+            Explore Services
+          </a>
+          <a href="/about-us/" class="btn btn--outline btn--xl">
+            About Secario Labs
+          </a>
+        </div>
+      </div>
+      <div class="home-hero__img-wrap">
+        <img class="home-hero__img" src="/assets/images/screens.png" alt="Secario Labs Assessment Dashboard" width="898" height="697">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 Core Pillars Overview Section -->
+<section class="section-block section--pillars" id="pillars">
+  <div class="container container--xl">
+    <span class="section-badge-pill">
+      <span class="dot"></span> Comprehensive Practice Areas
+    </span>
+    <h2 class="section-block__heading">Unified Security &amp; Infrastructure Engineering</h2>
+    <p class="section-block__subheading">
+      Consolidated expertise spanning adversary simulation, managed detection, modern cloud automation, and regulatory governance.
+    </p>
+
+    <div class="pillars-grid">
+
+      <!-- Pillar 1: Offensive Security -->
+      <a href="/services/#offensive" class="pillar-card">
+        <div class="pillar-card__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="16 18 22 12 16 6"/></svg>
+        </div>
+        <span class="pillar-card__num">01. Offensive</span>
+        <h3 class="pillar-card__title">Offensive Security</h3>
+        <p class="pillar-card__text">
+          Manual penetration testing, Red Teaming, web/mobile app security, and adversary emulation that mirror real-world threat actors to expose vulnerabilities first.
+        </p>
+        <div class="pillar-card__tags">
+          <span class="pillar-card__tag">Pen Testing</span>
+          <span class="pillar-card__tag">Red Team</span>
+          <span class="pillar-card__tag">AppSec</span>
+        </div>
+      </a>
+
+      <!-- Pillar 2: Blue Team & MDR -->
+      <a href="/services/#defensive" class="pillar-card">
+        <div class="pillar-card__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <span class="pillar-card__num">02. Defensive</span>
+        <h3 class="pillar-card__title">Blue Team &amp; MDR</h3>
+        <p class="pillar-card__text">
+          24/7 Managed Detection &amp; Response, rapid DFIR incident response, continuous threat hunting, and security engineering across your existing multi-vendor stack.
+        </p>
+        <div class="pillar-card__tags">
+          <span class="pillar-card__tag">24/7 SOC</span>
+          <span class="pillar-card__tag">DFIR</span>
+          <span class="pillar-card__tag">Threat Hunting</span>
+        </div>
+      </a>
+
+      <!-- Pillar 3: IT Support & DevOps -->
+      <a href="/services/#it-devops" class="pillar-card">
+        <div class="pillar-card__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+        </div>
+        <span class="pillar-card__num">03. Operations</span>
+        <h3 class="pillar-card__title">IT Support &amp; DevOps</h3>
+        <p class="pillar-card__text">
+          Hands-on IT operations, Mac &amp; Windows helpdesk, cloud infrastructure setup, automated software release pipelines, and internal corporate endpoint hardening.
+        </p>
+        <div class="pillar-card__tags">
+          <span class="pillar-card__tag">Cloud IaC</span>
+          <span class="pillar-card__tag">DevSecOps</span>
+          <span class="pillar-card__tag">IT Helpdesk</span>
+        </div>
+      </a>
+
+      <!-- Pillar 4: InfoSec & ISO 27001 -->
+      <a href="/services/#infosec" class="pillar-card">
+        <div class="pillar-card__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <span class="pillar-card__num">04. Governance</span>
+        <h3 class="pillar-card__title">InfoSec &amp; ISO 27001</h3>
+        <p class="pillar-card__text">
+          Led by our in-house infosec team. Accredited ISMS implementation, audit readiness, regulatory compliance (SOC 2, NIS2, DORA), and Virtual CISO advisory.
+        </p>
+        <div class="pillar-card__tags">
+          <span class="pillar-card__tag">ISO 27001</span>
+          <span class="pillar-card__tag">SOC 2 / NIS2</span>
+          <span class="pillar-card__tag">vCISO</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- Why Choose Secario Labs Section (Clean Light Canvas) -->
+<section class="section-block section--why">
+  <div class="container container--xl">
+    <div style="max-width: 860px; margin: 0 auto;">
+      <span class="section-badge-pill">
+        <span class="dot"></span> Why Choose Secario Labs
+      </span>
+      <h2 class="section-block__heading">Offensive Experience &amp; Dedicated Partnership</h2>
+      <p class="section-block__subheading">
+        Secario Labs is an elite cyber security engineering firm headquartered in Sofia, Bulgaria, delivering high-touch technical excellence and working alongside your internal teams to identify risks and verify remediation.
+      </p>
+      <ul class="why-checklist">
+        <li>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <span><strong>Threat-Intelligence-Led Testing:</strong> Realistic adversary emulation mirroring modern attackers' TTPs, not just automated scanners.</span>
+        </li>
+        <li>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <span><strong>Actionable Remediation &amp; Re-Testing:</strong> Detailed developer-ready reproduction steps with free re-testing to confirm vulnerabilities are resolved.</span>
+        </li>
+        <li>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <span><strong>Flexible Stack Integration:</strong> Seamless 24/7 SOC integration with your existing telemetry stack without proprietary lock-in.</span>
+        </li>
+      </ul>
+      <div style="margin-top: 32px;">
+        <a href="/about-us/" class="btn btn--secondary">
+          Learn More About Our Team
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Client Testimonials Section -->
+<section class="section-block section--testimonials">
+  <div class="container container--xl">
+    <span class="section-badge-pill">
+      <span class="dot"></span> Client Testimonials
+    </span>
+    <h2 class="section-block__heading">What Our Clients Say</h2>
+    <p class="section-block__subheading">
+      Direct feedback from engineering leaders, CISOs, and executives who trust Secario Labs to safeguard their applications and infrastructure.
+    </p>
+
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <p class="testimonial-quote">
+          “They understood the underlying technologies well and had a very detailed look over the provided codebase.”
+        </p>
+        <span class="testimonial-author">CEO, US Software Company</span>
+      </div>
+
+      <div class="testimonial-card">
+        <p class="testimonial-quote">
+          “Secario Labs’ good communication distinguishes them from the competition. It’s hard to find a provider with good skills and good communication; we often get one or the other, and with Secario Labs, we get both.”
+        </p>
+        <span class="testimonial-author">CEO, Israeli Technology Company</span>
+      </div>
+
+      <div class="testimonial-card">
+        <p class="testimonial-quote">
+          “Secario Labs were not only able to identify security vulnerabilities which other vendors have somehow missed, but they went above and beyond to help us remediate them and verify the patches. The whole process from scoping to the final debrief was exceptionally carried out.”
+        </p>
+        <span class="testimonial-author">Project Manager, UK Utilities Company</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Partners Section -->
+<section class="section--partners">
+  <div class="container container--xl">
+    <div class="partners-title">Industry Collaboration &amp; Technology Partners</div>
+    <div class="partners-logos">
+      <img class="partners-logo" src="/assets/images/logos/cyberwales.png" alt="Cyber Wales" width="524" height="303">
+      <img class="partners-logo" src="/assets/images/logos/darktrace.png" alt="Darktrace" width="1024" height="300">
+      <img class="partners-logo" src="/assets/images/logos/computer2000.jpg" alt="Computer 2000" width="2316" height="908">
+      <a href="https://www.exclusive-networks.com/bg" target="_blank" rel="noopener"><img class="partners-logo" src="/assets/images/logos/exclusive-networks.png" alt="Exclusive Networks" width="960" height="332"></a>
+    </div>
+  </div>
+</section>
+
+<!-- Callout Section -->
+<section class="section section--dark callout">
+  <div class="container">
+    <header class="section__header callout__header">
+      <h2 class="section__heading callout__heading">
+        Understand how your company will respond to trained and skilled offensive actors.
+      </h2>
+    </header>
+    <div class="section__content callout__content">
+      <div class="callout__text text-xl">
+        <p>We understand real-world threat actors’ methodology, and our manual testing of your assets will help you develop and mature robust cybersecurity.</p>
+      </div>
+      <a href="{{ site.data.global.booking_url }}" target="_blank" class="btn btn--xl btn--secondary uppercase callout__cta">
+        Book a call
+      </a>
+    </div>
+  </div>
+</section>
