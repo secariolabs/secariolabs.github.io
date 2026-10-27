@@ -7,14 +7,15 @@
 
   color: $light;
 
+  background-color: #121316;
+  background-image: 
+    radial-gradient(circle at 50% 25%, rgba(201, 59, 59, 0.08) 0%, transparent 65%),
+    linear-gradient(rgba(18, 19, 22, 0.88), rgba(18, 19, 22, 0.96)), 
+    url(/assets/images/hero/background-hero.jpg);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  background-attachment: fixed;
-
-  @include touch_device {
-    background-attachment: scroll;
-  }
+  border-bottom: 1px solid #232630;
 
   & > .container {
     padding-top: 12rem;
@@ -38,28 +39,23 @@
     }
   }
 
-  &--about-us {
-    background-image: url(/assets/images/call-background.jpg);
-  }
-
-  &--services {
-    background-image: url(/assets/images/Scattered-Lines-Dots-12-scaled.jpg);
-    background-color: rgba(0, 0, 0, 0.5);
-    background-blend-mode: color;
+  &--about-us,
+  &--services,
+  &--defence,
+  &--blog {
+    background-color: #121316;
+    background-image: 
+      radial-gradient(circle at 50% 25%, rgba(201, 59, 59, 0.08) 0%, transparent 65%),
+      linear-gradient(rgba(18, 19, 22, 0.88), rgba(18, 19, 22, 0.96)), 
+      url(/assets/images/hero/background-hero.jpg);
+    background-blend-mode: normal;
+    background-size: cover;
+    background-position: center;
+    border-bottom: 1px solid #232630;
     text-align: center;
   }
 
-  &--defence {
-    background-image: url(/assets/images/Scattered-Lines-Dots-12-scaled.jpg);
-    background-color: rgba(26, 0, 83, 0.8);
-    background-blend-mode: color;
-  }
-
   &--blog {
-    background-color: rgba(44, 62, 80, 0.3);
-    background-image: url(/assets/images/Scattered-Lines-Dots-10-scaled.jpg);
-    background-blend-mode: overlay;
-
     padding-bottom: 6rem;
 
     @include breakpoint(medium) {
