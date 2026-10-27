@@ -1,14 +1,39 @@
 @use "vars" as *;
 
-.contact-page-wrapper {
+.page-hero {
+  padding: 80px 0 60px;
+  background: $dark;
+  border-bottom: 1px solid #282a33;
+  text-align: center;
+
+  &__heading {
+    font-family: $heading_font;
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    font-weight: 700;
+    color: #ffffff;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
+  }
+
+  &__subheading {
+    font-size: 1.15rem;
+    color: #94a3b8;
+    max-width: 680px;
+    margin: 0 auto;
+    line-height: 1.65;
+  }
+}
+
+.contact-section {
+  padding: 64px 0 96px;
   background: #121316;
-  padding: 48px 0 80px;
 }
 
 .contact-grid {
   display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-  gap: 48px;
+  grid-template-columns: 1.25fr 0.75fr;
+  gap: 40px;
   align-items: start;
 
   @include breakpoint(medium) {
@@ -21,10 +46,124 @@
   background: #18191f;
   border: 1px solid #282a33;
   border-radius: 8px;
-  padding: 44px 36px;
+  padding: 44px 40px;
 
   @include breakpoint(smaller) {
     padding: 28px 20px;
+  }
+
+  &__heading {
+    font-family: $heading_font;
+    font-size: 1.65rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+
+  &__desc {
+    color: #94a3b8;
+    font-size: 0.98rem;
+    line-height: 1.65;
+    margin-bottom: 32px;
+  }
+}
+
+.form-group {
+  margin-bottom: 22px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+
+  @include breakpoint(smaller) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-label {
+  display: block;
+  font-size: 0.82rem;
+  font-family: $heading_font;
+  font-weight: 700;
+  color: #cbd5e1;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+
+  span {
+    color: #e04f4f;
+  }
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  background: #121316;
+  border: 1px solid #282a33;
+  border-radius: 6px;
+  color: #ffffff;
+  padding: 13px 16px;
+  font-size: 15px;
+  font-family: $text_font;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #c93b3b;
+    box-shadow: 0 0 0 3px rgba(201, 59, 59, 0.18);
+  }
+
+  &::placeholder {
+    color: #64748b;
+  }
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 130px;
+  line-height: 1.6;
+}
+
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 8px;
+
+  @include breakpoint(smaller) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #121316;
+  border: 1px solid #282a33;
+  border-radius: 6px;
+  padding: 11px 14px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #cbd5e1;
+  transition: all 0.2s ease;
+  user-select: none;
+
+  &:hover {
+    border-color: rgba(201, 59, 59, 0.4);
+    color: #ffffff;
+  }
+
+  input[type="checkbox"] {
+    accent-color: #921F20;
+    width: 17px;
+    height: 17px;
+    cursor: pointer;
   }
 }
 
@@ -34,21 +173,38 @@
   gap: 28px;
 }
 
-.booking-card {
+.booking-box {
   background: #18191f;
   border: 1px solid #282a33;
   border-left: 5px solid #c93b3b;
   border-radius: 8px;
   padding: 34px 28px;
-}
 
-.booking-pill {
-  font-size: 0.72rem;
-  font-family: $heading_font;
-  font-weight: 700;
-  color: #e04f4f;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
+  &__tag {
+    font-size: 0.72rem;
+    font-family: $heading_font;
+    font-weight: 700;
+    color: #e04f4f;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  h3 {
+    font-family: $heading_font;
+    font-size: 1.35rem;
+    color: #ffffff;
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+
+  p {
+    color: #cbd5e1;
+    font-size: 0.94rem;
+    line-height: 1.65;
+    margin-bottom: 22px;
+  }
 }
 
 .location-box {
@@ -64,13 +220,23 @@
 .location-item {
   h4 {
     font-family: $heading_font;
-    font-size: 1.05rem;
+    font-size: 1.1rem;
     color: #ffffff;
-    margin-bottom: 4px;
+    margin-top: 0;
+    margin-bottom: 6px;
   }
   p {
     color: #94a3b8;
+    font-size: 0.94rem;
     line-height: 1.6;
     margin: 0;
+  }
+  a {
+    color: #e04f4f;
+    text-decoration: none;
+    font-weight: 600;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
