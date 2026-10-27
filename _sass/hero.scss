@@ -46,6 +46,7 @@
     background-image: url(/assets/images/Scattered-Lines-Dots-12-scaled.jpg);
     background-color: rgba(0, 0, 0, 0.5);
     background-blend-mode: color;
+    text-align: center;
   }
 
   &--defence {
@@ -70,6 +71,10 @@
   }
 
   &__heading {
+    text-align: center;
+    font-family: $heading_font;
+    margin-bottom: 1rem;
+
     &--page {
       text-align: center;
     }
@@ -83,7 +88,9 @@
   &__subheading {
     text-align: center;
     font-family: $text_font;
-    margin: 0;
+    margin: 0 auto;
+    max-width: 760px;
+    line-height: 1.65;
   }
 
   &__desc {
