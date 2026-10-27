@@ -27,7 +27,7 @@ layout: default
           Complete the details below and an experienced security consultant will respond within 1 business day with scoping guidance and a detailed quote.
         </p>
 
-        <form action="https://getform.io/f/bqoodwyb" method="POST">
+        <form id="contact-form" action="https://getform.io/f/bqoodwyb" method="POST">
           <div class="form-row form-group">
             <div>
               <label class="form-label">First Name <span>*</span></label>
@@ -80,7 +80,8 @@ layout: default
           <!-- Anti-spam Honeypot -->
           <input type="hidden" name="_reallyimportant_" style="display:none !important">
 
-          <button type="submit" class="btn btn--secondary btn--xl uppercase" style="width: 100%; justify-content: center;">
+          <div id="contact-form-status" style="display:none;"></div>
+          <button id="contact-submit-btn" type="submit" class="btn btn--secondary btn--xl uppercase" style="width: 100%; justify-content: center;">
             Submit Scoping Request
           </button>
         </form>

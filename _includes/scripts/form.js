@@ -1,157 +1,95 @@
-function handle_form_behavior(){
-
-    const pristineConfig = {
-        /* class of the parent element where the error/success class is added */
-        classTo: 'contact__form-control',
-        errorClass: 'has-danger',
-        successClass: 'has-success',
-        /* class of the parent element where error text element is appended */
-        errorTextParent: 'contact__form-control',
-        /* type of element to create for the error text */
-        errorTextTag: 'div',
-        /* class of the error text element */
-        errorTextClass: 'contact__form-text-help' 
-    };
-
+(function () {
     const form = document.getElementById("contact-form");
     if (!form) return;
 
-    let pristine = new Pristine(form, pristineConfig);
+    const statusBox = document.getElementById("contact-form-status");
+    const submitBtn = document.getElementById("contact-submit-btn") || form.querySelector('button[type="submit"]');
 
-    const the_select = document.getElementById('select-contact-method');
-    const the_email_heading = document.getElementById('email-heading');
-    const the_email = document.getElementById('email');
-    const the_email_control = document.getElementById('email-control');
-    const the_phone = document.getElementById('phone');
-    const the_phone_control = document.getElementById('phone-control');
-    const time_to_call = document.getElementById('time-to-call');
-    const time_to_call_control = document.getElementById('time_to_call-control');
-    const success_message = document.getElementById('contact__form-message--success');
-    const error_message = document.getElementById('contact__form-message--error');
-    
-    function clear_messages(){
-        const the_messages = document.querySelectorAll('.contact__form-message');
-        the_messages.forEach(function(message){
-            message.classList.add('hidden');
-            message.textContent = '';
-        });
-    }
-
-    if (the_select) {
-        the_select.addEventListener('change', (event) => {
-            $this = event.target;
-            const the_value = $this.value;
-
-            if(the_value == 'phone') {
-                if (the_email) {
-                    the_email.name = '';
-                    the_email.value = '';
-                    the_email.required = false;
-                }
-                if (the_email_heading) the_email_heading.classList.add('hidden');
-                if (the_email_control) the_email_control.classList.add('hidden');
-                
-                if (the_phone) {
-                    the_phone.required = true;
-                    the_phone.name = 'phone';
-                }
-                if (time_to_call) {
-                    time_to_call.required = true;
-                    time_to_call.name = 'time_to_call';
-                }
-                if (the_phone_control) the_phone_control.classList.remove('hidden');
-                if (time_to_call_control) time_to_call_control.classList.remove('hidden');
+    // Reset on browser back-forward navigation (bfcache)
+    window.addEventListener("pageshow", function (event) {
+        if (event.persisted) {
+            form.reset();
+            if (statusBox) {
+                statusBox.style.display = "none";
+                statusBox.innerHTML = "";
             }
-            
-            if(the_value == 'email') {
-                if (the_phone) {
-                    the_phone.required = false;
-                    the_phone.name = '';
-                }
-                if (time_to_call) {
-                    time_to_call.required = false;
-                    time_to_call.name = '';
-                }
-                if (the_phone_control) the_phone_control.classList.add('hidden');
-                if (time_to_call_control) time_to_call_control.classList.add('hidden');
-                
-                if (the_email) {
-                    the_email.required = true;
-                    the_email.name = 'email';
-                }
-                if (the_email_heading) the_email_heading.classList.remove('hidden');
-                if (the_email_control) the_email_control.classList.remove('hidden');
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Submit Scoping Request";
             }
-        });
-    }
-
-    form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        
-        /* check if the form is valid */
-        var valid = pristine.validate(); /* returns true or false */
-
-        if(valid){
-            const formData = new FormData(e.target);
-            fetch("https://getform.io/f/bqoodwyb", {
-                method: "POST",
-                body: formData,
-                headers: {
-                    "Accept": "application/json",
-                },
-            })
-            .then(response => {
-                if (response.ok) {
-                    clear_messages();
-                    success_message.classList.remove('hidden');
-                    success_message.textContent = '{{ site.data.global.contact.success_message }}';
-                } else {
-                    throw new Error(`An error occurred: ${response.statusText}`);
-                }
-            })
-            .catch(error => {
-                clear_messages();
-                error_message.classList.remove('hidden');
-                error_message.textContent = '{{ site.data.global.contact.error_message }}';
-            });
-        } else {
-            clear_messages();
-            error_message.classList.remove('hidden');
-            error_message.textContent = '{{ site.data.global.contact.validation_error }}';
         }
- 
-     });
-
-}
-
-function initValidation(){
-
-    var form = document.getElementById("contact-form");
-
-    let pristineConfig = {
-        /* class of the parent element where the error/success class is added */
-        classTo: 'contact__form-control',
-        errorClass: 'has-danger',
-        successClass: 'has-success',
-        /* class of the parent element where error text element is appended */
-        errorTextParent: 'contact__form-control',
-        /* type of element to create for the error text */
-        errorTextTag: 'div',
-        /* class of the error text element */
-        errorTextClass: 'contact__form-text-help' 
-    };
-    
-    /* create the pristine instance */
-    var pristine = new Pristine(form, pristineConfig);
-
-    form.addEventListener('submit', function (e) {
-       e.preventDefault();
-       
-       /* check if the form is valid */
-       var valid = pristine.validate(); /* returns true or false */
-
     });
 
-}
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
 
-handle_form_behavior()
+        // Browser built-in validity check
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+
+        const originalBtnText = submitBtn ? submitBtn.textContent : "Submit Scoping Request";
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Submitting Request...";
+        }
+        if (statusBox) {
+            statusBox.style.display = "none";
+            statusBox.innerHTML = "";
+        }
+
+        const formData = new FormData(form);
+        const endpoint = form.getAttribute("action") || "https://getform.io/f/bqoodwyb";
+
+        fetch(endpoint, {
+            method: "POST",
+            body: formData,
+            headers: {
+                "Accept": "application/json"
+            }
+        })
+        .then(function (response) {
+            if (response.ok) {
+                form.reset();
+                if (statusBox) {
+                    statusBox.style.display = "block";
+                    statusBox.style.background = "rgba(34, 197, 94, 0.12)";
+                    statusBox.style.border = "1px solid rgba(34, 197, 94, 0.35)";
+                    statusBox.style.color = "#86efac";
+                    statusBox.style.padding = "16px 20px";
+                    statusBox.style.borderRadius = "6px";
+                    statusBox.style.marginBottom = "20px";
+                    statusBox.style.fontSize = "0.95rem";
+                    statusBox.style.lineHeight = "1.5";
+                    statusBox.innerHTML = "<strong>✓ Scoping Request Received!</strong> Thank you for reaching out to Secario Labs. An experienced security consultant will review your parameters and follow up within 1 business day.";
+                }
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Submit Another Request";
+                }
+            } else {
+                throw new Error("Server returned status " + response.status);
+            }
+        })
+        .catch(function (error) {
+            console.error("Form submission error:", error);
+            if (statusBox) {
+                statusBox.style.display = "block";
+                statusBox.style.background = "rgba(239, 68, 68, 0.12)";
+                statusBox.style.border = "1px solid rgba(239, 68, 68, 0.35)";
+                statusBox.style.color = "#fca5a5";
+                statusBox.style.padding = "16px 20px";
+                statusBox.style.borderRadius = "6px";
+                statusBox.style.marginBottom = "20px";
+                statusBox.style.fontSize = "0.95rem";
+                statusBox.style.lineHeight = "1.5";
+                statusBox.innerHTML = "There was an issue submitting your request. Please try again or reach out directly to <a href='mailto:info@secariolabs.com' style='color:#ffffff; text-decoration:underline;'>info@secariolabs.com</a>.";
+            }
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalBtnText;
+            }
+        });
+    });
+})();
